@@ -1,4 +1,4 @@
-# **B**ehavior **E**xpression and **N**eural **T**race **O**bservatory
+# **B**ehavior **E**nsemble and **N**eural **T**rajectory **O**bservatory
 
 Bento is a Matlab GUI for browsing and annotating joint calcium imaging + video datasets.
 
