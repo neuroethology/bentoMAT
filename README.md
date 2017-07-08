@@ -1,10 +1,10 @@
-# Tracer
+# **B**ehavior **E**xpression and **N**eural **T**race **O**bservatory
 
-This is a Matlab GUI for browsing and annotating joint calcium imaging + video datasets.
+Bento is a Matlab GUI for browsing and annotating joint calcium imaging + video datasets.
 
 ## Getting Started
 
-Want to get a quick visual sense of what's going on in your data? Tracer lets you browse and annotate behavioral and neural data, and makes it easy to organize and navigate trials within a batch of experiments.
+Want to get a quick visual sense of what's going on in your data? Bento lets you browse and annotate behavioral and neural data, and makes it easy to organize and navigate trials within a batch of experiments.
 
 ### Prerequisites
 * Matlab 2014b or later
