@@ -1,1 +1,0 @@
-function sliderArrows(source,~,LR)
