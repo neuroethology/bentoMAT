@@ -1,0 +1,8 @@
+# temporary files/junk #
+########################
+*~
+.DS_Store
+
+# folder of debugging examples #
+################################
+gui_test/*
