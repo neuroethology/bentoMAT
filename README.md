@@ -15,11 +15,12 @@ Want to get a quick visual sense of what's going on in your data? Bento lets you
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if using calcium traces extracted with CNMF_E
 
 ## Installation
-Coming soon.
+The easiest way to keep your local version up to date is to clone this git repository; GitHub's software then lets you update to the latest version of the code at the press of a button.
+
+A copy of the code is also posted to the Anderson lab private server, however this copy is less frequently updated.
 
 ## Creating your first experiment
 Coming soon.
 
 ## Using the GUI
 Coming soon.
-Testing
