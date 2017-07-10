@@ -3,6 +3,10 @@
 *~
 .DS_Store
 
-# folder of debugging examples #
-################################
+# other matlab packages #
+#########################
+ca_source_extraction/*
+
+# debugging #
+#############
 gui_test/*
