@@ -4,7 +4,7 @@ fid     = trial.io.annot.fid;
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
 
-if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')) %need to create a new file
+if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
     suggestedName = ['mouse' num2str(mouse) '_' session '_' num2str(tr,'%03d') '.annot'];
     [fname,pth] = uiputfile(suggestedName);
     fid = [pth fname];
@@ -13,7 +13,13 @@ fid = fopen(fid,'w');
 % write metadata-----------------------------------------------------------
 fprintf(fid,'%s\n','Tracergui annotation file');
 if(gui.enabled.movie)
-    fprintf(fid,'%s %s\n','Movie file: ',trial.io.movie.fid);
+    nmov = length(trial.io.movie.fid);
+    fstr = '%s ';
+    for m = 1:nmov
+        fstr = [fstr '%s '];
+    end
+    fstr = [fstr '\n'];
+    fprintf(fid,fstr,'Movie file(s): ',trial.io.movie.fid{:});
 end
 fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',trial.stim);
