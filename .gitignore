@@ -5,7 +5,7 @@
 
 # other matlab packages #
 #########################
-ca_source_extraction/*
+loading data/ca_source_extraction/*
 
 # debugging #
 #############
