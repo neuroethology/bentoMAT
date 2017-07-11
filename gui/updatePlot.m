@@ -50,22 +50,33 @@ if(gui.enabled.traces)
     bump = gui.traces.yScale;
     show = find(gui.data.show);
     for i = 1:length(show)
+        switch gui.toPlot
+            case 'rast'
+                tr = gui.data.rast(show(end-i+1),inds) - ...
+                     nanmean(gui.data.rast(show(end-i+1),:));
+            case 'PCs'
+                tr = gui.data.PCA(:,show(end-i+1))'*gui.data.rast(:,inds) - ...
+                     nanmean(gui.data.PCA(:,show(end-i+1))'*gui.data.rast);
+        end
         if(i<=length(gui.traces.traces))
             set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
-                                     'ydata',gui.data.rast(show(end-i+1),inds) - ...
-                                        nanmean(gui.data.rast(show(end-i+1),:)) + i*bump);
+                                     'ydata',tr + i*bump);
         else
             gui.traces.traces(i) = plot(gui.traces.axes,...
-                                        gui.data.CaTime(inds) - time,...
-                                        gui.data.rast(show(end-i+1),inds) - ...
-                                        nanmean(gui.data.rast(show(end-i+1),:)) + i*bump,...
+                                        gui.data.CaTime(inds) - time,tr + i*bump,...
                                         'color',[.1 .1 .1]);
         end
     end
     delete(gui.traces.traces(i+1:end));
     gui.traces.traces(i+1:end)=[];
-    traceOffset = [min(gui.data.rast(show(end),:)   - nanmean(gui.data.rast(show(end),:))) ...
-                   max(gui.data.rast(show(1),:) - nanmean(gui.data.rast(show(1),:)))];
+    switch gui.toPlot
+        case 'rast'
+            traceOffset = [min(gui.data.rast(show(end),:)   - nanmean(gui.data.rast(show(end),:))) ...
+                               max(gui.data.rast(show(1),:) - nanmean(gui.data.rast(show(1),:)))];
+        case 'PCs'
+            traceOffset = [min(gui.data.PCA(:,show(end))'*gui.data.rast - gui.data.PCA(:,show(end))'*nanmean(gui.data.rast,2)) ...
+                           max(gui.data.PCA(:,show(1))'*gui.data.rast   - gui.data.PCA(:,show(1))'*nanmean(gui.data.rast,2))];
+    end
     traceOffset(isnan(traceOffset)) = 0;
     if(isempty(traceOffset))
         traceOffset = [0 0];

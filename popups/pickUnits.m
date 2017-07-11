@@ -1,14 +1,22 @@
 function pickUnits(source,~)
     parent      = source;
     gui         = guidata(source);
-    rast        = gui.data.rast;
+    
+    switch gui.toPlot
+        case 'rast'
+            plotStr = 'Cell ';
+            rast = gui.data.rast;
+        case 'PCs'
+            plotStr = 'PC ';
+            rast = gui.data.PCA'*gui.data.rast;
+    end
     plotUnits   = gui.data.show;
 
     N           = size(rast,1);
     nrow        = 16; %up to 16 buttons per column
     ncol        = ceil(N/nrow);
     W           = 70;
-
+    
     h = figure('dockcontrols','off','menubar','none',...
         'Tag','Trace browser','NumberTitle','off');
     gui.browser = h;
@@ -16,7 +24,7 @@ function pickUnits(source,~)
     p = get(h,'position');
     figW = max(ncol*W,300);
     set(h,'position',[p(1:2) figW 450]);
-    uicontrol('Style','text','String','Select units to plot:',...
+    uicontrol('Style','text','String','Select elements to plot:',...
               'Position', [0 420 max(ncol*W,300) 20]);
     for i = 1:N
         colnum = floor(20*(i-1)/(nrow*20)) - ncol/2;
@@ -26,7 +34,7 @@ function pickUnits(source,~)
                 'Position',[figW/2 + W*colnum  nrow*20+W-rownum 20 20],...
                 'callback',{@toggleUnit,parent,i});
         uicontrol('Style','text',...
-                'String',['Unit ' num2str(i)],...
+                'String',[plotStr num2str(i)],...
                 'Position', [figW/2  + 15 + W*colnum  nrow*20+W-rownum 40 20]);
     end
     for i = 1:ncol

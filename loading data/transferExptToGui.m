@@ -16,6 +16,9 @@ gui.enabled.movie   = enabled.movie;
 gui.enabled.ctrl    = 1;
 gui.enabled.annot   = enabled.annot;
 
+gui.toPlot          = 'rast'; %plot cells to start
+set(gui.ctrl.track.plotType,'Value',1);
+
 gui.allData         = mouse;                %stores all mice!
 gui.allPopulated    = cell2mat(raw(3:end,1:3)); %keeps a list of which mouse/sess/trials are populated
 mouseList           = unique(gui.allPopulated(:,1));

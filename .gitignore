@@ -2,10 +2,12 @@
 ########################
 *~
 .DS_Store
+*.asv
 
 # other matlab packages #
 #########################
 loading data/ca_source_extraction/*
+loading data/piotr_toolbox/*
 
 # debugging #
 #############
