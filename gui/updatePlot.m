@@ -49,6 +49,10 @@ if(gui.enabled.traces)
     inds = inds | [false inds(1:end-1)] | [inds(2:end) false];
     bump = gui.traces.yScale;
     show = find(gui.data.show);
+    [~,order] = sort(gui.data.order(show));
+    order     = max(order)-order+1;
+    [~,first] = min(order(show));
+    [~,last]  = max(order(show));
     for i = 1:length(show)
         switch gui.toPlot
             case 'rast'
@@ -60,10 +64,10 @@ if(gui.enabled.traces)
         end
         if(i<=length(gui.traces.traces))
             set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
-                                     'ydata',tr + i*bump);
+                                     'ydata',tr + order(i)*bump);
         else
             gui.traces.traces(i) = plot(gui.traces.axes,...
-                                        gui.data.CaTime(inds) - time,tr + i*bump,...
+                                        gui.data.CaTime(inds) - time,tr + order(i)*bump,...
                                         'color',[.1 .1 .1]);
         end
     end
@@ -71,11 +75,11 @@ if(gui.enabled.traces)
     gui.traces.traces(i+1:end)=[];
     switch gui.toPlot
         case 'rast'
-            traceOffset = [min(gui.data.rast(show(end),:)   - nanmean(gui.data.rast(show(end),:))) ...
-                               max(gui.data.rast(show(1),:) - nanmean(gui.data.rast(show(1),:)))];
+            traceOffset = [min(gui.data.rast(last,:) - nanmean(gui.data.rast(last,:))) ...
+                           max(gui.data.rast(first,:)   - nanmean(gui.data.rast(first,:)))];
         case 'PCs'
-            traceOffset = [min(gui.data.PCA(:,show(end))'*gui.data.rast - gui.data.PCA(:,show(end))'*nanmean(gui.data.rast,2)) ...
-                           max(gui.data.PCA(:,show(1))'*gui.data.rast   - gui.data.PCA(:,show(1))'*nanmean(gui.data.rast,2))];
+            traceOffset = [min(gui.data.PCA(:,last)'*gui.data.rast - gui.data.PCA(:,last)'*nanmean(gui.data.rast,2)) ...
+                           max(gui.data.PCA(:,first)'*gui.data.rast   - gui.data.PCA(:,first)'*nanmean(gui.data.rast,2))];
     end
     traceOffset(isnan(traceOffset)) = 0;
     if(isempty(traceOffset))

@@ -72,10 +72,12 @@ end
 
 % tweak the traces
 N = size(data.rast,1);
-if(isfield(gui,'data') && strcmpi(sess,sessOld)) %inherit show settings from previously used trial
+if(isfield(gui,'data') && strcmpi(sess,sessOld) && m==mOld) %inherit show settings from previously used trial
     data.show = gui.data.show;
+    data.order = gui.data.order;
 else
     data.show = true(N,1);
+    data.order = 1:N;
 end
 data.rast = [nan(N,1) data.rast nan(N,1)]; % pad with nans for display
 
