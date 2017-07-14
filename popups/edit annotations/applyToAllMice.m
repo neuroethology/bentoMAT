@@ -27,7 +27,7 @@ for i = 1:size(inds,1)
     for ch = 1:length(channels)
         switch action
             case 'add'
-                anno.(newStr) = [];
+                anno.(channels{ch}).(newStr) = [];
                 
             case 'delete'
                 for b = 1:length(toKill)

@@ -9,9 +9,12 @@ for i = 1:size(inds,1)
     trial   = inds(i,3);
     anno    = data(m).(sess)(trial).annot;
     
-    for b = 1:length(bhvList)
-        if(~isfield(anno,bhvList{b}))
-            anno.(bhvList{b})=[];
+    channels = fieldnames(anno);
+    for ch = 1:length(channels)
+        for b = 1:length(bhvList)
+            if(~isfield(anno.(channels{ch}),bhvList{b}))
+                anno.(channels{ch}).(bhvList{b})=[];
+            end
         end
     end
     data(m).(sess)(trial).annot = anno;

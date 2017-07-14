@@ -24,4 +24,4 @@ for i = 1:size(inds,1)
     dat     = data(m).(sess)(trial);
     saveAnnotSheetTxt(gui,dat,m,sess,trial);
 end
-helpbox('Done!');
+helpdlg('Done!');

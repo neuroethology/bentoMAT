@@ -20,8 +20,8 @@ switch action
         answer          = inputdlg('Annotation to be added:','New annotation');
         [answer,err]    = checkValid(answer);
         if(err) return; end
-        h.bhvMasterList = [h.bhvMasterList answer];
-        gui = applyToAllMice(gui,'add',answer);
+        h.bhvMasterList = [h.bhvMasterList; answer];
+        gui = applyToAllMice(gui,'add',answer{:});
 
     case 'delete'
         inds    = h.bhv.Value;
