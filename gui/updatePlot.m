@@ -6,25 +6,25 @@ if(~isempty(eventdata))
     switch eventdata.Source.Tag
         case 'slider'
             if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox'))
-                set(gui.ctrl.slider.text,'String',makeTime(gui.ctrl.slider.Value-gui.ctrl.slider.Min));
+                set(gui.ctrl.slider.text,'String',makeTime(gui.ctrl.slider.Value-gui.ctrl.slider.Min+gui.ctrl.slider.SliderStep(1)));
             else
-                set(gui.ctrl.slider.text,'String',num2str(round((gui.ctrl.slider.Value-gui.ctrl.slider.Min)*gui.data.annoFR)));
+                set(gui.ctrl.slider.text,'String',num2str(round((gui.ctrl.slider.Value-gui.ctrl.slider.Min)*gui.data.annoFR+1)));
             end
         case 'timeBox'
             gui.ctrl.slider.Value = getTime(gui.ctrl.slider.text.String)+gui.ctrl.slider.Min;
             updateSlider(source,gui.ctrl.slider);
 
         case 'frameBox'
-            gui.ctrl.slider.Value = str2num(gui.ctrl.slider.text.String)/gui.data.annoFR + gui.ctrl.slider.Min;
+            gui.ctrl.slider.Value = (str2num(gui.ctrl.slider.text.String)-1)/gui.data.annoFR + gui.ctrl.slider.Min;
             updateSlider(source,gui.ctrl.slider);
         
         case 'winBox'
         gui.traces.win  = str2num(eventdata.Source.String);
-            gui.tracker.win = str2num(eventdata.Source.String);
+            gui.features.win = str2num(eventdata.Source.String);
             guidata(source,gui);
 
             set(gui.traces.axes,'xlim',[-gui.traces.win  gui.traces.win]);
-            set(gui.tracker.axes,'xlim',[-gui.tracker.win  gui.tracker.win]);
+            set(gui.features.axes,'xlim',[-gui.features.win  gui.features.win]);
     end
 end
 time = gui.ctrl.slider.Value;
@@ -33,6 +33,9 @@ time = gui.ctrl.slider.Value;
 % update the movie panel
 if(gui.enabled.movie)
     [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+    if(gui.enabled.tracker) % add tracking data if included
+        mov = applyTracking(gui,mov,time);
+    end
     if(strcmpi(gui.data.io.movie.readertype,'seq'))
         set(gui.movie.img,'cdata',mov/3);
     else
@@ -132,25 +135,6 @@ if(gui.enabled.annot)
         end
     elseif(gui.enabled.traces)
 %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)
-    end
-end
-
-
-% update the tracking data
-if(gui.enabled.tracker)
-    frnum = round(time*gui.data.annoFR);
-    for i = 1:gui.data.tracking.nObj
-        if(gui.enabled.movie)
-            trfun = gui.data.tracking.hullFun;
-            [x,y] = trfun(gui.data.tracking.vals(frnum));
-            set(gui.tracker.hull(i),'xdata',x,'ydata',y);
-        end
-        
-%         win  = (-gui.tracker.win*gui.data.bhvFR):(gui.tracker.win*gui.data.bhvFR);
-%         inds = frnum + round(win);
-%         inds(inds<=0)=1;
-%         inds(inds>length(gui.tracker.data.L)) = length(gui.tracker.data.L);
-%         set(gui.tracker.traces(1),'xdata',win/gui.data.bhvFr,'ydata',gui.tracker.data.L(inds))
     end
 end
 

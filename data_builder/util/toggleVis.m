@@ -6,8 +6,8 @@ switch(get(source,'Tag'))
         gui.t.Data(:,6:7) = {[]};
         gui.rowVis(6:7) = get(source,'Value');
     case('concatAnnot')
-        gui.t.Data(:,10:11) = {[]};
-        gui.rowVis(10:11) = get(source,'Value');
+        gui.t.Data(:,11:12) = {[]};
+        gui.rowVis(11:12) = get(source,'Value');
     case('FRCa')
         gui.t.Data(:,8) = {[]};
         gui.rowVis(8) = get(source,'Value');
@@ -19,9 +19,9 @@ switch(get(source,'Tag'))
             set(gui.CaFRtxt,'Enable','off');
         end
     case('FRAnnot')
-        gui.t.Data(:,12) = {[]};
-        gui.rowVis(12) = get(source,'Value');
-        if(gui.rowVis(12)==0)
+        gui.t.Data(:,13) = {[]};
+        gui.rowVis(13) = get(source,'Value');
+        if(gui.rowVis(13)==0)
             set(gui.annoFR,'Enable','on');
             set(gui.annoFRtxt,'Enable','on');
         else
@@ -29,11 +29,14 @@ switch(get(source,'Tag'))
             set(gui.annoFRtxt,'Enable','off');
         end
     case('offset')
-        gui.rowVis(13) = get(source,'Value');
-        gui.t.Data(:,13) = {[]};
-    case('BhvMovies')
         gui.rowVis(14) = get(source,'Value');
         gui.t.Data(:,14) = {[]};
+    case('BhvMovies')
+        gui.rowVis(15) = get(source,'Value');
+        gui.t.Data(:,15) = {[]};
+    case('Tracking');
+        gui.rowVis(16) = get(source,'Value');
+        gui.t.Data(:,16) = {[]};
 end
 
 guidata(source,gui);

@@ -15,7 +15,7 @@ switch type
         maxVal = min(tMax,info.tmax/Fr);
         minVal = max(1/Fr,info.tmin/Fr);
     case 'Ca'
-        minVal  = info.annoTime(1);
+        minVal  = 0;
         maxVal  = info.annoTime(end);
         Fr      = 1/(info.annoTime(2)-info.annoTime(1));
 end

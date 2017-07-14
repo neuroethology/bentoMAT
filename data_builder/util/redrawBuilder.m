@@ -1,12 +1,11 @@
 function redrawBuilder(source,~)
 gui = guidata(source);
 
-res      = get(source,'position');
-if(gui.rowVis(14)==1)
-    cw       = (res(3)*.98 - 50*(sum(gui.rowVis)-3) - 26)/3;
-else
-    cw       = (res(3)*.98 - 50*(sum(gui.rowVis)-2) - 26)/2;
-end
-colSizes = [50 50 50 50 cw 50 50 50 cw 50 50 50 50 cw].*gui.rowVis;
+res             = get(source,'position');
+txt             = [5 9 10 15 16];
+cw              = (res(3)*0.98 - 50*sum(gui.rowVis(setdiff(1:16,txt))) - 26) / sum(gui.rowVis(txt));
+colSizes        = 50*ones(1,16);
+colSizes(txt)   = cw;
+colSizes        = colSizes.*gui.rowVis;
 
 set(gui.t,'columnwidth',mat2cell(colSizes,1,ones(1,length(colSizes))));

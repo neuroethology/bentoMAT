@@ -22,33 +22,33 @@ for i = 1:length(enabled)
     end
 end
 
-if(gui.enabled.movie && (gui.enabled.traces||gui.enabled.tracker))
+if(gui.enabled.movie && (gui.enabled.traces||gui.enabled.features))
     gui.movie.panel.Position  = [0 ctrlSize config.midline 1-ctrlSize];
     gui.ctrl.panel.Position   = [0 0 config.midline ctrlSize];
     if(gui.enabled.traces&&gui.enabled.tracker)
         gui.traces.panel.Position = [config.midline 0 1-config.midline 0.5];
-        gui.tracker.panel.Position = [config.midline 0.5 1-config.midline 1];
+        gui.features.panel.Position = [config.midline 0.5 1-config.midline 1];
     elseif(gui.enabled.traces)
         gui.traces.panel.Position = [config.midline 0 1-config.midline 1];
     else
-        gui.tracker.panel.Position = [config.midline 0 1-config.midline 1];
+        gui.features.panel.Position = [config.midline 0 1-config.midline 1];
     end
     
 elseif(gui.enabled.movie)
     gui.movie.panel.Position  = [0 ctrlSize 1 1-ctrlSize];
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
     
-elseif(gui.enabled.traces&&gui.enabled.tracker)
+elseif(gui.enabled.traces&&gui.enabled.features)
     gui.traces.panel.Position = [0 ctrlSize 0.5 1-ctrlSize];
-    gui.tracker.panel.Position = [0.5 ctrlSize 1 1-ctrlSize];
+    gui.features.panel.Position = [0.5 ctrlSize 1 1-ctrlSize];
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
     
 elseif(gui.enabled.traces)
     gui.traces.panel.Position = [0 ctrlSize 1 1-ctrlSize];
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
     
-elseif(gui.enabled.tracker)
-    gui.tracker.panel.Position = [0 ctrlSize 1 1-ctrlSize];
+elseif(gui.enabled.features)
+    gui.features.panel.Position = [0 ctrlSize 1 1-ctrlSize];
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
     
 else

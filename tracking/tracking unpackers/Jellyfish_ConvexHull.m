@@ -1,8 +1,6 @@
-function data = unpackConvexHull(data)
+function data = Jellyfish_ConvexHull(data)
 % extracts tracking features of interest from the output of the convex hull
-% jellyfish tracker. The only mandatory feature that must be defined is a
-% value for data.nframes; the remaining features, saved to data.feats, will
-% be z-scored and plotted in the tracking panel.
+% jellyfish tracker.
 
 data.nframes = length(data.hull);
 

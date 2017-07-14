@@ -8,18 +8,19 @@ set(gui.h0,'dockcontrols','off','menubar','none',...
     'CloseRequestFcn',@closeGui);
 
 % sets which panels are visible/being updated.
-gui.enabled.movie   = 0;
-gui.enabled.ctrl    = 0;
-gui.enabled.traces  = 0;
-gui.enabled.tracker = 0;
-gui.enabled.welcome = 1;
+gui.enabled.movie    = 0;
+gui.enabled.ctrl     = 0;
+gui.enabled.traces   = 0;
+gui.enabled.tracker  = 0;
+gui.enabled.features = 0;
+gui.enabled.welcome  = 1;
 
 gui.config  = loadConfig();
 gui.menus   = menu_setup(gui);
 
 gui     = drawMovie(gui);
 gui     = drawTraces(gui);
-gui     = drawTracker(gui);
+gui     = drawFeatures(gui);
 gui     = drawAnnot(gui);
 gui     = drawCtrl(gui);
 gui     = drawWelcome(gui);

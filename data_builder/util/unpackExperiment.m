@@ -25,10 +25,11 @@ if(isnumeric(raw{1,5})&~isnan(raw{1,5})) %if there's a common bhvr movie framera
     data(:,match.FR_Anno) = raw(1,5);
 end
 
-enabled.movie   = raw{1,11};
-enabled.annot   = any(~cellfun(@isempty,data(:,match.Annotation_file)));
-enabled.traces  = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)));
-enabled.tracking  = any(~cellfun(@isempty,data(:,match.Tracking_data)));
+enabled.movie    = raw{1,11};
+enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)));
+enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)));
+enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)));
+
 
 mouse = struct();
 prevCa = '';
@@ -154,13 +155,12 @@ for i=1:size(data,1)
     end
     
     % add tracking data----------------------------------------------------
-    if(enabled.tracking)
-        if(~isempty(data{i,match.Tracking_data}) & ~isnan(data{i,match.Tracking_data}))
-            fid = [pth data{i,match.Tracking_data}];
-            temp = load(fid);
-            strtemp.distData = temp.pRT;
+    if(enabled.tracker)
+        if(~isempty(data{i,match.Tracking}))
+            fid = [pth data{i,match.Tracking}];
+            strtemp.tracking.args = load(fid);
         else
-            strtemp.distData = [];
+            strtemp.tracking.args = [];
         end
     end
         
@@ -170,7 +170,7 @@ for i=1:size(data,1)
         if(~isempty(strfind(data{i,match.Annotation_file}(end-4:end),'xls')))
             strtemp.io.annot.fid = [pth data{i,match.Annotation_file}];
             if(raw{1,9})
-                [strtemp.annot,tmax] = loadAnnotSheet([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                [strtemp.annot,~] = loadAnnotSheet([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                 tmin = data{i,match.Start_Anno};
                 tmax = data{i,match.Stop_Anno};
             else
