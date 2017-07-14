@@ -1,6 +1,5 @@
 function config = loadConfig()
 
-config.root      = pwd;
 config.midline   = 0.6;
 config.rowscale  = 0.06;
 

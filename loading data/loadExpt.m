@@ -11,10 +11,12 @@ if(~FileName)
     return;
 end
 
+gui = guidata(useSource);
+
 switch action
     case 'edit'
         exptBuilder = build_experiment(source,[]);
         unpackExptToBuilder(exptBuilder.f,[PathName FileName],exptBuilder);
     case 'load'
-        transferExptToGui([PathName FileName],guidata(useSource));
+        transferExptToGui([PathName FileName],gui);
 end

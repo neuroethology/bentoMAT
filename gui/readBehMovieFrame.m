@@ -20,7 +20,7 @@ for i = 1:length(movie.reader) %loop over loaded movies
         otherwise
             tMax    = reader(i).Duration - 1/reader(i).FrameRate;
             time    = min(time, tMax);
-            reader(i).currentTime = time - 1/reader(i).FrameRate;
+            reader(i).currentTime = time;
             movies{i} = readFrame(reader(i));
     end
 end

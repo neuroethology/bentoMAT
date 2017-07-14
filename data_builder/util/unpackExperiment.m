@@ -169,6 +169,7 @@ for i=1:size(data,1)
     if(enabled.annot && ~isempty(data{i,match.Annotation_file}))
         if(~isempty(strfind(data{i,match.Annotation_file}(end-4:end),'xls')))
             strtemp.io.annot.fid = [pth data{i,match.Annotation_file}];
+            strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.xlsx','.annot'); %force conversion to .annot format upon next save
             if(raw{1,9})
                 [strtemp.annot,~] = loadAnnotSheet([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                 tmin = data{i,match.Start_Anno};
@@ -180,7 +181,7 @@ for i=1:size(data,1)
         elseif(strcmpi(data{i,match.Annotation_file}(end-5:end),'.annot'))
 			strtemp.io.annot.fid = [pth data{i,match.Annotation_file}];
             if(raw{1,9})
-                [strtemp.annot,tmax] = loadAnnotSheetTxt([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                [strtemp.annot,~] = loadAnnotSheetTxt([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                 tmin = data{i,match.Start_Anno};
                 tmax = data{i,match.Stop_Anno};
             else
@@ -194,13 +195,13 @@ for i=1:size(data,1)
             end
 		else		%load data in the old format, prepare to convert to sheet format when saved
             if(raw{1,9})
-                frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.xlsx'];
+                frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
                 strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.txt',frame_suffix);
-                [strtemp.annot,tmax] = loadAnnotFile([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                [strtemp.annot,~] = loadAnnotFile([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                 tmin = data{i,match.Start_Anno};
                 tmax = data{i,match.Stop_Anno};
             else
-                strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.txt','.xlsx');
+                strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.txt','.annot');
                 [strtemp.annot,tmax] = loadAnnotFile([pth data{i,match.Annotation_file}]);
                 tmin = 1;
             end

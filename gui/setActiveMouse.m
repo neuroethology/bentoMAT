@@ -80,6 +80,8 @@ if(gui.enabled.tracker)
             gui.enabled.tracker = 0;
         end
     end
+    data.tracking.active    = {}; %clear the other tracking features
+    data.tracking.crop      = [];
 end
 
 % tweak the traces
