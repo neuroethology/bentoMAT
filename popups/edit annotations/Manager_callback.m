@@ -18,7 +18,8 @@ gui = h.gui;
 switch action
     case 'add'
         answer          = inputdlg('Annotation to be added:','New annotation');
-        [answer,err]    = checkValid(answer);
+        if(isempty(answer)) return; end
+        [answer,err]    = checkValid(answer,h.bhvMasterList);
         if(err) return; end
         h.bhvMasterList = [h.bhvMasterList; answer];
         gui = applyToAllMice(gui,'add',answer{:});
@@ -36,17 +37,23 @@ switch action
         toMerge = h.bhv.String(inds);
         answer  = inputdlg({'Enter name of new (merged) annotation','Keep old annotations? (y/n)'},...
                            ['Merging behaviors ' strjoin(toMerge,' ')],1,{'','no'});
-        [answer{1},err] = checkValid(answer{1});
-        if(err) return; end
-        
+        if(isempty(answer)) return; end
         if(~any(strcmpi({'y','yes','n','no'},answer{2})))
             answer{2} = questdlg('Keep old annotations?', '???', 'Yes','No','No');
         end
-        h.bhvMasterList = [h.bhvMasterList; answer(1)];
-        toKill = 1;
-        if(strcmpi(answer{2},'n')|strcmpi(answer{2},'no'))
+        [answer{1},err] = checkValid(answer{1},setdiff(h.bhvMasterList,answer{1}));
+        if(err) return; end
+        
+        inds    = inds(~strcmpi(toMerge,answer{1})); %don't delete the behavior we merge into
+        toMerge = h.bhv.String(inds);
+        
+        if(~any(strcmpi(h.bhvMasterList,answer{1})))
+            h.bhvMasterList = [h.bhvMasterList; answer(1)];
+        end
+        toKill = 0;
+        if(any(strcmpi({'n','no'},answer{2})))
             h.bhvMasterList(inds)=[];
-            toKill = 0;
+            toKill = 1;
         end
         gui = applyToAllMice(gui,'merge',toMerge,answer{1},toKill);
         
@@ -54,6 +61,7 @@ switch action
         ind             = h.bhv.Value;
         toEdit          = h.bhv.String(ind);
         answer          = inputdlg('Rename annotation:','Rename',1,toEdit);
+        if(isempty(answer)) return; end
         [answer,err]    = checkValid(answer);
         if(err) return; end
         h.bhvMasterList(ind) = answer;
@@ -69,13 +77,17 @@ guidata(source,h);
 guidata(gui.h0,gui);
 
 
-    function [answer,err] = checkValid(answer)
+    function [answer,err] = checkValid(answer,bhvList)
         answer(ismember(answer,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
         answer = strrep(strtrim(answer),' ','_');
         
         err=0;
         if(isempty(answer))
             msgbox('Name must be at least one character long (special characters are removed.)');
+            err=1;
+        end
+        if(any(strcmpi(bhvList,answer)))
+            msgbox('A label with that name already exists.');
             err=1;
         end
     end

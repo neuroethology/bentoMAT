@@ -7,7 +7,7 @@ switch action
     case 'add'
         newStr = varargin{1};
     case 'delete'
-        toKill = varargin{1};
+        killStr = varargin{1};
     case 'merge'
         oldList = varargin{1};
         newName = varargin{2};
@@ -30,16 +30,19 @@ for i = 1:size(inds,1)
                 anno.(channels{ch}).(newStr) = [];
                 
             case 'delete'
-                for b = 1:length(toKill)
-                    anno.(channels{ch}) = rmfield(anno.(channels{ch}),toKill{b});
+                for b = 1:length(killStr)
+                    anno.(channels{ch}) = rmfield(anno.(channels{ch}),killStr{b});
                 end
                 
             case 'merge'
-                newRast = [];
-                for b = 1:length(oldList)
-                    newRast = [newRast; anno.(channels{ch}).(oldList{b})];
-                    if(toKill)
-                        anno.(channels{ch}) = rmfield(anno.(channels{ch}),oldList{b});
+                if(~isfield(anno.(channels{ch}),newName))
+                    anno.(channels{ch}).(newName) = [];
+                end
+                newRast = []; bhvList = [newName;oldList];
+                for b = 1:length(bhvList)
+                    newRast = [newRast; anno.(channels{ch}).(bhvList{b})];
+                    if(toKill && b>1)
+                        anno.(channels{ch}) = rmfield(anno.(channels{ch}),bhvList{b});
                     end
                 end
                 newRast = cleanMergedRaster(newRast);

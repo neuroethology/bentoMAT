@@ -6,8 +6,8 @@ if(isempty(rast))
 end
 
 rast    = sortrows(rast,1);
-rtemp   = convertToRast(rast,max(rast)+1);
-rtemp   = [rtemp(2:end-1)-rtemp(1:end-2) 0 -rtemp(end)];
+rtemp   = convertToRast(rast,max(rast(:))+100);
+rtemp   = [rtemp(1)  rtemp(2:end-1)-rtemp(1:end-2) -rtemp(end)];
 tOn     = find(rtemp==1);
 tOff    = find(rtemp==-1);
 
