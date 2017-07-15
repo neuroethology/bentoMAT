@@ -4,6 +4,7 @@ function sliderCheck(source,~,parent)
 
 gui    = guidata(parent);
 
+gui.ctrl.slider.timer = tic;
 switch source.Tag
     case 'leftArrow'
         gui.Action = -gui.ctrl.slider.SliderStep(1);   %left arrow
@@ -11,16 +12,16 @@ switch source.Tag
         gui.Action = gui.ctrl.slider.SliderStep(1);    %right arrow
     case 'bar'
         pClick  = get(0,'pointerlocation');
-        
+
         tracker = getpixelposition(gui.ctrl.slider.Marker,true);
         tracker(1) = gui.h0.Position(1) + tracker(1);
-              
+
         if(pClick(1) < tracker(1))
             gui.Action = -gui.ctrl.slider.SliderStep(2);   %track left
         elseif(pClick(1) > tracker(1)+tracker(3))
             gui.Action = gui.ctrl.slider.SliderStep(2);    %track right
         end
-        
+
     case 'marker'
         gui.Action = 'drag';
 end

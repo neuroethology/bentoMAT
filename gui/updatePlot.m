@@ -17,7 +17,7 @@ if(~isempty(eventdata))
         case 'frameBox'
             gui.ctrl.slider.Value = (str2num(gui.ctrl.slider.text.String)-1)/gui.data.annoFR + gui.ctrl.slider.Min;
             updateSlider(source,gui.ctrl.slider);
-        
+
         case 'winBox'
         gui.traces.win  = str2num(eventdata.Source.String);
             gui.features.win = str2num(eventdata.Source.String);
