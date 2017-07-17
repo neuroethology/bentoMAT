@@ -3,9 +3,11 @@ function [mouse,enabled] = unpackExperiment(raw)
 % files and formats their data.
 for i = 3:size(raw,1)
     inds = [4 5 9 10 15 16];
+    inds(inds>size(raw,2))=[];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {''};
     inds = setdiff(1:16,inds);
+    inds(inds>size(raw,2))=[];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {[]};
 end
