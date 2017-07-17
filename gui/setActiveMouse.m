@@ -80,7 +80,7 @@ if(gui.enabled.tracker)
             gui.enabled.tracker = 0;
         end
     end
-    data.tracking.active    = {}; %clear the other tracking features
+    data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
     data.tracking.crop      = [];
 end
 

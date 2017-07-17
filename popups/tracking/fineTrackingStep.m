@@ -1,15 +1,14 @@
 function fineTrackingStep(source,~,delta)
 
 h = guidata(source);
-gui = h.gui;
+gui = guidata(h.guifig);
 
-v = gui.ctrl.slider.Value + gui.ctrl.slider.Min*delta;
-v = max(v,gui.ctrl.slider.Min);
-v = min(v,gui.ctrl.slider.Max);
-
-gui.ctrl.slider.Value = v;
+gui.ctrl.slider.timer = tic;
+gui.Action = delta;
+h.Action   = delta;
 
 guidata(gui.h0,gui);
+guidata(source,h);
 updateSlider(gui.h0,gui.ctrl.slider);
 
 dummy.Source.Tag = 'slider';

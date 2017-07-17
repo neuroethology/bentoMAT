@@ -10,3 +10,5 @@ alone 0.660 0.660 0.660
 groom_genital 0.503 0.503 0.096
 agg_investigation 1.000 0.675 0.921
 cable_fix 0.020 0.020 0.020
+dancing 0.000 0.000 1.000
+sniffAG 0.000 1.000 0.000

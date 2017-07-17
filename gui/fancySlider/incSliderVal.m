@@ -4,16 +4,17 @@ function h = incSliderVal(source)
 gui = guidata(source);
 h = gui.ctrl.slider;
 
-p       = get(0,'PointerLocation');         %click location
-marker  = getpixelposition(h.Marker,true);
-marker  = gui.h0.Position(1) + marker(1) + marker(3)/2; %marker coordinates
-
 % check if out-of-range
 if(((h.Value + gui.Action)>h.Max)|((h.Value + gui.Action)<h.Min))
     return
 end
+
+
 % check for overshoot
-if(sign(p(1) - marker) ~= sign(gui.Action))
+p       = get(0,'PointerLocation');         %click location
+marker  = getpixelposition(h.Marker,true);
+marker  = gui.h0.Position(1) + marker(1) + marker(3)/2; %marker coordinates
+if((gui.h0==gcf) && (sign(p(1) - marker) ~= sign(gui.Action)))
     return;
 end
 
