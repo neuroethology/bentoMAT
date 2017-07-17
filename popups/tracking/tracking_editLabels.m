@@ -13,17 +13,38 @@ switch type
             errordlg('Please specify both objects to swap');
             return;
         end
-        ind1 = find(gui.data.tracking.active{fr}==s1);
-        ind2 = find(gui.data.tracking.active{fr}==s2);
-        if(~isempty(ind1)&~isempty(ind2))
-            gui.data.tracking.active{fr}(ind1) = s2;
-            gui.data.tracking.active{fr}(ind2) = s1;
-        elseif(~isempty(ind1))
-            gui.data.tracking.active{fr}(ind1) = s2;
-        elseif(~isempty(ind2))
-            gui.data.tracking.active{fr}(ind1) = s1;
+        if(s1<=length(gui.data.tracking.active{fr}))
+            v1 = gui.data.tracking.active{fr}(s1);
+            A1=1;
+        else
+            s1 = s1-length(gui.data.tracking.active{fr});
+            v1 = gui.data.tracking.inactive{fr}(s1);
+            A1=0;
         end
+        if(s2<=length(gui.data.tracking.active{fr}))
+            v2 = gui.data.tracking.active{fr}(s2);
+            A2=1;
+        else
+            s2 = s2-length(gui.data.tracking.active{fr});
+            v2 = gui.data.tracking.inactive{fr}(s2);
+            A2=0;
+        end
+        if(A1&A2)
+            gui.data.tracking.active{fr}(s1)=v2;
+            gui.data.tracking.active{fr}(s2)=v1;
+        elseif(A1)
+            gui.data.tracking.active{fr}(s1)=v2;
+            gui.data.tracking.inactive{fr}(s2)=v1;
+        elseif(A2)
+            giu.data.tracking.inactive{fr}(s1)=v2;
+            gui.data.tracking.active{fr}(s2)=v1;
+        else
+            gui.data.tracking.inactive{fr}(s1)=v2;
+            gui.data.tracking.inactive{fr}(s2)=v1;
+        end
+        
         gui.data.tracking.active(fr+1:end) = gui.data.tracking.active(fr);
+        gui.data.tracking.inactive(fr+1:end) = gui.data.tracking.inactive(fr);
         
         guidata(gui.h0,gui);
         updatePlot(gui.h0,[]);
