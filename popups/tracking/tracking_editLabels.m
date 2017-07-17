@@ -29,14 +29,14 @@ switch type
             v2 = gui.data.tracking.inactive{fr}(s2);
             A2=0;
         end
-        if(A1&A2)
+        if(A1&&A2)
             gui.data.tracking.active{fr}(s1)=v2;
             gui.data.tracking.active{fr}(s2)=v1;
         elseif(A1)
             gui.data.tracking.active{fr}(s1)=v2;
             gui.data.tracking.inactive{fr}(s2)=v1;
         elseif(A2)
-            giu.data.tracking.inactive{fr}(s1)=v2;
+            gui.data.tracking.inactive{fr}(s1)=v2;
             gui.data.tracking.active{fr}(s2)=v1;
         else
             gui.data.tracking.inactive{fr}(s1)=v2;
