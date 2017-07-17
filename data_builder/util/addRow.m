@@ -3,12 +3,14 @@ function addRow(source,~)
 gui = guidata(source);
 dat = get(gui.t,'data');
 
-dat(end+1,4) = {''};
-dat{end,1} = dat{end-1,1};
-dat{end,2} = dat{end-1,2};
-dat{end,3} = dat{end-1,3}+1;
-dat(end,5:8) = {'',[],[],[]};
-dat(end,9:12) = {'',[],[],[]};
+dat(end+1,4)  = {''};
+dat{end,1}    = dat{end-1,1};
+dat{end,2}    = dat{end-1,2};
+dat{end,3}    = dat{end-1,3}+1;
+dat(end,5:16) = {[]};
+txt           = [5 9 10 15 16];
+dat(end,txt)  = {''};
+
 
 set(gui.t,'data',dat);
 pP   = get(gui.bP,'position');

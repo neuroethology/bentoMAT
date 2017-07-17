@@ -1,5 +1,4 @@
 function changeExpt(source,~)
-% try
 useSource = source.Parent.Parent.Parent;
 gui = guidata(useSource);
 
@@ -30,6 +29,3 @@ gui = redrawPanels(gui);
 guidata(useSource,gui);
 dummy.Source.Tag = 'slider';
 updatePlot(gui.h0,dummy);
-% catch
-%     keyboard
-% end

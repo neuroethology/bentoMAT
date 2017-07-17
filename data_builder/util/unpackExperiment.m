@@ -2,10 +2,10 @@ function [mouse,enabled] = unpackExperiment(raw)
 % parses the metadata in the excel sheet, then loads all of the listed
 % files and formats their data.
 for i = 3:size(raw,1)
-    inds = [4 5 9];
+    inds = [4 5 9 10 15 16];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {''};
-    inds = [6 7 8 10 11 12];
+    inds = setdiff(1:16,inds);
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {[]};
 end
@@ -185,13 +185,10 @@ for i=1:size(data,1)
                 tmin = data{i,match.Start_Anno};
                 tmax = data{i,match.Stop_Anno};
             else
-                [strtemp.annot,~] = loadAnnotSheetTxt([pth data{i,match.Annotation_file}]);
-                tmin = 1;
-                if(~isempty(strtemp.CaTime))
-                    tmax = length(strtemp.CaTime)*strtemp.annoFR/strtemp.CaFR;
-                else
-                    tmax = nan;
-                end
+                [strtemp.annot,tmin,tmax] = loadAnnotSheetTxt([pth data{i,match.Annotation_file}]);
+%                 if(~isempty(strtemp.CaTime))
+%                     tmax = length(strtemp.CaTime)*strtemp.annoFR/strtemp.CaFR;
+%                 end
             end
 		else		%load data in the old format, prepare to convert to sheet format when saved
             if(raw{1,9})

@@ -12,11 +12,7 @@ end
 channels = fieldnames(data.annot);
 annot.channels = channels;
 gui.ctrl.annot.ch.String = {'',channels{:},'add new...','remove channel...'};
-try
 bhvList = fieldnames(data.annot.(channels{1}))';
-catch
-    keyboard
-end
 bhvList(strcmpi(bhvList,'other'))=[];
 
 annot.bhv = struct();

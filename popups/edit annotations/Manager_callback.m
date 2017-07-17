@@ -62,7 +62,7 @@ switch action
         toEdit          = h.bhv.String(ind);
         answer          = inputdlg('Rename annotation:','Rename',1,toEdit);
         if(isempty(answer)) return; end
-        [answer,err]    = checkValid(answer);
+        [answer,err]    = checkValid(answer,h.bhvMasterList);
         if(err) return; end
         h.bhvMasterList(ind) = answer;
         gui = applyToAllMice(gui,'rename',toEdit{:},answer{:});

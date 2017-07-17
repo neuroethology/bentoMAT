@@ -30,6 +30,7 @@ dat{1,3}    = 1;
 dat(1,4)    = {''};
 dat(1,5:8)  = {'',[],[],[]};
 dat(1,9:13) = {'',[],[],[],[]};
+dat(1,14:16) = {[],[],[]};
 
 set(exptGui.t,'data',dat);
 exptGui.CaMulti   = uicontrol('parent',f,fillin{:},'position',[.2 .25 .2 .03],'Tag','concatCa',...

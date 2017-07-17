@@ -1,4 +1,4 @@
-function [annot,tmax] = loadAnnotSheetTxt(fname,tmin,tmax)
+function [annot,tmin,tmax] = loadAnnotSheetTxt(fname,tmin,tmax)
 % still need to add support for multiple annotations per file
 if(nargin<2)
     tmin = nan;
@@ -9,11 +9,7 @@ elseif(isstr(tmin))
 end
 
 fid     = fopen(fname);
-try
 tline   = fgetl(fid);
-catch
-    keyboard
-end
 M       = {};
 while ischar(tline)
     M{end+1} = tline;

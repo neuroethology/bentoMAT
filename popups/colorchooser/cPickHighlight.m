@@ -1,7 +1,6 @@
 function cPickHighlight(source,~)
 data = guidata(source);
 
-% keyboard
 hit = find([data.h.bhvrs.Value]);
 for i=1:length(data.h.lbls)
     if(i==hit)

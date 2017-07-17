@@ -26,22 +26,14 @@ inds = [find(~cellfun(@isempty,strfind(M,'-----'))); length(M)+3];
 annot = struct();
 for i = 1:2
     str = ['Ch' num2str(i)];
-    try
     for b=1:length(conf)
         annot.(str).(conf{b}) = [];
-    end
-    catch
-        keyboard
     end
 end
 
 if(isinf(tmax))
     Mtemp = regexp(M((inds(1)+1):(inds(2)-3)),'(\S+)','match'); Mtemp = cat(1,Mtemp{:});
-    try
     maxTime = str2num(Mtemp{end,2});
-    catch
-        keyboard
-    end
 else
     maxTime = tmax-tmin+1;
 end

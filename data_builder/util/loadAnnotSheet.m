@@ -52,11 +52,7 @@ for c = channels'
     end
     for f = 1:length(populated)
         dsub = cell2mat(data(3:end,(f-1)*3+(1:2)));
-        try
         dsub(isnan(dsub(:,1)),:) = [];
-        catch
-            keyboard
-        end
         annot.(c{:}).(populated{f}) = dsub;
     end
 end
