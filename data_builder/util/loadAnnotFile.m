@@ -20,6 +20,10 @@ listend = listend(2);
 conf = M(4:listend-1);
 for i = 1:length(conf)
     conf{i} = conf{i}(1:end-2);
+    if(~isstrprop(conf{i}(1),'alpha'))
+        conf{i} = ['x' conf{i}];
+        M = strrep(M,conf{i}(2:end),conf{i});
+    end
 end
 
 inds = [find(~cellfun(@isempty,strfind(M,'-----'))); length(M)+3];
