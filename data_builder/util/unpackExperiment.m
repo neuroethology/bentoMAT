@@ -74,7 +74,7 @@ for i=1:size(data,1)
             strtemp.CaTime   = (1:size(strtemp.rast,2))/CaFR;
             strtemp.CaFR     = CaFR;
         end
-        hasOffset = ~isempty(offset)&&~isnan(offset);
+        hasOffset = ~isempty(offset)&&~any(isnan(offset));
         if(hasOffset)
             if(~isnumeric(offset))
                 offset = str2num(offset);

@@ -9,7 +9,7 @@ end
 bhv = gui.annot.bhv;
 bhvStruct = struct();
 for f = fieldnames(bhv)'
-    rast    = [bhv.(f{:})(1) bhv.(f{:})(2:end-1)-bhv.(f{:})(1:end-2) -bhv.(f{:})(end)];
+    rast    = [bhv.(f{:})(1) bhv.(f{:})(2:end)-bhv.(f{:})(1:end-1) -bhv.(f{:})(end)];
     tOn     = find(rast==1);
     tOff    = find(rast==-1);
     if(~isempty(tOn)&~isempty(tOff))

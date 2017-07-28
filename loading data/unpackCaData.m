@@ -29,6 +29,11 @@ switch ext
             end
         end
         time = [];
+    case '.flr'
+        % Yatang Ca traces
+        datapara = input_lyt(pth);
+        rast = datapara.data';
+        time=[];
 end
 
 disp('done');
