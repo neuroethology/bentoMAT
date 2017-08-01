@@ -81,7 +81,9 @@ if(gui.enabled.tracker)
         end
     end
     data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
+    data.tracking.active(1:end) = {1}; %default active settings
     data.tracking.inactive  = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
+    data.tracking.inactive(1:end) = {2:1e5};
     data.tracking.crop      = [];
 end
 
