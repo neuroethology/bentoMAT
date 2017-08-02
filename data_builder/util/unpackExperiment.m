@@ -12,6 +12,9 @@ for i = 3:size(raw,1)
     raw(i,inds(find(mask))) = {[]};
 end
 
+%OS compatibility:
+raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
+raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 pth = raw{1,1};
 
 fieldset = raw(2,:);

@@ -1,7 +1,7 @@
 function trackType = promptTrackType()
 
 pth         = fileparts(which('promptTrackType'));
-trackerList = dir([pth '\tracking unpackers\*.m']);
+trackerList = dir([pth filesep 'tracking unpackers' filesep '*.m']);
 trackerList = {trackerList.name};
 trackerList = strrep(trackerList,'.m','');
 

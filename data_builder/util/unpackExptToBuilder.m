@@ -6,6 +6,8 @@ else
 end
 
 [~,~,raw] = xlsread(pth,'Sheet1');
+raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
+raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 for i = 3:size(raw,1)
     inds = [4 5 9];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));

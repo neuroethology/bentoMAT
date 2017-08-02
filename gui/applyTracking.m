@@ -40,16 +40,16 @@ if(size(pts,2)<=4)
                                  cellstr(num2str( ((length(active)+1):size(pts,1))' ))',...
                                  'color','blue','textcolor','w','linewidth',2,'FontSize',12);
 else
-    mov = insertShape(mov,'Polygon',plotActive,'linewidth',3,'color','green');
     for j=1:size(plotActive,1)
-        for i = 1:2:size(plotActive,2)
+        for i = 3:2:size(plotActive,2)
+            mov = insertShape(mov,'Line',plotActive(j,i-2:i+1),'linewidth',3,'color','green');
             mov = insertShape(mov,'FilledCircle',[plotActive(j,i:i+1) 6],'color','green');
         end
         mov = insertShape(mov,'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
     end
-    mov = insertShape(mov,'Polygon',plotInactive,'linewidth',3,'color','cyan');
     for j=1:size(plotInactive,1)
-        for i = 1:2:size(plotInactive,2)
+        for i = 3:2:size(plotInactive,2)
+            mov = insertShape(mov,'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color','cyan');
             mov = insertShape(mov,'FilledCircle',[plotInactive(j,i:i+1) 6],'color','cyan');
         end
         mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);

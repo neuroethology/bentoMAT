@@ -7,8 +7,11 @@ M = [cell(1,16); get(gui.t,'ColumnName')'; gui.t.Data];
 
 % get path
 pth = get(gui.root,'string');
-if(~strcmpi(pth(end),'\'))
-    pth = [pth '\'];
+%OS protection:
+pth = strrep(pth,'\',filesep);
+pth = strrep(pth,'/',filesep);
+if(~strcmpi(pth(end),filesep))
+    pth = [pth filesep];
 end
 M{1,1}  = pth;
 M{1,2}  = 'Ca framerate:';
