@@ -37,7 +37,7 @@ if(gui.enabled.movie)
         mov = applyTracking(gui,mov,time);
     end
     if(strcmpi(gui.data.io.movie.readertype,'seq'))
-        set(gui.movie.img,'cdata',mov);
+        set(gui.movie.img,'cdata',mov/3);
     else
         set(gui.movie.img,'cdata',mov);
     end
