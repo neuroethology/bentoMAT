@@ -180,12 +180,17 @@ for i=1:size(data,1)
             if(strcmpi(ext,'mat'))
                 fid             = [pth data{i.match.Audio_file}];
                 strtemp.audio   = load(fid);
+                audMin = min(strtemp.audio.psd(:));
+                audMax = max(strtemp.audio.psd(:));
+                strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
+                
             elseif(~isempty(ls([pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')])))
                 fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
                 strtemp.audio   = load(fid);
                 audMin = min(strtemp.audio.psd(:));
                 audMax = max(strtemp.audio.psd(:));
                 strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
+                
             else
                 disp(['Processing file ' data{i,match.Audio_file}]);
                 disp('Reading audio...');
