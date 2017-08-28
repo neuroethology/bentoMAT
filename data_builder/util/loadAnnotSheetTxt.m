@@ -48,7 +48,7 @@ end
 if(chInds(end)~=length(M))
     chInds = [chInds length(M)];
 end
-clc
+
 for c = 1:length(chInds)-1
     ch = M{chInds(c)}(1:end-10); % active channel
     beh    = M{chInds(c)+1}(2:end);  %active behavior

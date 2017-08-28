@@ -20,6 +20,7 @@ listend = listend(2);
 conf = M(4:listend-1);
 for i = 1:length(conf)
     conf{i} = conf{i}(1:end-2);
+    conf{i} = strrep(conf{i},'-','_');
     if(~isstrprop(conf{i}(1),'alpha'))
         conf{i} = ['x' conf{i}];
         M = strrep(M,conf{i}(2:end),conf{i});
@@ -53,7 +54,11 @@ for i = 1:2
     Mtemp(:,3) = num2cell(max((cat(1,Mtemp{:,3})-tmin+1),1));
     Mtemp(cat(1,Mtemp{:,3})<=1,:) = [];
     
+    Mtemp(:,1) = strrep(Mtemp(:,1),'-','_');
     for j = 1:size(Mtemp,1)
+        if(strcmpi(Mtemp{j,1},'other'))
+            continue;
+        end
         times = [Mtemp{j,2} Mtemp{j,3}];
         annot.(str).(Mtemp{j,1})   = [annot.(str).(Mtemp{j,1}); times];
     end

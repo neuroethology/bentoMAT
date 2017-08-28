@@ -3,7 +3,7 @@ function [M,flag] = packExperiment(gui)
 % blank out any accidental text that made it into hidden columns
 gui.t.Data(:,~gui.rowVis) = {[]};
 flag=0;
-M = [cell(1,16); get(gui.t,'ColumnName')'; gui.t.Data];
+M = [cell(1,length(gui.t.Data)); get(gui.t,'ColumnName')'; gui.t.Data];
 
 % get path
 pth = get(gui.root,'string');
@@ -24,6 +24,10 @@ M{1,10} = 'Includes behavior movies:';
 M{1,11} = get(gui.incMovies,'Value');
 M{1,12} = 'Offset (in seconds; positive values = annot starts before Ca):';
 M{1,13} = get(gui.offset,'Value');
+M{1,14} = 'Includes tracking data:';
+M{1,15} = get(gui.incTracking,'Value');
+M{1,16} = 'Includes audio files:';
+M{1,17} = get(gui.incAudio,'Value');
 
 % add Ca framerate data:
 if(get(gui.CaFRtog,'Value')==0)

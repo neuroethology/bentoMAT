@@ -9,6 +9,15 @@ if(isempty(gui.data.tracking.inactive{frnum})&frnum>1)
 end
     
 eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args, ' num2str(frnum) ' );']);
+if(length(gui.data.io.movie.fid)>1)
+    dims = [gui.data.io.movie.reader.width];
+    if(dims(1)~=max(dims))
+        pad = (max(dims)-dims(1))/2;
+        for i=1:size(pts,1)
+            pts(i,2:2:end)=pts(i,2:2:end)+pad;
+        end
+    end
+end
 
 active       = gui.data.tracking.active{frnum};
 inactive     = gui.data.tracking.inactive{frnum};

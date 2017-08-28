@@ -19,12 +19,14 @@ if(~isempty(eventdata))
             updateSlider(source,gui.ctrl.slider);
 
         case 'winBox'
-        gui.traces.win  = str2num(eventdata.Source.String);
+            gui.traces.win   = str2num(eventdata.Source.String);
             gui.features.win = str2num(eventdata.Source.String);
+            gui.audio.win    = str2num(eventdata.Source.String);
             guidata(source,gui);
 
             set(gui.traces.axes,'xlim',[-gui.traces.win  gui.traces.win]);
             set(gui.features.axes,'xlim',[-gui.features.win  gui.features.win]);
+            set(gui.audio.axes,'xlim',[-gui.audio.win  gui.audio.win]);
     end
 end
 time = gui.ctrl.slider.Value;
@@ -36,19 +38,34 @@ if(gui.enabled.movie)
     if(gui.enabled.tracker) % add tracking data if included
         mov = applyTracking(gui,mov,time);
     end
-    if(strcmpi(gui.data.io.movie.readertype,'seq'))
-        set(gui.movie.img,'cdata',mov/3);
+    if(size(mov,3)==1)
+        mov = repmat(mov,[1 1 3]);
+    end
+    if(strcmpi(gui.data.io.movie.readertype,'seq')&&~gui.enabled.tracker)
+        set(gui.movie.img,'cdata',mov);
     else
         set(gui.movie.img,'cdata',mov);
     end
 end
+
+% update the audio spectrogram
+if(gui.enabled.audio)
+    inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
+    inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
+    tsub   = gui.data.audio.t;
+    set(gui.audio.img, 'cdata', gui.data.audio.psd(:,inds)*64);
+    set(gui.audio.img, 'xdata', tsub(inds)-time);
+    set(gui.audio.img, 'ydata', gui.data.audio.f/1000);
+    set(gui.audio.axes,'ylim',  gui.data.audio.f([1 end])/1000);
+    set(gui.audio.zeroLine,'ydata',gui.data.audio.f([1 end])/1000);
+end
+
 %now change time to be relative to start of movie
 time = time - gui.ctrl.slider.Min;
 
-
 % update the plotted traces
 if(gui.enabled.traces)
-    inds = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime)<=(time+gui.traces.win);
+    inds = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
     inds = inds | [false inds(1:end-1)] | [inds(2:end) false];
     bump = gui.traces.yScale;
     show = find(gui.data.show);
@@ -117,24 +134,45 @@ if(gui.enabled.annot)
         set(gui.annot.Box.traces,'xdata',[gui.annot.highlightStart/gui.data.annoFR-time 0 0 gui.annot.highlightStart/gui.data.annoFR-time]);
     end
     
-    % display the current behavior
-    str = '';count=0;
-    for f = fieldnames(gui.annot.bhv)'
-        if(gui.annot.bhv.(f{:})(min(max(round(time*gui.data.annoFR),1),length(gui.annot.bhv.(f{:})))))
-            str = [str strrep(f{:},'_',' ') ' '];
-            count=count+1;
+    % display the current behavior in each channel~!
+    frnum = min(max(round(time*gui.data.annoFR),1),gui.data.io.annot.tmax - gui.data.io.annot.tmin + 1);
+    for chNum = 1:length(gui.annot.channels)
+        chName = gui.annot.channels{chNum};
+        str = '';
+        count=0;
+        if(strcmpi(gui.annot.activeCh,chName))
+            for f = fieldnames(gui.annot.bhv)'
+                if(gui.annot.bhv.(f{:})(frnum)&&gui.annot.show.(f{:}))
+                    str = [str strrep(f{:},'_',' ') ' '];
+                    count=count+1;
+                end
+            end
+        else %have to get inactive-channel data from gui.data :0
+            for f = fieldnames(gui.data.annot.(chName))'
+                if(~isempty(gui.data.annot.(chName).(f{:})))
+                    if(any((gui.data.annot.(chName).(f{:})(:,1)<=frnum) & (gui.data.annot.(chName).(f{:})(:,2)>=frnum)))
+                        str = [str strrep(f{:},'_',' ') ' '];
+                        count=count+1;
+                    end
+                end
+            end
         end
-    end
-    if(gui.enabled.movie)
-        set(gui.movie.annot,'string',str);
-        if(count==1)
-            cswatch = gui.annot.cmap.(strrep(str(1:end-1),' ','_'));
-            set(gui.movie.annot,'backgroundcolor',cswatch,'color',ones(1,3)*(1-round(mean(cswatch))));
-        else
-            set(gui.movie.annot,'backgroundcolor','k','color','w');
+        if(gui.enabled.movie)
+            set(gui.movie.annot(chNum),'string',str);
+            if(count==1&strcmpi(gui.annot.activeCh,chName))
+                cswatch = gui.annot.cmap.(strrep(str(1:end-1),' ','_'));
+                set(gui.movie.annot(chNum),'backgroundcolor',cswatch,'color',ones(1,3)*(1-round(mean(cswatch))));
+            else
+                set(gui.movie.annot(chNum),'backgroundcolor',[.5 .5 .5],'color','w');
+            end
+            if(strcmpi(gui.annot.activeCh,chName))
+                set(gui.movie.annot(chNum),'fontweight','bold','fontsize',14);
+            else
+                set(gui.movie.annot(chNum),'fontweight','normal','fontsize',10);
+            end
+        elseif(gui.enabled.traces)
+    %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)
         end
-    elseif(gui.enabled.traces)
-%         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)
     end
 end
 

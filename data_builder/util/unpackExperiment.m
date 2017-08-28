@@ -2,11 +2,11 @@ function [mouse,enabled] = unpackExperiment(raw)
 % parses the metadata in the excel sheet, then loads all of the listed
 % files and formats their data.
 for i = 3:size(raw,1)
-    inds = [4 5 9 10 15 16];
+    inds = [4 5 9 10 15 16 17];
     inds(inds>size(raw,2))=[];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {''};
-    inds = setdiff(1:16,inds);
+    inds = setdiff(1:17,inds);
     inds(inds>size(raw,2))=[];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {[]};
@@ -34,6 +34,7 @@ enabled.movie    = raw{1,11};
 enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)));
 enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)));
 enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)));
+enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)));
 
 
 mouse = struct();
@@ -41,6 +42,9 @@ prevCa = '';
 rast   = [];
 CaTime = [];
 for i=1:size(data,1)
+    if(isempty(data{i,match.Mouse}))
+        continue;
+    end
     strtemp         = struct();
     strtemp.stim    = data{i,match.Stim};
     strtemp.CaFR    = data{i,match.FR_Ca};
@@ -169,45 +173,86 @@ for i=1:size(data,1)
         end
     end
         
+    % add audio data-------------------------------------------------------
+    if(enabled.audio)
+        if(~isempty(data{i,match.Audio_file}))
+            [~,~,ext] = fileparts(data{i,match.Audio_file});
+            if(strcmpi(ext,'mat'))
+                fid             = [pth data{i.match.Audio_file}];
+                strtemp.audio   = load(fid);
+            elseif(~isempty(ls([pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')])))
+                fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
+                strtemp.audio   = load(fid);
+                audMin = min(strtemp.audio.psd(:));
+                audMax = max(strtemp.audio.psd(:));
+                strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
+            else
+                disp(['Processing file ' data{i,match.Audio_file}]);
+                disp('Reading audio...');
+                fid             = [pth data{i,match.Audio_file}];
+                [y,fs]          = audioread(fid);
+                disp('Generating spectrogram...');
+                [~,f,t,psd]     = spectrogram(y,512,[],[],fs,'yaxis');
+                psd             = 10*log10(abs(double(psd)+eps));
+                disp('Saving spectrogram for future use...');
+                fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
+                save(fid,'f','t','psd','fs');
+                disp('Done!');
+                strtemp.audio.f   = f;
+                strtemp.audio.t   = t;
+                strtemp.audio.psd = psd;
+                strtemp.audio.fs  = fs;
+            end
+        else
+            strtemp.audio = [];
+        end
+    end
     
     % load annotations-----------------------------------------------------
     if(enabled.annot && ~isempty(data{i,match.Annotation_file}))
-        if(~isempty(strfind(data{i,match.Annotation_file}(end-4:end),'xls')))
-            strtemp.io.annot.fid = [pth data{i,match.Annotation_file}];
-            strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.xlsx','.annot'); %force conversion to .annot format upon next save
-            if(raw{1,9})
-                [strtemp.annot,~] = loadAnnotSheet([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
-                tmin = data{i,match.Start_Anno};
-                tmax = data{i,match.Stop_Anno};
-            else
-                [strtemp.annot,tmax] = loadAnnotSheet([pth data{i,match.Annotation_file}]);
-                tmin = 1;
+        annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
+        for j = 1:length(annoList)
+            if(j>1), suff = ['_file' num2str(j)]; else suff=''; end
+            if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
+                strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
+                if(raw{1,9})
+                    [atemp,~] = loadAnnotSheet([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                    tmin(j) = data{i,match.Start_Anno};
+                    tmax(j) = data{i,match.Stop_Anno};
+                else
+                    [atemp,tmax(j)] = loadAnnotSheet([pth annoList{j}]);
+                    tmin(j) = 1;
+                end
+            elseif(strcmpi(annoList{j}(end-5:end),'.annot')) %new .annot format
+                strtemp.io.annot.fid{j} = strtrim([pth strtrim(annoList{j})]);
+                if(raw{1,9})
+                    [atemp,~] = loadAnnotSheetTxt([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                    tmin(j) = data{i,match.Start_Anno};
+                    tmax(j) = data{i,match.Stop_Anno};
+                else
+                    [atemp,tmin(j),tmax(j)] = loadAnnotSheetTxt([pth annoList{j}]);
+                end
+            else		%load data in the old format, prepare to convert to sheet format when saved
+                if(raw{1,9})
+                    frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
+                    strtemp.io.annot.fid = strrep([pth [pth annoList{j}]],'.txt',frame_suffix);
+                    [atemp,~] = loadAnnotFile([pth [pth annoList{j}]],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                    tmin(j) = data{i,match.Start_Anno};
+                    tmax(j) = data{i,match.Stop_Anno};
+                else
+                    strtemp.io.annot.fid = strrep([pth [pth annoList{j}]],'.txt','.annot');
+                    [atemp,tmax(j)] = loadAnnotFile([pth annoList{j}]);
+                    tmin(j) = 1;
+                end
             end
-        elseif(strcmpi(data{i,match.Annotation_file}(end-5:end),'.annot'))
-			strtemp.io.annot.fid = [pth data{i,match.Annotation_file}];
-            if(raw{1,9})
-                [strtemp.annot,~] = loadAnnotSheetTxt([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
-                tmin = data{i,match.Start_Anno};
-                tmax = data{i,match.Stop_Anno};
-            else
-                [strtemp.annot,tmin,tmax] = loadAnnotSheetTxt([pth data{i,match.Annotation_file}]);
-%                 if(~isempty(strtemp.CaTime))
-%                     tmax = length(strtemp.CaTime)*strtemp.annoFR/strtemp.CaFR;
-%                 end
-            end
-		else		%load data in the old format, prepare to convert to sheet format when saved
-            if(raw{1,9})
-                frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
-                strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.txt',frame_suffix);
-                [strtemp.annot,~] = loadAnnotFile([pth data{i,match.Annotation_file}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
-                tmin = data{i,match.Start_Anno};
-                tmax = data{i,match.Stop_Anno};
-            else
-                strtemp.io.annot.fid = strrep([pth data{i,match.Annotation_file}],'.txt','.annot');
-                [strtemp.annot,tmax] = loadAnnotFile([pth data{i,match.Annotation_file}]);
-                tmin = 1;
+            fields = fieldnames(atemp);
+            for f = 1:length(fields)
+                strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
+        strtemp.annot = orderfields(strtemp.annot);
+        tmin = min(tmin);tmax=max(tmax);
+        
         if(isnan(tmax))
             tmin = strtemp.io.movie.tmin;
             tmax = strtemp.io.movie.tmax;

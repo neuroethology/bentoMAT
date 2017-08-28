@@ -60,6 +60,8 @@ gui.rowVis(matchInds.Start_Anno)       = raw{1,9};
 gui.rowVis(matchInds.Stop_Anno)        = raw{1,9};
 gui.rowVis(matchInds.Behavior_movie)   = raw{1,11};
 gui.rowVis(matchInds.Offset)           = raw{1,13};
+gui.rowVis(matchInds.Tracking)         = raw{1,15};
+gui.rowVis(matchInds.Audio_file)       = raw{1,17};
 gui.rowVis(isnan(gui.rowVis)) = 0;
 
 res  = get(useSource,'position');

@@ -37,6 +37,9 @@ switch(get(source,'Tag'))
     case('Tracking');
         gui.rowVis(16) = get(source,'Value');
         gui.t.Data(:,16) = {[]};
+    case('Audio');
+        gui.rowVis(17) = get(source,'Value');
+        gui.t.Data(:,17) = {[]};
 end
 
 guidata(source,gui);
