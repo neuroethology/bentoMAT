@@ -56,8 +56,13 @@ if(gui.enabled.audio)
     set(gui.audio.img, 'cdata', gui.data.audio.psd(:,inds)*64);
     set(gui.audio.img, 'xdata', tsub(inds)-time);
     set(gui.audio.img, 'ydata', gui.data.audio.f/1000);
-    set(gui.audio.axes,'ylim',  gui.data.audio.f([1 end])/1000);
-    set(gui.audio.zeroLine,'ydata',gui.data.audio.f([1 end])/1000);
+    if(gui.enabled.annot&~gui.enabled.traces)
+        set(gui.audio.axes,'ylim',  gui.data.audio.f(end)/1000*[-0.2 1]);
+        set(gui.audio.zeroLine,'ydata', gui.data.audio.f(end)/1000*[-0.2 1]);
+    else
+        set(gui.audio.axes,'ylim',  gui.data.audio.f([1 end])/1000);
+        set(gui.audio.zeroLine,'ydata', gui.data.audio.f([1 end])/1000);
+    end
 end
 
 %now change time to be relative to start of movie
@@ -121,11 +126,15 @@ if(gui.enabled.annot)
     inds(inds>length(gui.data.annoTime)) = length(gui.data.annoTime);
     
     tmax    = round(gui.data.annoTime(end)*gui.data.annoFR);
-    if(gui.enabled.traces)
+    if(gui.enabled.traces || gui.enabled.audio)
         img     = makeBhvImage(gui.annot.bhv,gui.annot.cmap,inds,tmax,gui.annot.show)*2/3+1/3;
         img(:,drop,:) = 1;
         img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
-        set(gui.traces.bg,'cdata',img,'xdata',win/gui.data.annoFR,'ydata',[0 bump*(length(show)+1)]);
+        if(gui.enabled.traces)
+            set(gui.traces.bg,'cdata',img,'xdata',win/gui.data.annoFR,'ydata',[0 bump*(length(show)+1)]);
+        else
+            set(gui.audio.bg,'cdata',img,'xdata',-gui.traces.win:gui.traces.win,'ydata',[-gui.data.audio.f(end)/1000/5 0]);
+        end
     end
         
     % update behavior-annotating box if it's active

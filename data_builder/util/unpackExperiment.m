@@ -180,16 +180,10 @@ for i=1:size(data,1)
             if(strcmpi(ext,'mat'))
                 fid             = [pth data{i.match.Audio_file}];
                 strtemp.audio   = load(fid);
-                audMin = min(strtemp.audio.psd(:));
-                audMax = max(strtemp.audio.psd(:));
-                strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
                 
             elseif(~isempty(ls([pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')])))
                 fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
                 strtemp.audio   = load(fid);
-                audMin = min(strtemp.audio.psd(:));
-                audMax = max(strtemp.audio.psd(:));
-                strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
                 
             else
                 disp(['Processing file ' data{i,match.Audio_file}]);
@@ -208,6 +202,9 @@ for i=1:size(data,1)
                 strtemp.audio.psd = psd;
                 strtemp.audio.fs  = fs;
             end
+            audMin = min(strtemp.audio.psd(:));
+            audMax = max(strtemp.audio.psd(:));
+            strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
         else
             strtemp.audio = [];
         end
@@ -273,8 +270,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax = strtemp.io.movie.tmax;
         strtemp.annoFR   = strtemp.io.movie.FR;
         strtemp.annot = struct();
-        strtemp.annoTime = (strtemp.io.annot.tmin+strtemp.io.movie.FR):...
-                            strtemp.io.movie.FR:strtemp.io.movie.tmax;
+        strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.movie.tmax)/strtemp.io.movie.FR;
     
     else
         strtemp.annot = struct();
