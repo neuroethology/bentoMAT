@@ -53,9 +53,12 @@ if(gui.enabled.audio)
     inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
-    set(gui.audio.img, 'cdata', gui.data.audio.psd(:,inds)*64);
+    img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
+    
+    set(gui.audio.img, 'cdata', img*64);
     set(gui.audio.img, 'xdata', tsub(inds)-time);
     set(gui.audio.img, 'ydata', gui.data.audio.f/1000);
+    
     if(gui.enabled.annot&~gui.enabled.traces)
         set(gui.audio.axes,'ylim',  gui.data.audio.f(end)/1000*[-0.2 1]);
         set(gui.audio.zeroLine,'ydata', gui.data.audio.f(end)/1000*[-0.2 1]);

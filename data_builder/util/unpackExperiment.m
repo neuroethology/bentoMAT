@@ -202,9 +202,6 @@ for i=1:size(data,1)
                 strtemp.audio.psd = psd;
                 strtemp.audio.fs  = fs;
             end
-            audMin = min(strtemp.audio.psd(:));
-            audMax = max(strtemp.audio.psd(:));
-            strtemp.audio.psd = (strtemp.audio.psd - audMin)/(audMax-audMin);
         else
             strtemp.audio = [];
         end
