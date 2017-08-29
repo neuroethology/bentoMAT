@@ -102,5 +102,6 @@ gui.data = data;
 % add the behavior annotations to the gui
 if(gui.enabled.annot)
     gui = transferAnnot(gui,data);
+    set(gui.audio.bg,'visible','on');
     updateSliderAnnot(gui);
 end

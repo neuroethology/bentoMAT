@@ -202,6 +202,10 @@ for i=1:size(data,1)
                 strtemp.audio.psd = psd;
                 strtemp.audio.fs  = fs;
             end
+            strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
+            strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
+            strtemp.audio.f = strtemp.audio.f(3:2:end-1);
+            strtemp.audio.t = strtemp.audio.t(2:2:end);
         else
             strtemp.audio = [];
         end

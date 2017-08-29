@@ -54,17 +54,18 @@ if(gui.enabled.audio)
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
     img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
+    fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
-    set(gui.audio.img, 'cdata', img*64);
+    set(gui.audio.img, 'cdata', img(fshow,:)*64);
     set(gui.audio.img, 'xdata', tsub(inds)-time);
-    set(gui.audio.img, 'ydata', gui.data.audio.f/1000);
+    set(gui.audio.img, 'ydata', [gui.audio.freqLo gui.audio.freqHi]);
     
     if(gui.enabled.annot&~gui.enabled.traces)
-        set(gui.audio.axes,'ylim',  gui.data.audio.f(end)/1000*[-0.2 1]);
-        set(gui.audio.zeroLine,'ydata', gui.data.audio.f(end)/1000*[-0.2 1]);
+        set(gui.audio.axes,'ylim',      [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) gui.audio.freqHi]);
+        set(gui.audio.zeroLine,'ydata', [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) gui.audio.freqHi]);
     else
-        set(gui.audio.axes,'ylim',  gui.data.audio.f([1 end])/1000);
-        set(gui.audio.zeroLine,'ydata', gui.data.audio.f([1 end])/1000);
+        set(gui.audio.axes,'ylim',      [gui.audio.freqLo gui.audio.freqHi]);
+        set(gui.audio.zeroLine,'ydata', [gui.audio.freqLo gui.audio.freqHi]);
     end
 end
 
