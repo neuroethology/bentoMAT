@@ -26,12 +26,12 @@ if(gui.enabled.movie && gui.enabled.traces)
     gui.movie.panel.Position  = [0 ctrlSize config.midline 1-ctrlSize];
     gui.ctrl.panel.Position   = [0 0 config.midline ctrlSize];
     
-    if(gui.enabled.traces && gui.enabled.trackFeats && gui.enabled.audio)
+    if(gui.enabled.traces && gui.enabled.features && gui.enabled.audio)
         gui.traces.panel.Position   = [config.midline 0    1-config.midline 0.5];
         gui.features.panel.Position = [config.midline 0.5  1-config.midline 0.25];
         gui.audio.panel.Position    = [config.midline 0.75 1-config.midline 0.25];
         
-    elseif(gui.enabled.traces && gui.enabled.trackFeats)
+    elseif(gui.enabled.traces && gui.enabled.features)
         gui.traces.panel.Position   = [config.midline 0 1-config.midline 0.5];
         gui.features.panel.Position = [config.midline 0.5 1-config.midline 0.5];
         
@@ -48,7 +48,7 @@ elseif(gui.enabled.movie && gui.enabled.audio)
     gui.audio.panel.Position  = [0 ctrlSize 1 .25];
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
 
-elseif(gui.enabled.movie && gui.enabled.trackFeats)
+elseif(gui.enabled.movie && gui.enabled.features)
     gui.movie.panel.Position    = [0 ctrlSize config.midline 1-ctrlSize];
     gui.ctrl.panel.Position     = [0 0 config.midline ctrlSize];
     gui.features.panel.Position = [config.midline 0 1-config.midline 1];

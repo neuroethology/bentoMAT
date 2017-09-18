@@ -34,7 +34,7 @@ enabled.movie    = raw{1,11};
 enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)));
 enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)));
 enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)));
-enabled.trackfeats  = 0;%any(~cellfun(@isempty,data(:,match.Tracking)));
+enabled.features  = 0;%any(~cellfun(@isempty,data(:,match.Tracking)));
 enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)));
 
 
