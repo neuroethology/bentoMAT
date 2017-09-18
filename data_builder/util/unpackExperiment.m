@@ -167,7 +167,12 @@ for i=1:size(data,1)
     if(enabled.tracker)
         if(~isempty(data{i,match.Tracking}))
             fid = [pth data{i,match.Tracking}];
-            strtemp.tracking.args = load(fid);
+            [~,~,ext] = fileparts(fid);
+            if(strcmpi(ext,'.mat'))
+                strtemp.tracking.args = load(fid);
+            elseif(strcmpi(ext,'.json'))
+                strtemp.tracking.args = json_decode(fileread(fid));
+            end
         else
             strtemp.tracking.args = [];
         end
@@ -216,7 +221,7 @@ for i=1:size(data,1)
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
             if(j>1), suff = ['_file' num2str(j)]; else suff=''; end
-            if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
+            if(contains(annoList{j}(end-4:end),'xls')) %old .annot format
                 strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
                 if(raw{1,9})
                     [atemp,~] = loadAnnotSheet([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});

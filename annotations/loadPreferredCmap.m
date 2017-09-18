@@ -1,7 +1,7 @@
 function cmap = loadPreferredCmap()
 
 formatSpec = '%s %.3f %.3f %.3f';
-fid = fopen([fileparts(mfilename('fullpath')) '\color_profiles.txt']);
+fid = fopen([fileparts(mfilename('fullpath')) filesep 'color_profiles.txt']);
 M    = textscan(fid,formatSpec);
 
 for i = 1:length(M{1})
