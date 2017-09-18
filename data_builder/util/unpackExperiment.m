@@ -34,6 +34,7 @@ enabled.movie    = raw{1,11};
 enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)));
 enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)));
 enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)));
+enabled.trackfeats  = 0;%any(~cellfun(@isempty,data(:,match.Tracking)));
 enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)));
 
 
@@ -171,7 +172,7 @@ for i=1:size(data,1)
             if(strcmpi(ext,'.mat'))
                 strtemp.tracking.args = load(fid);
             elseif(strcmpi(ext,'.json'))
-                strtemp.tracking.args = json_decode(fileread(fid));
+                strtemp.tracking.args = json_read_slow(fid);
             end
         else
             strtemp.tracking.args = [];
