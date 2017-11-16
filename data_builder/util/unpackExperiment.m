@@ -241,7 +241,12 @@ for i=1:size(data,1)
                 else
                     [atemp,tmin(j),tmax(j)] = loadAnnotSheetTxt([pth annoList{j}]);
                 end
-            else		%load data in the old format, prepare to convert to sheet format when saved
+            elseif(contains(annoList{j}(end-4:end),'csv')) %temporary MUPET support
+                strtemp.io.annot.fid = [pth annoList{j}];
+                M = dlmread([pth annoList{j}],',',1,0);
+                dt = strtemp.audio.t(2) - strtemp.audio.t(1);
+                atemp.singing.sing = round(M(:,2:3)/dt);
+            else %load data in the old format, prepare to convert to sheet format when saved
                 if(raw{1,9})
                     frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
                     strtemp.io.annot.fid = strrep([pth [pth annoList{j}]],'.txt',frame_suffix);

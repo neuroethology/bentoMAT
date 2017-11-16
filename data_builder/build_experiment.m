@@ -1,9 +1,17 @@
 function exptGui = build_experiment(source,~)
+%
+% possible data and metadata to include:
+%   - mouse number, session number, trial number, stimulus name
+%   - Ca imaging data (.mat), NVista log file, framerate
+%   - Behavior video (.seq, .mp4, .avi), behavior annotations, timestamp?
+%   framerate
+%   - Audio data, audio log file/timestamp, framerate
+%   - Tracking data, tracking data format
 
 gui = guidata(source);
 pth = pwd;
 
-fillin = {'units','normalized','fontsize',12};
+fillin = {'units','normalized','fontsize',11};
 f = figure(999);clf;
 exptGui.f = f;
 set(f,'units','pixels','dockcontrols','off','menubar','none','NumberTitle','off',...
