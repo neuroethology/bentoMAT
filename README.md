@@ -13,6 +13,7 @@ Want to get a quick visual sense of what's going on in your data? Bento lets you
 ### Additional Resources
 * [Piotr's Matlab Toolbox](https://pdollar.github.io/toolbox/) if behavior videos are in *.seq format
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if using calcium traces extracted with CNMF_E
+* [JSONLab](https://github.com/fangq/jsonlab) if using *.json files (eg for tracker output)
 
 ## Installation
 The easiest way to keep your local version up to date is to clone this git repository; GitHub's software then lets you update to the latest version of the code at the press of a button.
