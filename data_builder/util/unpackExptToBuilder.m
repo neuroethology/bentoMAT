@@ -63,6 +63,7 @@ gui.rowVis(matchInds.Offset)           = raw{1,13};
 gui.rowVis(matchInds.Tracking)         = raw{1,15};
 gui.rowVis(matchInds.Audio_file)       = raw{1,17};
 gui.rowVis(isnan(gui.rowVis)) = 0;
+gui.incAudio.Value = gui.rowVis(matchInds.Audio_file);
 
 res  = get(useSource,'position');
 pP   = [.025 .792 .02 .02*res(3)/res(4)];

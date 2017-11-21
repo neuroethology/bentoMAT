@@ -66,8 +66,10 @@ if(gui.enabled.movie)
         data.io.movie.reader = gui.data.io.movie.reader;
         gui = applySliderUpdates(gui,'movie',data.io.movie);
     end
-else
+elseif(gui.enabled.traces)
     gui = applySliderUpdates(gui,'Ca',data);
+else
+    gui = applySliderUpdates(gui,'audio',data);
 end
 
 % get tracking type if needed
