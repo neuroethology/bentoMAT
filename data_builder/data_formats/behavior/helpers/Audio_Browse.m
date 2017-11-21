@@ -1,16 +1,22 @@
 function Audio_Browse(source,~,fieldname)
 
 gui = guidata(source);
-switch fieldname
-    case 'fid'
-        typestr = {'*.mp3;*.wav;*.ogg;*.flac;*.au', 'Audio files (*.mp3;*.wav;*.ogg;*.flac;*.au)'};
-    case 'meta'
-        typestr = {'*.txt', 'Audio log files (*.txt)'};
-end
-[FileName,PathName,~] = uigetfile({typestr{:};'*.*',  'All Files (*.*)'},'Pick a file');
-fname = [PathName FileName];
-if(FileName==0)
-    return
+if(source.Style=='pushbutton')
+    switch fieldname
+        case 'fid'
+            typestr = {'*.mp3;*.wav;*.ogg;*.flac;*.au', 'Audio files (*.mp3;*.wav;*.ogg;*.flac;*.au)'};
+        case 'annot'
+            typestr = {'*.txt', 'MUPET event times (*.txt)'};
+        case 'meta'
+            typestr = {'*.txt', 'Audio log files (*.txt)'};
+    end
+    [FileName,PathName,~] = uigetfile({typestr{:};'*.*',  'All Files (*.*)'},'Pick a file');
+    fname = [PathName FileName];
+    if(FileName==0)
+        return
+    end
+else
+    fname = source.String;
 end
 
 ind = find([gui.fields.p]==source.Parent.Parent);

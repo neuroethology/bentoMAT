@@ -1,14 +1,26 @@
 function [h2,nRows,scale] = Audio_recordings(h,ss)
 
-nRows = 3;
+nRows = 4;
 scale = [];
 
-p           = uipanel(h,ss.subpanel{:},'position',[5 65 700 30]);
+p           = uipanel(h,ss.subpanel{:},'position',[5 96 700 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[20 0 60 0],'string','Audio file  ');
 h2.fid      = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[80 0 530 0],'string','',...
                         'callback',{'Audio_Browse','fid'});
 temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
                         'callback',{'Audio_Browse','fid'}');
+align([temp,h2.fid],'distribute','center')
+scale(1).h = h2.fid;
+scale(1).w = 120;
+scale(1).post = temp(end);
+
+clear temp;
+p           = uipanel(h,ss.subpanel{:},'position',[5 96 700 30]);
+              uicontrol(p,ss.R{:},'style','text','position',ss.txt+[20 0 60 0],'string','Event annotations  ');
+h2.annot    = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[80 0 530 0],'string','',...
+                        'callback',{'Audio_Browse','annot'});
+temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
+                        'callback',{'Audio_Browse','annot'}');
 align([temp,h2.fid],'distribute','center')
 scale(1).h = h2.fid;
 scale(1).w = 120;

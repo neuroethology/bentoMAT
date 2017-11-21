@@ -3,6 +3,7 @@ function output = json_read_slow(fid)
 dat = fileread(fid);
 txt = json_decode(dat);
 
+keyboard
 keypoints = zeros(length(txt.keypoints),2,2,7);
 scores    = zeros(length(txt.keypoints),2,7);
 for i = 1:length(txt.keypoints)
