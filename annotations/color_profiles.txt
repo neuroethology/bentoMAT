@@ -34,3 +34,6 @@ weirdstereotypies 0.276 0.034 0.000
 exploration 0.552 0.966 1.000
 sniffAG 0.621 0.690 0.586
 dancing 0.000 0.241 0.345
+calls 0.621 0.724 0.034
+song 0.000 0.241 0.931
+sing 0.138 0.276 0.621

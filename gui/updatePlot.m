@@ -135,9 +135,10 @@ if(gui.enabled.annot)
         img(:,drop,:) = 1;
         img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
         if(gui.enabled.traces)
-            set(gui.traces.bg,'cdata',img,'xdata',win/gui.data.annoFR,'ydata',[0 bump*(length(show)+1)]);
+            set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 bump*(length(show)+1)]);
         else
-            set(gui.audio.bg,'cdata',img,'xdata',-gui.traces.win:gui.traces.win,'ydata',[-gui.data.audio.f(end)/1000/5 0]);
+            set(gui.audio.bg,'Visible','on');
+            set(gui.audio.bg,'cdata',img,'XData',-gui.traces.win:gui.traces.win,'YData',[-gui.data.audio.f(end)/1000/5 0]);
         end
     end
         

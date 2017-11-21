@@ -18,6 +18,10 @@ switch type
         minVal  = 0;
         maxVal  = info.annoTime(end);
         Fr      = 1/(info.annoTime(2)-info.annoTime(1));
+    case 'audio'
+        minVal  = 0;
+        maxVal  = info.audio.t(end);
+        Fr      = 1/(info.audio.t(2)-info.audio.t(1));
 end
         
 % change the slider limits and resets it to start

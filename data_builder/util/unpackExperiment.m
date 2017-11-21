@@ -201,7 +201,7 @@ for i=1:size(data,1)
                 psd             = 10*log10(abs(double(psd)+eps));
                 disp('Saving spectrogram for future use...');
                 fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
-                save(fid,'f','t','psd','fs');
+                save(fid,'-v7.3','f','t','psd','fs');
                 disp('Done!');
                 strtemp.audio.f   = f;
                 strtemp.audio.t   = t;
@@ -222,7 +222,7 @@ for i=1:size(data,1)
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
             if(j>1), suff = ['_file' num2str(j)]; else suff=''; end
-            if(contains(annoList{j}(end-4:end),'xls')) %old .annot format
+            if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
                 strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
                 if(raw{1,9})
                     [atemp,~] = loadAnnotSheet([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
@@ -241,6 +241,13 @@ for i=1:size(data,1)
                 else
                     [atemp,tmin(j),tmax(j)] = loadAnnotSheetTxt([pth annoList{j}]);
                 end
+            elseif(strcmpi(annoList{j}(end-2:end),'csv')) %temporary MUPET support
+                strtemp.io.annot.fid = [pth annoList{j}];
+                M = dlmread([pth annoList{j}],',',1,0);
+                dt = strtemp.audio.t(2) - strtemp.audio.t(1);
+                atemp.singing.sing = round(M(:,2:3)/dt);
+                tmin(j) = 1;
+                tmax(j) = max(atemp.singing.sing(:));
             else		%load data in the old format, prepare to convert to sheet format when saved
                 if(raw{1,9})
                     frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
@@ -279,6 +286,14 @@ for i=1:size(data,1)
         strtemp.annot = struct();
         strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.movie.tmax)/strtemp.io.movie.FR;
     
+    elseif(enabled.audio && ~isempty(data{i,match.Audio_file}))
+        strtemp.annot = struct();
+        strtemp.io.annot.fid = [];
+        strtemp.annoFR = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
+        strtemp.io.annot.tmin = 1;
+        strtemp.io.annot.tmax = round(strtemp.audio.t(end)*strtemp.annoFR);
+        strtemp.annot = struct();
+        strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.annoFR;
     else
         strtemp.annot = struct();
         strtemp.annoTime = strtemp.CaTime;
