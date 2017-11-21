@@ -210,8 +210,9 @@ for i=1:size(data,1)
             end
             strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
             strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
-            strtemp.audio.f = strtemp.audio.f(3:2:end-1);
-            strtemp.audio.t = strtemp.audio.t(2:2:end);
+            strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
+            strtemp.audio.t   = strtemp.audio.t(2:2:end);
+            strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
         else
             strtemp.audio = [];
         end
@@ -245,10 +246,11 @@ for i=1:size(data,1)
                 strtemp.io.annot.fid = [pth annoList{j}];
                 M = dlmread([pth annoList{j}],',',1,0);
                 dt = strtemp.audio.t(2) - strtemp.audio.t(1);
-                atemp.singing.sing = round(M(:,2:3)/dt);
+                atemp.singing.sing = round(M(:,2:3)/dt * 1.0000356445); % what's up, MUPET :\
                 tmin(j) = 1;
-                tmax(j) = max(atemp.singing.sing(:));
-            else		%load data in the old format, prepare to convert to sheet format when saved
+                tmax(j) = length(strtemp.audio.t);
+                strtemp.annoFR = 1/dt;
+            else %load data in the old format, prepare to convert to sheet format when saved
                 if(raw{1,9})
                     frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
                     strtemp.io.annot.fid = strrep([pth [pth annoList{j}]],'.txt',frame_suffix);
@@ -275,7 +277,7 @@ for i=1:size(data,1)
         end
         strtemp.io.annot.tmin = tmin;
         strtemp.io.annot.tmax = tmax;
-        strtemp.annoTime = (1:(tmax-tmin))/data{i,match.FR_Anno};
+        strtemp.annoTime = (1:(tmax-tmin))/strtemp.annoFR;
         
     elseif(enabled.movie && ~isempty(data{i,match.Behavior_movie}))
         strtemp.io.annot = struct();
@@ -284,16 +286,17 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax = strtemp.io.movie.tmax;
         strtemp.annoFR   = strtemp.io.movie.FR;
         strtemp.annot = struct();
-        strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.movie.tmax)/strtemp.io.movie.FR;
-    
+        strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
+        
     elseif(enabled.audio && ~isempty(data{i,match.Audio_file}))
-        strtemp.annot = struct();
-        strtemp.io.annot.fid = [];
-        strtemp.annoFR = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
-        strtemp.io.annot.tmin = 1;
-        strtemp.io.annot.tmax = round(strtemp.audio.t(end)*strtemp.annoFR);
+        strtemp.io.annot = struct();
+        strtemp.io.annot.fid   = [];
+        strtemp.io.annot.tmin = strtemp.io.audio.tmin;
+        strtemp.io.annot.tmax = strtemp.io.audio.tmax;
+        strtemp.annoFR   = strtemp.io.audio.FR;
         strtemp.annot = struct();
         strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.annoFR;
+    
     else
         strtemp.annot = struct();
         strtemp.annoTime = strtemp.CaTime;
