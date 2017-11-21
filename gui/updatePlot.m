@@ -137,7 +137,7 @@ if(gui.enabled.annot)
         if(gui.enabled.traces)
             set(gui.traces.bg,'cdata',img,'xdata',win/gui.data.annoFR,'ydata',[0 bump*(length(show)+1)]);
         else
-            set(gui.audio.bg,'cdata',img,'xdata',-gui.traces.win:gui.traces.win,'ydata',[-gui.data.audio.f(end)/1000/5 0]);
+            set(gui.audio.bg,'cdata',img,'xdata',win/gui.data.annoFR,'ydata',[-gui.data.audio.f(end)/1000/5 0]);
         end
     end
         
