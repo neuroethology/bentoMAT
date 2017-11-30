@@ -50,6 +50,11 @@ for i=1:size(data,1)
     strtemp.stim    = data{i,match.Stim};
     strtemp.CaFR    = data{i,match.FR_Ca};
     strtemp.annoFR  = data{i,match.FR_Anno};
+    offset          = data{i,match.Offset};
+    if(~isnumeric(offset))
+        offset = str2num(offset);
+    end
+    hasOffset       = ~isempty(offset)&&~any(isnan(offset));
     
     % load traces----------------------------------------------------------
     if(enabled.traces && ~isempty(data{i,match.Calcium_imaging_file}))
@@ -57,7 +62,6 @@ for i=1:size(data,1)
         tstart  = data{i,match.Start_Ca};
         tstop   = data{i,match.Stop_Ca};
         CaFR    = data{i,match.FR_Ca};
-        offset  = data{i,match.Offset};
 
         if(~strcmpi(fid,prevCa)) %save some time by not re-loading files used previously
             [rast,CaTime]    = unpackCaData(fid);
@@ -82,11 +86,7 @@ for i=1:size(data,1)
             strtemp.CaTime   = (1:size(strtemp.rast,2))/CaFR;
             strtemp.CaFR     = CaFR;
         end
-        hasOffset = ~isempty(offset)&&~any(isnan(offset));
         if(hasOffset)
-            if(~isnumeric(offset))
-                offset = str2num(offset);
-            end
             strtemp.CaTime  = strtemp.CaTime + offset;
         end
     else
