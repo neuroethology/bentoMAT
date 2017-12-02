@@ -6,7 +6,8 @@ elseif(gui.enabled.traces)
     time = round(gui.data.CaTime(end) - gui.data.CaTime(1)*gui.data.CaFR);
 end
 
-img     = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],time,gui.annot.show);
+inds = find((gui.data.annoTime>=gui.ctrl.slider.Min) & (gui.data.annoTime<=gui.ctrl.slider.Max));
+img     = makeBhvImage(gui.annot.bhv,gui.annot.cmap,inds,time,gui.annot.show);
 
 bgsmall = displayImage(img,gui.ctrl.slider.Pos(3)*gui.h0.Position(3)*5,1);
 set(gui.ctrl.slider.bg,'cdata',bgsmall);

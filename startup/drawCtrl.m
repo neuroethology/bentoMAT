@@ -3,6 +3,7 @@ function gui = drawCtrl(gui)
 if(isfield(gui,'ctrl'))
     delete(gui.ctrl.panel);
 end
+gui.ctrl = [];
 gui.ctrl.panel  = uipanel('position',[0 0 1 1],'bordertype','none');
 
 scale = ones(size(gui.config.ctrl));
@@ -17,3 +18,5 @@ for i = 1:length(scale)
            '(gui,' num2str(nRows-sum(scale(1:i))+1) ',' num2str(scale(i)) ',nRows)'];
     gui.ctrl.(gui.config.ctrl{i}) = eval(str);
 end
+
+gui.ctrl.labels = drawlabels(gui,1.5,2,nRows); %a hidden legend that pops in when we save movies

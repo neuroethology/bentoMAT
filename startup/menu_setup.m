@@ -5,6 +5,8 @@ uimenu(mh.loader,'Label','Load experiment','callback',{@loadExpt,'load'});
 uimenu(mh.loader,'Label','Edit experiment','callback',{@loadExpt,'edit'});
 uimenu(mh.loader,'Label','Manage annotations','Separator','on','callback',@launchAnnotEditor);
 uimenu(mh.loader,'Label','Manage tracking data','Separator','on','callback',@launchTrackingCleanup);
+uimenu(mh.loader,'Label','Save screenshot','Separator','on','callback',@saveScreen);
+uimenu(mh.loader,'Label','Save movie','callback',@saveMovie);
 uimenu(mh.loader,'Label','Quit','Separator','on','Accelerator','Q','callback',@doQuit);
 
 

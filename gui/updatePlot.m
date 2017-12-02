@@ -53,6 +53,7 @@ if(gui.enabled.audio)
     inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
+%     psd    = 
     img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
     fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
@@ -69,8 +70,8 @@ if(gui.enabled.audio)
     end
 end
 
-%now change time to be relative to start of movie
-time = time - gui.ctrl.slider.Min;
+%now change time to be relative to start of relevant movie segment
+time = time - gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
 
 % update the plotted traces
 if(gui.enabled.traces)
@@ -143,9 +144,11 @@ if(gui.enabled.annot)
     end
         
     % update behavior-annotating box if it's active
-    if((gui.ctrl.annot.toggleAnnot.Value||gui.ctrl.annot.toggleErase.Value)&&gui.enabled.traces)
-        set(gui.annot.Box.traces,'ydata',[0 0 bump*(length(show)+1) bump*(length(show)+1)]);
-        set(gui.annot.Box.traces,'xdata',[gui.annot.highlightStart/gui.data.annoFR-time 0 0 gui.annot.highlightStart/gui.data.annoFR-time]);
+    if(isfield(gui.ctrl,'annot'))
+        if((gui.ctrl.annot.toggleAnnot.Value||gui.ctrl.annot.toggleErase.Value)&&gui.enabled.traces)
+            set(gui.annot.Box.traces,'ydata',[0 0 bump*(length(show)+1) bump*(length(show)+1)]);
+            set(gui.annot.Box.traces,'xdata',[gui.annot.highlightStart/gui.data.annoFR-time 0 0 gui.annot.highlightStart/gui.data.annoFR-time]);
+        end
     end
     
     % display the current behavior in each channel~!
