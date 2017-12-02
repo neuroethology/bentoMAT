@@ -6,8 +6,9 @@ gui = guidata(source);
                  '*.mp4', 'MP4 file (*.mp4)';...
                  '*.*',  'All Files (*.*)'},'Save As');
 saveDataName = fullfile(PathName,FileName);
-info.tmin = gui.ctrl.slider.Value;
-info.tmax = gui.ctrl.slider.Max;
+offset    = gui.ctrl.slider.Min;
+info.tmin = gui.ctrl.slider.Value - offset;
+info.tmax = gui.ctrl.slider.Max - offset;
 
 specs        = getMovieSpecs(info);
 v            = VideoWriter(saveDataName,specs.profile);
@@ -32,9 +33,9 @@ if(specs.sliderOn)
     gui.ctrl.slider.panel.Visible = 'on';
     gui.ctrl.labels.panel.Visible = 'on';
     gui.ctrl.labels.panel.BackgroundColor = specs.color;
-    gui.ctrl.slider.Value       = specs.startTime;
-    gui.ctrl.slider.Min         = specs.startTime;
-    gui.ctrl.slider.Max         = specs.endTime;
+    gui.ctrl.slider.Value       = specs.startTime+offset;
+    gui.ctrl.slider.Min         = specs.startTime+offset;
+    gui.ctrl.slider.Max         = specs.endTime+offset;
     
     addLabelLegend(gui.ctrl.labels.panel,gui.annot,specs);
     updateSlider(gui.h0,gui.ctrl.slider);
@@ -47,7 +48,7 @@ redrawPanels(gui);
 
 open(v);
 temp = [];
-for t = specs.startTime : 1/specs.FR : specs.endTime
+for t = (specs.startTime : 1/specs.FR : specs.endTime)
     gui.ctrl.slider.text.String = makeTime(t-specs.startTime);
     temp.Source.Tag = 'timeBox';
     updatePlot(gui.h0,temp);
