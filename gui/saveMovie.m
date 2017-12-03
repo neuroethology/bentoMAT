@@ -12,7 +12,7 @@ info.tmax = gui.ctrl.slider.Max - offset;
 
 specs        = getMovieSpecs(info);
 v            = VideoWriter(saveDataName,specs.profile);
-v.FrameRate  = specs.FR;
+v.FrameRate  = specs.FR*specs.playback;
 if(strcmpi(specs.profile,'Motion JPEG AVI')|strcmpi(specs.profile,'MPEG-4'))
     v.Quality    = round(specs.quality);
 end

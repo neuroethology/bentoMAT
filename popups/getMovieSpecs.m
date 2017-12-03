@@ -35,11 +35,14 @@ h.profile   = uicontrol(h.quality,ss.C{:},'style','popup','position',[.1 .5 .8 .
 h.qSlider   = uicontrol(h.quality,ss.C{:},'style','slider','position',[.2 .2 .6 .25],...
                         'min',0,'max',100,'value',75,'enable','on');
 
-uicontrol(h.display,ss.R{:},'style','text','position',[.025 .45 .4 .375],'string','Background color');
-uicontrol(h.display,ss.R{:},'style','text','position',[.025 .05 .4 .375],'string','Scrollbar visibility');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .65 .4 .25],'string','Background color');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .35 .4 .25],'string','Scrollbar visibility');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .05 .4 .25],'string','Play speed');
 
-h.bg        = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .45 .4 .4],'string',{'White','Black','Gray'});
-h.sliderOn  = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .05 .4 .4],'string',{'On','Off'});
+h.bg        = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .65 .4 .3],'string',{'White','Black','Gray'});
+h.sliderOn  = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .35 .4 .3],'string',{'On','Off'});
+h.playSpeed = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .05 .4 .3],...
+                        'string',{'8x','4x','2x','1x','0.5x','0.25x','0.125x'},'Value',4);
 
 uicontrol(h.go,ss.C{:},'backgroundcolor',[.65 1 .65],'style','pushbutton','position',[.2 .2 .6 .6],...
           'string','Go!','callback','uiresume(gcbf)');
@@ -51,6 +54,7 @@ uiwait(h.fig);
 specs.startTime = getTime(h.startTime.String);
 specs.endTime   = getTime(h.endTime.String);
 specs.FR        = str2num(h.FR.String);
+specs.playback  = str2num(strrep(h.playSpeed.String{h.playSpeed.Value},'x',''));
 
 specs.profile   = strs{h.profile.Value};
 specs.quality   = h.qSlider.Value;
