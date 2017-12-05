@@ -203,7 +203,8 @@ for i=1:size(data,1)
                 fid             = [pth data{i,match.Audio_file}];
                 [y,fs]          = audioread(fid);
                 disp('Generating spectrogram...');
-                [~,f,t,psd]     = spectrogram(y,512,[],[],fs,'yaxis');
+                win = hann(1024);
+                [~,f,t,psd]     = spectrogram(y,win,[],[],fs,'yaxis');
                 psd             = 10*log10(abs(double(psd)+eps));
                 disp('Saving spectrogram for future use...');
                 fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
@@ -219,6 +220,11 @@ for i=1:size(data,1)
             strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
             strtemp.audio.t   = strtemp.audio.t(2:2:end);
             strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
+
+%             [y,fs] = audioread(fid);
+%             strtemp.audio.y = y;
+%             strtemp.audio.FR = fs;
+%             strtemp.audio.t = (1:length(y))/fs;
             if(hasOffset)
                 strtemp.audio.t  = strtemp.audio.t + offset;
             end
@@ -263,7 +269,7 @@ for i=1:size(data,1)
                 if(raw{1,9})
                     frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
                     strtemp.io.annot.fid = strrep([pth [pth annoList{j}]],'.txt',frame_suffix);
-                    [atemp,~] = loadAnnotFile([pth [pth annoList{j}]],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                    [atemp,~] = loadAnnotFile([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                     tmin(j) = data{i,match.Start_Anno};
                     tmax(j) = data{i,match.Stop_Anno};
                 else
@@ -293,7 +299,7 @@ for i=1:size(data,1)
         strtemp.io.annot.fid   = [];
         strtemp.io.annot.tmin = strtemp.io.movie.tmin;
         strtemp.io.annot.tmax = strtemp.io.movie.tmax;
-        strtemp.annoFR   = strtemp.io.movie.FR;
+        strtemp.io.annoFR   = strtemp.io.movie.FR;
         strtemp.annot = struct();
         strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
         

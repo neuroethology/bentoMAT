@@ -45,7 +45,20 @@ else
 end
 redrawPanels(gui);
 
+if(specs.title~=1 && gui.enabled.movie)
+    if(specs.title==2)
+        tstr = ['Mouse ' num2str(gui.data.info.mouse) ', stimulus: ' strrep(gui.data.stim,'_',' ')];
+    elseif(specs.title==3)
+        s = regexp(gui.data.info.session,['\d+\.?\d*'],'match');
+        tstr = {['Mouse ' num2str(gui.data.info.mouse) ', session ' s{:} ...
+                ', trial ' num2str(gui.data.info.trial)],['stimulus: ' strrep(gui.data.stim,'_',' ')]};
+    elseif(specs.title==4)
+        tstr = specs.titleString;
+    end
+    title(gui.movie.axes,tstr);
+end
 
+% this is the actual save loop!--------------------------------------------
 open(v);
 temp = [];
 for t = (specs.startTime : 1/specs.FR : specs.endTime)
@@ -57,7 +70,11 @@ for t = (specs.startTime : 1/specs.FR : specs.endTime)
     writeVideo(v,img);
 end
 close(v);
+% -------------------------------------------------------------------------
 
+if(specs.title~=1 && gui.enabled.movie)
+    title(gui.movie.axes,'');
+end
 
 gui.h0.Color = oldColor;
 for i=1:length(gui.h0.Children)

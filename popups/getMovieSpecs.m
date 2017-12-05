@@ -12,8 +12,8 @@ ss.L = {'units','normalized','fontsize',10,'horizontalalign','left'};
 ss.C = {'units','normalized','fontsize',10,'horizontalalign','center'};
 strs = {'Motion JPEG AVI','Archival','Motion JPEG 2000','MPEG-4','Uncompressed AVI','Indexed AVI','Grayscale AVI'};
 
-h.quality  = uipanel(h.fig,ss.panel{:},'title','Quality settings','units','normalized','position',[.025 .5 .45 .45]);
-h.display  = uipanel(h.fig,ss.panel{:},'title','Display','units','normalized','position',[.025 .05 .45 .45]);
+h.quality  = uipanel(h.fig,ss.panel{:},'title','Quality settings','units','normalized','position',[.025 .6 .45 .35]);
+h.display  = uipanel(h.fig,ss.panel{:},'title','Display','units','normalized','position',[.025 .05 .45 .55]);
 h.frames   = uipanel(h.fig,ss.panel{:},'title','Segment to save','units','normalized','position',[.5 .05 .475 .55]);
 h.go       = uipanel(h.fig,ss.panel{:},'bordertype','none','units','normalized','position',[.5 .6 .475 .375]);
 
@@ -21,8 +21,6 @@ h.go       = uipanel(h.fig,ss.panel{:},'bordertype','none','units','normalized',
 uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .6 .3 .3],'string','Start time');
 uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .3 .3 .3],'string','Stop time');
 uicontrol(h.frames,ss.R{:},'style','text','position',[.025 0 .3 .3],'string','Framerate (Hz)');
-% uicontrol(h.frames,ss.R{:},'style','pushbutton','position',[.8 .55 .1 .3],'string',char(8644),...
-%           'TooltipString','Switch to frame # (behavior video)','Callback',@changeMovieUnits);
 
 h.startTime = uicontrol(h.frames,ss.C{:},'style','edit','position',[.35 .7 .4 .25],'string',makeTime(info.tmin));
 h.endTime   = uicontrol(h.frames,ss.C{:},'style','edit','position',[.35 .4 .4 .25],'string',makeTime(info.tmax));
@@ -35,14 +33,16 @@ h.profile   = uicontrol(h.quality,ss.C{:},'style','popup','position',[.1 .5 .8 .
 h.qSlider   = uicontrol(h.quality,ss.C{:},'style','slider','position',[.2 .2 .6 .25],...
                         'min',0,'max',100,'value',75,'enable','on');
 
-uicontrol(h.display,ss.R{:},'style','text','position',[.025 .65 .4 .25],'string','Background color');
-uicontrol(h.display,ss.R{:},'style','text','position',[.025 .35 .4 .25],'string','Scrollbar visibility');
-uicontrol(h.display,ss.R{:},'style','text','position',[.025 .05 .4 .25],'string','Play speed');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .725 .4 .2],'string','Background color');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .5 .4 .2],'string','Scrollbar visibility');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .275 .4 .2],'string','Play speed');
+uicontrol(h.display,ss.R{:},'style','text','position',[.025 .05 .4 .2],'string','Title style');
 
-h.bg        = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .65 .4 .3],'string',{'White','Black','Gray'});
-h.sliderOn  = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .35 .4 .3],'string',{'On','Off'});
-h.playSpeed = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .05 .4 .3],...
+h.bg        = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .725 .4 .225],'string',{'White','Black','Gray'});
+h.sliderOn  = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .5 .4 .225],'string',{'On','Off'});
+h.playSpeed = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .275 .4 .225],...
                         'string',{'8x','4x','2x','1x','0.5x','0.25x','0.125x'},'Value',4);
+h.tStr  = uicontrol(h.display,ss.L{:},'style','popup','position',[.5 .05 .4 .225],'string',{'None','Short (mouse+stim)','Full (mouse, session, trial, stim)','Custom'});
 
 uicontrol(h.go,ss.C{:},'backgroundcolor',[.65 1 .65],'style','pushbutton','position',[.2 .2 .6 .6],...
           'string','Go!','callback','uiresume(gcbf)');
@@ -58,6 +58,10 @@ specs.playback  = str2num(strrep(h.playSpeed.String{h.playSpeed.Value},'x',''));
 
 specs.profile   = strs{h.profile.Value};
 specs.quality   = h.qSlider.Value;
+specs.title     = h.tStr.Value;
+if(h.tStr.Value==4)
+    specs.titleString = inputdlg('Enter movie title: ');
+end
 
 switch h.bg.Value
     case 1
