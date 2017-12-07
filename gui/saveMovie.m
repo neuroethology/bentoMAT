@@ -37,7 +37,7 @@ if(specs.sliderOn)
     gui.ctrl.slider.Min         = specs.startTime+offset;
     gui.ctrl.slider.Max         = specs.endTime+offset;
     
-    addLabelLegend(gui.ctrl.labels.panel,gui.annot,specs);
+    addLabelLegend(gui,specs);
     updateSlider(gui.h0,gui.ctrl.slider);
     updateSliderAnnot(gui);
 else

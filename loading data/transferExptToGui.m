@@ -18,7 +18,7 @@ gui.enabled.annot   = enabled.annot;
 gui.enabled.tracker = enabled.tracker;
 gui.enabled.audio   = enabled.audio;
 
-gui.toPlot          = 'rast'; %plot cells to start
+gui.traces.toPlot = 'rast'; %plot cells to start
 set(gui.ctrl.track.plotType,'Value',1);
 
 if(isfield(gui,'data')) gui = rmfield(gui,'data'); end

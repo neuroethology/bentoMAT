@@ -41,6 +41,6 @@ h.expt.addField = uicontrol(p,ss.R{:},'style','popup','position',ss.box+[150 0 2
 align([temp h.expt.addField],'distribute','center')
 
 uicontrol(h.pTop,ss.C{:},'style','pushbutton','position',[560 5 150 ss.rowsize*2+10],'string','Add to table',...
-          'backgroundcolor',[.65 1 .65])
+          'backgroundcolor',[.65 1 .65],'callback',@addEntryToTable)
 
 guidata(h.f,h);

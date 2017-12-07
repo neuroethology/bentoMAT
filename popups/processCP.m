@@ -59,7 +59,7 @@ for i = 1:size(rast1,1)
 end
 [~,order] = sort(CP,'ascend');
 
-gui.data.order = order;
+gui.traces.order = order;
 guidata(gui.h0,gui);
 updatePlot(gui.h0,[]);
 

@@ -1,13 +1,13 @@
 function changePlotType(source,~)
 gui = guidata(source);
 
-oldPlot = gui.toPlot;
+oldPlot = gui.traces.toPlot;
 switch(source.Value)
     case 1 % raster
-        gui.toPlot = 'rast';
+        gui.traces.toPlot = 'rast';
         guidata(source,gui);
         updatePlot(source,[]);
     case 2 % PCs
-        gui.toPlot = 'PCs';
+        gui.traces.toPlot = 'PCs';
         getPCAxes(gui,source);
 end

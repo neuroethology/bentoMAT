@@ -5,7 +5,7 @@ rast    = [gui.allData(m).(sess)(trList(setdiff(1:length(trList),trials.Value)))
 nPCs    = min(str2num(nPCs.String),length(e));
 
 gui.data.PCA    = fliplr(e(:,end-nPCs+1:end));
-gui.data.show   = true(nPCs,1);
+gui.traces.show = true(nPCs,1);
 close(h);
 
 guidata(parent,gui);

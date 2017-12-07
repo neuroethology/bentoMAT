@@ -50,11 +50,10 @@ end
 
 % update the audio spectrogram
 if(gui.enabled.audio)
-    inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
+    inds   = (gui.data.audio.tShift >= (time-gui.audio.win)) & (gui.data.audio.tShift <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    tsub   = gui.data.audio.t;
-%     psd    = 
-    img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
+    tsub   = gui.data.audio.tShift;
+    img    = scaleAudio(gui,gui.data.audio.psd(:,find(inds)));
     fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
     set(gui.audio.img, 'cdata', img(fshow,:)*64);
@@ -71,20 +70,20 @@ if(gui.enabled.audio)
 end
 
 %now change time to be relative to start of relevant movie segment
-time = time - gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
+time = time - gui.ctrl.slider.Min;%gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
 
 % update the plotted traces
 if(gui.enabled.traces)
     inds = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
     inds = inds | [false inds(1:end-1)] | [inds(2:end) false];
     bump = gui.traces.yScale;
-    show = find(gui.data.show);
-    [~,order] = sort(gui.data.order(show));
+    show = find(gui.traces.show);
+    [~,order] = sort(gui.traces.order(show));
     order     = max(order)-order+1;
     [~,first] = min(order(show));
     [~,last]  = max(order(show));
     for i = 1:length(show)
-        switch gui.toPlot
+        switch gui.traces.toPlot
             case 'rast'
                 tr = gui.data.rast(show(end-i+1),inds) - ...
                      nanmean(gui.data.rast(show(end-i+1),:));
@@ -103,7 +102,7 @@ if(gui.enabled.traces)
     end
     delete(gui.traces.traces(i+1:end));
     gui.traces.traces(i+1:end)=[];
-    switch gui.toPlot
+    switch gui.traces.toPlot
         case 'rast'
             traceOffset = [min(gui.data.rast(last,:) - nanmean(gui.data.rast(last,:))) ...
                            max(gui.data.rast(first,:)   - nanmean(gui.data.rast(first,:)))];
@@ -139,7 +138,7 @@ if(gui.enabled.annot)
             set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 bump*(length(show)+1)]);
         else
             set(gui.audio.bg,'Visible','on');
-            set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end)/1000/5 0]);
+            set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end,1)/1000/5 0]);
         end
     end
         

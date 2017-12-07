@@ -189,9 +189,11 @@ for i=1:size(data,1)
     if(enabled.audio)
         if(~isempty(data{i,match.Audio_file}))
             [~,~,ext] = fileparts(data{i,match.Audio_file});
-            if(strcmpi(ext,'mat'))
-                fid             = [pth data{i.match.Audio_file}];
+            if(strcmpi(ext,'.mat'))
+                fid             = [pth data{i,match.Audio_file}];
+                disp('Loading spectrogram...');
                 strtemp.audio   = load(fid);
+                disp('Done!');
                 
             elseif(~isempty(ls([pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')])))
                 fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
@@ -201,33 +203,31 @@ for i=1:size(data,1)
                 disp(['Processing file ' data{i,match.Audio_file}]);
                 disp('Reading audio...');
                 fid             = [pth data{i,match.Audio_file}];
-                [y,fs]          = audioread(fid);
+                [y,Fs]          = audioread(fid);
                 disp('Generating spectrogram...');
                 win = hann(1024);
                 [~,f,t,psd]     = spectrogram(y,win,[],[],fs,'yaxis');
                 psd             = 10*log10(abs(double(psd)+eps));
                 disp('Saving spectrogram for future use...');
                 fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
-                save(fid,'-v7.3','f','t','psd','fs');
+                save(fid,'-v7.3','f','t','psd','Fs');
                 disp('Done!');
                 strtemp.audio.f   = f;
                 strtemp.audio.t   = t;
                 strtemp.audio.psd = psd;
-                strtemp.audio.fs  = fs;
+                strtemp.audio.fs  = Fs;
             end
             strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
             strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
             strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
             strtemp.audio.t   = strtemp.audio.t(2:2:end);
             strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
-
-%             [y,fs] = audioread(fid);
-%             strtemp.audio.y = y;
-%             strtemp.audio.FR = fs;
-%             strtemp.audio.t = (1:length(y))/fs;
+            
             if(hasOffset)
                 strtemp.audio.t  = strtemp.audio.t + offset;
             end
+            strtemp.audio.tmin = strtemp.audio.t(1,1);
+            strtemp.audio.tmax = strtemp.audio.t(1,end);
         else
             strtemp.audio = [];
         end
@@ -306,9 +306,9 @@ for i=1:size(data,1)
     elseif(enabled.audio && ~isempty(data{i,match.Audio_file}))
         strtemp.io.annot = struct();
         strtemp.io.annot.fid   = [];
-        strtemp.io.annot.tmin = strtemp.io.audio.tmin;
-        strtemp.io.annot.tmax = strtemp.io.audio.tmax;
-        strtemp.annoFR   = strtemp.io.audio.FR;
+        strtemp.io.annot.tmin = strtemp.audio.tmin;
+        strtemp.io.annot.tmax = strtemp.audio.tmax;
+        strtemp.annoFR   = strtemp.audio.t(1,1);
         strtemp.annot = struct();
         strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.annoFR;
     

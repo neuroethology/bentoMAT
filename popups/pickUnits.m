@@ -2,7 +2,7 @@ function pickUnits(source,~)
     parent      = source;
     gui         = guidata(source);
     
-    switch gui.toPlot
+    switch gui.traces.toPlot
         case 'rast'
             plotStr = 'Cell ';
             rast = gui.data.rast;
@@ -10,7 +10,7 @@ function pickUnits(source,~)
             plotStr = 'PC ';
             rast = gui.data.PCA'*gui.data.rast;
     end
-    plotUnits   = gui.data.show;
+    plotUnits   = gui.traces.show;
 
     N           = size(rast,1);
     nrow        = 16; %up to 16 buttons per column
@@ -59,15 +59,15 @@ end
 function toggleUnit(source,eventdata,parent,cellnums)
     gui = guidata(parent);
     if(strcmpi(source.Style,'radiobutton'))
-        gui.data.show(cellnums) = source.Value;
+        gui.traces.show(cellnums) = source.Value;
     elseif(strcmpi(source.String,'On'))
-        gui.data.show(cellnums) = 1;
+        gui.traces.show(cellnums) = 1;
         h2 = guidata(source);
         for i = cellnums
             h2(i).Value = 1;
         end
     else
-        gui.data.show(cellnums) = 0;
+        gui.traces.show(cellnums) = 0;
         h2 = guidata(source);
         for i = cellnums
             h2(i).Value = 0;

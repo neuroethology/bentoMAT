@@ -5,9 +5,9 @@ annot.channels  = '';
 annot.activeCh  = '';
 annot.modified  = 0;
 annot.bhv   = struct();
+annot.show  = struct();
 annot.cmap  = struct();
 annot.cmapDef = loadPreferredCmap(); %default colors to use
-annot.show  = struct();
 
 % adds patches to show annotation edits on the trace/tracker axes
 annot.Box.traces     = patch([0 0 0 0],[0 0 0 0],[.8 .8 .8],...
