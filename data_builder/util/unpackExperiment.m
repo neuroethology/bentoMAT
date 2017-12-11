@@ -172,12 +172,14 @@ for i=1:size(data,1)
             if(strcmpi(ext,'.mat'))
                 strtemp.tracking.args = load(fid);
             elseif(strcmpi(ext,'.json'))
-                if(exist('loadjson','file'))
+                if(exist('jsondecode','file'))
+                    strtemp.tracking.args = jsondecode(fileread(fid));
+                elseif(exist('loadjson','file'))
                     disp('loadjson')
                     strtemp.tracking.args = loadjson(fid);
                 else
                     disp('Please download jsonlab to use json files! (https://github.com/fangq/jsonlab)')
-                    strtemp.tracking.args = jsondecode(fileread(fid));
+                    strtemp.tracking.args = [];
                 end
             end
         else
