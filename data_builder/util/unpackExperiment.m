@@ -177,7 +177,7 @@ for i=1:size(data,1)
                     strtemp.tracking.args = loadjson(fid);
                 else
                     disp('Please download jsonlab to use json files! (https://github.com/fangq/jsonlab)')
-                    strtemp.tracking.args = [];
+                    strtemp.tracking.args = jsondecode(fileread(fid));
                 end
             end
         else
