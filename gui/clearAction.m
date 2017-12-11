@@ -1,7 +1,7 @@
 function clearAction(source,~)
 
 gui = guidata(source);
-if(gui.Action~=0)
+if(any(gui.Action~=0))
     if(toc(gui.ctrl.slider.timer)<.3)
         if(~strcmpi(gui.Action,'drag'))
             hSlider = incSliderVal(gui.h0);

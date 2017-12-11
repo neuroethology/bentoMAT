@@ -5,12 +5,16 @@ gui=guidata(source);
 %     return
 % end
 
-gui.ctrl.slider.timer = tic;
-if(strcmpi(eventdata.Key,'space'))
-    if(~gui.Action)
-        gui.Action = gui.ctrl.slider.SliderStep(1);
-    else
-        gui.Action = 0;
-    end
+switch eventdata.Key
+    case 'space'
+        if(~gui.Action)
+            gui.Action = [gui.ctrl.slider.SliderStep(1) 0];
+            guidata(gui.h0,gui);
+        else
+            clearAction(source);
+        end
+    case 'rightarrow'
+        clearAction(source);
+    case 'leftarrow'
+        clearAction(source);
 end
-guidata(gui.h0,gui);

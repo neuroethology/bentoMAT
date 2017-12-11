@@ -7,9 +7,9 @@ gui    = guidata(parent);
 gui.ctrl.slider.timer = tic;
 switch source.Tag
     case 'leftArrow'
-        gui.Action = -gui.ctrl.slider.SliderStep(1);   %left arrow
+        gui.Action = [-gui.ctrl.slider.SliderStep(1) 1];   %left arrow
     case 'rightArrow'
-        gui.Action = gui.ctrl.slider.SliderStep(1);    %right arrow
+        gui.Action = [gui.ctrl.slider.SliderStep(1) 1];    %right arrow
     case 'bar'
         pClick  = get(0,'pointerlocation');
 
@@ -17,9 +17,9 @@ switch source.Tag
         tracker(1) = gui.h0.Position(1) + tracker(1);
 
         if(pClick(1) < tracker(1))
-            gui.Action = -gui.ctrl.slider.SliderStep(2);   %track left
+            gui.Action = [-gui.ctrl.slider.SliderStep(2) 1];   %track left
         elseif(pClick(1) > tracker(1)+tracker(3))
-            gui.Action = gui.ctrl.slider.SliderStep(2);    %track right
+            gui.Action = [gui.ctrl.slider.SliderStep(2) 1];    %track right
         end
 
     case 'marker'

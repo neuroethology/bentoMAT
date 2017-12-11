@@ -33,5 +33,6 @@ gui = redrawPanels(gui);
 
 gui.Action      = 0;
 gui.quitbutton  = 0;
+gui.ctrl.slider.timer = tic;
 
 guidata(gui.h0,gui);

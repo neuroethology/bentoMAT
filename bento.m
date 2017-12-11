@@ -1,9 +1,10 @@
 fclose all; clear gui;
 quitloop = 0;
 construct_gui();
+
 while(~quitloop)
     gui = guidata(gui.h0);
-    if(gui.Action)
+    if(any(gui.Action))
         test = toc(gui.ctrl.slider.timer);
         if(test>0.2)
             if(~strcmpi(gui.Action,'drag'))

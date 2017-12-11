@@ -4,8 +4,8 @@ h = guidata(source);
 gui = guidata(h.guifig);
 
 gui.ctrl.slider.timer = tic;
-gui.Action = delta;
-h.Action   = delta;
+gui.Action = [delta 0];
+h.Action   = [delta 0];
 
 guidata(gui.h0,gui);
 guidata(source,h);

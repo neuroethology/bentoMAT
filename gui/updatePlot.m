@@ -1,6 +1,6 @@
 function updatePlot(source,eventdata)
 gui = guidata(source);
-
+evaltime = tic;
 %update gui features (depending on who called)
 if(~isempty(eventdata))
     switch eventdata.Source.Tag
@@ -199,5 +199,5 @@ g2 = guidata(source);
 gui.Action=g2.Action;
 
 guidata(source,gui);
-pause(.025);
+pause(min(gui.ctrl.slider.SliderStep(1) - toc(evaltime),0));
 drawnow;
