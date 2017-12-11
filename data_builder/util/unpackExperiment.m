@@ -172,13 +172,13 @@ for i=1:size(data,1)
             if(strcmpi(ext,'.mat'))
                 strtemp.tracking.args = load(fid);
             elseif(strcmpi(ext,'.json'))
-                if(exist('jsondecode','file'))
+                if(exist('jsondecode','builtin'))
                     strtemp.tracking.args = jsondecode(fileread(fid));
                 elseif(exist('loadjson','file'))
-                    disp('loadjson')
+                    disp('Using loadjson.')
                     strtemp.tracking.args = loadjson(fid);
                 else
-                    disp('Please download jsonlab to use json files! (https://github.com/fangq/jsonlab)')
+                    disp('Please download jsonlab (https://github.com/fangq/jsonlab) or upgrade to Matlab 2016b or later.')
                     strtemp.tracking.args = [];
                 end
             end
