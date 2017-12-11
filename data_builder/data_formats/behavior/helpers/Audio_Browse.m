@@ -11,7 +11,7 @@ if(strcmpi(source.Style,'pushbutton'))
         case 'meta'
             typestr = {'*.txt', 'Audio log files (*.txt)'};
     end
-    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file');
+    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',gui.pth);
     fname = [PathName FileName];
     if(FileName==0)
         return
@@ -62,7 +62,8 @@ elseif(strcmpi(fieldname,'fid'))
     
 end
 
-
+gui.pth = fileparts(fname);
+guidata(source,gui);
 
 
 

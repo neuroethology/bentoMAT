@@ -1,21 +1,28 @@
 function Behavior_Vid_Browse(source,~,fieldname)
 
 gui = guidata(source);
-switch fieldname
-    case 'fid'
-        typestr = {'*.seq;*.mp4;*.avi;*.wmv', 'Behavior video (*.seq;*.mp4;*.avi;*.wmv)'};
-    case 'annot'
-        typestr = {'*.txt;*.annot;*.xls;*.xlsx', 'Annotation file (*.txt; *.annot;*.xls;*.xlsx)'};
-    case 'track'
-        typestr = {'*.mat;*.json', 'Tracking data (*.mat;*.json)'};
-end
-[FileName,PathName,~] = uigetfile({typestr{:};'*.*',  'All Files (*.*)'},'Pick a file');
-fname = [PathName FileName];
-if(FileName==0)
-    return
+if(strcmpi(source.Style,'pushbutton'))
+    switch fieldname
+        case 'fid'
+            typestr = {'*.seq;*.mp4;*.avi;*.wmv', 'Behavior video (*.seq;*.mp4;*.avi;*.wmv)'};
+        case 'annot'
+            typestr = {'*.txt;*.annot;*.xls;*.xlsx', 'Annotation file (*.txt; *.annot;*.xls;*.xlsx)'};
+        case 'track'
+            typestr = {'*.mat;*.json', 'Tracking data (*.mat;*.json)'};
+    end
+    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',gui.pth);
+    fname = [PathName FileName];
+    if(FileName==0)
+        return
+    end
+    else
+    fname = source.String;
+    if(isempty(fname))
+        return
+    end
 end
 
-ind = gui.fields.p==source.Parent.Parent;
+ind = find([gui.fields.p] == source.Parent.Parent);
 gui.fields(ind).data.(fieldname).String = fname;
 formatSpec = 'HH:MM:SS.FFF';
 
@@ -36,3 +43,6 @@ if(strcmpi(fieldname,'fid'))
     end
 
 end
+
+gui.pth = fileparts(fname);
+guidata(source,gui);

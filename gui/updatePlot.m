@@ -50,9 +50,9 @@ end
 
 % update the audio spectrogram
 if(gui.enabled.audio)
-    inds   = (gui.data.audio.tShift >= (time-gui.audio.win)) & (gui.data.audio.tShift <= (time+gui.audio.win));
+    inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    tsub   = gui.data.audio.tShift;
+    tsub   = gui.data.audio.t;
     img    = scaleAudio(gui,gui.data.audio.psd(:,find(inds)));
     fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
@@ -151,7 +151,8 @@ if(gui.enabled.annot)
     end
     
     % display the current behavior in each channel~!
-    frnum = min(max(round(time*gui.data.annoFR),1),gui.data.io.annot.tmax - gui.data.io.annot.tmin + 1);
+    frnum = min(max(round(time*gui.data.annoFR),1),...
+                round((gui.data.io.annot.tmax - gui.data.io.annot.tmin)*gui.data.annoFR+1));
     for chNum = 1:length(gui.annot.channels)
         chName = gui.annot.channels{chNum};
         str = '';

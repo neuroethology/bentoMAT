@@ -12,6 +12,10 @@ ss.txt = [0 1 0 20];
 ss.box = [0 1 0 25];
 ss.rowsize = 30;
 
+h.pth = pwd;
+if(~strcmpi(h.pth(end),filesep))
+    h.pth = [h.pth filesep];
+end
 h.ss = ss;
 [h.fields,h.scalable] = deal([]);
 close(figure(996));

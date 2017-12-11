@@ -1,16 +1,23 @@
 function Inscopix_Browse(source,~,fieldname)
     
 gui = guidata(source);
-switch fieldname
-    case 'fid'
-        typestr = {'*.mat', 'Extracted Ca traces (*.mat)'};
-    case 'meta'
-        typestr = {'*.txt', 'Ca imaging log files (*.txt)'};
-end
-[FileName,PathName,~] = uigetfile({typestr{:};'*.*',  'All Files (*.*)'},'Pick a file');
-fname = [PathName FileName];
-if(FileName==0)
-    return
+if(strcmpi(source.Style,'pushbutton'))
+    switch fieldname
+        case 'fid'
+            typestr = {'*.mat', 'Extracted Ca traces (*.mat)'};
+        case 'meta'
+            typestr = {'*.txt', 'Ca imaging log files (*.txt)'};
+    end
+    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',gui.pth);
+    fname = [PathName FileName];
+    if(FileName==0)
+        return
+    end
+else
+    fname = source.String;
+    if(isempty(fname))
+        return
+    end
 end
 
 ind = find([gui.fields.p] == source.Parent.Parent);
@@ -47,5 +54,7 @@ if(strcmpi(fieldname,'meta'))
     tRow = regexprep(tRow,'FRAMES: ','');
     gui.fields(ind).data.start.String = '1';
     gui.fields(ind).data.stop.String = tRow;
-
 end
+
+gui.pth = fileparts(fname);
+guidata(source,gui);

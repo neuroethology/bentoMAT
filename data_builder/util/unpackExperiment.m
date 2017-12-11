@@ -264,7 +264,6 @@ for i=1:size(data,1)
                 atemp.singing.sing = round(M(:,2:3)/dt * 1.0000356445); % what's up, MUPET :\
                 tmin(j) = 1;
                 tmax(j) = length(strtemp.audio.t);
-                strtemp.annoFR = 1/dt;
             else %load data in the old format, prepare to convert to sheet format when saved
                 if(raw{1,9})
                     frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
@@ -308,9 +307,9 @@ for i=1:size(data,1)
         strtemp.io.annot.fid   = [];
         strtemp.io.annot.tmin = strtemp.audio.tmin;
         strtemp.io.annot.tmax = strtemp.audio.tmax;
-        strtemp.annoFR   = strtemp.audio.t(1,1);
+        strtemp.annoFR   = 1/(strtemp.audio.t(2) - strtemp.audio.t(1));
         strtemp.annot = struct();
-        strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.annoFR;
+        strtemp.annoTime = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
     
     else
         strtemp.annot = struct();

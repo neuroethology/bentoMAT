@@ -8,7 +8,8 @@ if(isempty(fn)|fn(1)=='_'|fn(1)=='-')
 end
 
 rows = [];
-h.fields(end+1).wrap    = uipanel(h.f,ss.subpanel{:},'units','pixels','position',[15 h.bump 750 ss.rowsize]);
+h.fields(end+1).type    = fn;
+h.fields(end).wrap      = uipanel(h.f,ss.subpanel{:},'units','pixels','position',[15 h.bump 750 ss.rowsize]);
 h.fields(end).p         = uipanel(h.fields(end).wrap,ss.panel{:},'title',strrep(fn,'_',' '),'position',[25 1 700 ss.rowsize]);
 h.fields(end).rm        = uicontrol(h.fields(end).wrap,'style','pushbutton',ss.C{:},'position',[1 1 20 20],...
                                     'string','X','callback',{@entryWindowRmBox,length(h.fields)});
