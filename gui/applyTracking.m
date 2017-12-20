@@ -9,6 +9,13 @@ if(isempty(gui.data.tracking.inactive{frnum})&frnum>1)
 end
     
 eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args, ' num2str(frnum) ' );']);
+if(isstruct(pts))
+    color = pts.color;
+    pts = pts.pts;
+else
+    color = 'gcrgcrgcrgcrgcr';
+    color = [color color color];
+end
 if(length(gui.data.io.movie.fid)>1)
     dims = [gui.data.io.movie.reader.width];
     if(dims(1)~=max(dims))
@@ -18,27 +25,28 @@ if(length(gui.data.io.movie.fid)>1)
         end
     end
 end
-
-active       = gui.data.tracking.active{frnum};
-inactive     = gui.data.tracking.inactive{frnum};
-
-[~,indsA,indsB]     = intersect(pts(:,1),active);
-if(~isempty(indsA))
-    inds         = sortrows([indsB indsA],1);
-    inds         = inds(:,2);
-else
-    inds=[];
-end
-plotActive   = pts(inds, 2:end);
-
-[~,indsA,indsB]     = intersect(pts(:,1),inactive);
-if(~isempty(indsA))
-    inds         = sortrows([indsB indsA],1);
-    inds         = inds(:,2);
-else
-    inds=[];
-end
-plotInactive = pts(inds, 2:end);
+plotActive = pts(:,2:end);
+plotInactive = [];
+% active       = gui.data.tracking.active{frnum};
+% inactive     = gui.data.tracking.inactive{frnum};
+% 
+% [~,indsA,indsB]     = intersect(pts(:,1),active);
+% if(~isempty(indsA))
+%     inds         = sortrows([indsB indsA],1);
+%     inds         = inds(:,2);
+% else
+%     inds=[];
+% end
+% plotActive   = pts(inds, 2:end);
+% 
+% [~,indsA,indsB]     = intersect(pts(:,1),inactive);
+% if(~isempty(indsA))
+%     inds         = sortrows([indsB indsA],1);
+%     inds         = inds(:,2);
+% else
+%     inds=[];
+% end
+% plotInactive = pts(inds, 2:end);
 
 if(size(pts,2)<=4)
     mov = insertObjectAnnotation(mov,'circle',plotActive,...
@@ -51,15 +59,15 @@ if(size(pts,2)<=4)
 else
     for j=1:size(plotActive,1)
         for i = 3:2:size(plotActive,2)
-            mov = insertShape(mov,'Line',plotActive(j,i-2:i+1),'linewidth',3,'color','green');
-            mov = insertShape(mov,'FilledCircle',[plotActive(j,i:i+1) 6],'color','green');
+            mov = insertShape(mov,'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',color(j));
+            mov = insertShape(mov,'FilledCircle',[plotActive(j,i:i+1) 6],'color',color(j));
         end
         mov = insertShape(mov,'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
     end
     for j=1:size(plotInactive,1)
         for i = 3:2:size(plotInactive,2)
-            mov = insertShape(mov,'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color','cyan');
-            mov = insertShape(mov,'FilledCircle',[plotInactive(j,i:i+1) 6],'color','cyan');
+            mov = insertShape(mov,'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color',color(j));
+            mov = insertShape(mov,'FilledCircle',[plotInactive(j,i:i+1) 6],'color',color(j));
         end
         mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
     end
