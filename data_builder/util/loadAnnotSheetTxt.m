@@ -1,4 +1,4 @@
-function [annot,tmin,tmax] = loadAnnotSheetTxt(fname,tmin,tmax)
+function [annot,tmin,tmax,FR] = loadAnnotSheetTxt(fname,tmin,tmax)
 % still need to add support for multiple annotations per file
 if(nargin<2)
     tmin = nan;
@@ -23,6 +23,12 @@ if(isnan(tmin))
     tmin = str2num(M{L}(25:end));
     L = find(~cellfun(@isempty,strfind(M,'Annotation stop frame:')));
     tmax = str2num(M{L}(24:end));
+    L = find(~cellfun(@isempty,strfind(M,'Annotation framerate:')));
+    if(~isempty(L))
+        FR = str2num(M{L}(23:end));
+    else
+        FR = nan;
+    end
 end
 
 start = find(strcmpi(M,'List of channels:'))+1;

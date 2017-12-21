@@ -3,6 +3,7 @@ function saveAnnotSheetTxt(gui,trial,mouse,session,tr)
 fid     = trial.io.annot.fid;
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
+FR      = trial.annoFR;
 
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
     suggestedName = ['mouse' num2str(mouse) '_' session '_' num2str(tr,'%03d') '.annot'];
@@ -11,7 +12,7 @@ if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'
 end
 fid = fopen(fid,'w');
 % write metadata-----------------------------------------------------------
-fprintf(fid,'%s\n','Tracergui annotation file');
+fprintf(fid,'%s\n','Bento annotation file (v2.0)');
 if(gui.enabled.movie)
     nmov = length(trial.io.movie.fid);
     fstr = '%s ';
@@ -25,6 +26,7 @@ fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',trial.stim);
 fprintf(fid,'%s %d\n','Annotation start frame:',tmin);
 fprintf(fid,'%s %d\n','Annotation stop frame:',tmax);
+fprintf(fid,'%s %d\n','Annotation framerate:',FR);
 
 fprintf(fid,'\n%s\n','List of channels:');
 channels = fieldnames(trial.annot);

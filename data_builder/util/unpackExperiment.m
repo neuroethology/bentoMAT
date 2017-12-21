@@ -49,7 +49,6 @@ for i=1:size(data,1)
     strtemp         = struct();
     strtemp.stim    = data{i,match.Stim};
     strtemp.CaFR    = data{i,match.FR_Ca};
-    strtemp.annoFR  = data{i,match.FR_Anno};
     offset          = data{i,match.Offset};
     if(~isnumeric(offset))
         offset = str2num(offset);
@@ -285,15 +284,16 @@ for i=1:size(data,1)
             end
         end
         strtemp.annot = orderfields(strtemp.annot);
-        tmin = min(tmin);tmax=max(tmax);
-        
         if(isnan(tmax))
             tmin = strtemp.io.movie.tmin;
             tmax = strtemp.io.movie.tmax;
         end
+        tmin = min(tmin);
+        tmax = max(tmax);
         strtemp.io.annot.tmin = tmin;
         strtemp.io.annot.tmax = tmax;
-        strtemp.annoTime = (1:(tmax-tmin))/strtemp.annoFR;
+        strtemp.annoFR    = data{i,match.FR_Anno};
+        strtemp.annoTime  = (1:(tmax-tmin))/strtemp.annoFR;
         
     elseif(enabled.movie && ~isempty(data{i,match.Behavior_movie}))
         strtemp.io.annot = struct();

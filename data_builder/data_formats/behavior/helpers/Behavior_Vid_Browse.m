@@ -1,16 +1,20 @@
-function Behavior_Vid_Browse(source,~,fieldname)
+function Behavior_Vid_Browse(source,~,fieldname,str)
 
 gui = guidata(source);
+pth = gui.pth;
+if(~isempty(str) & ~isempty(str.String))
+    [pth,~,~] = fileparts(str.String);
+end
 if(strcmpi(source.Style,'pushbutton'))
     switch fieldname
         case 'fid'
             typestr = {'*.seq;*.mp4;*.avi;*.wmv', 'Behavior video (*.seq;*.mp4;*.avi;*.wmv)'};
-        case 'annot'
+        case 'anno'
             typestr = {'*.txt;*.annot;*.xls;*.xlsx', 'Annotation file (*.txt; *.annot;*.xls;*.xlsx)'};
         case 'track'
             typestr = {'*.mat;*.json', 'Tracking data (*.mat;*.json)'};
     end
-    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',gui.pth);
+    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',pth);
     fname = [PathName FileName];
     if(FileName==0)
         return

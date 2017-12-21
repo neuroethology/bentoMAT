@@ -1,4 +1,4 @@
-function exptGui = build_experiment(source,~)
+% function exptGui = build_experiment(source,~)
 %
 % possible data and metadata to include:
 %   - mouse number, session number, trial number, stimulus name
@@ -8,7 +8,7 @@ function exptGui = build_experiment(source,~)
 %   - Audio data, audio log file/timestamp, framerate
 %   - Tracking data, tracking data format
 
-gui = guidata(source);
+% gui = guidata(source);
 pth = pwd;
 
 fillin = {'units','normalized','fontsize',11};
@@ -46,9 +46,9 @@ exptGui.CaMulti   = uicontrol('parent',f,fillin{:},'position',[.2 .325 .2 .03],'
 exptGui.CaFRtxt   = uicontrol('parent',f,fillin{:},'position',[.2 .265 .14 .045],'Tag','concatCa',...
                 'style','text','string','Ca framerate (Hz):','horizontalalignment','left');
 exptGui.CaFR      = uicontrol('parent',f,fillin{:},'position',[.34 .265 .06 .05],'Tag','concatCa',...
-                'style','edit');
+                'style','edit','String','5');
 exptGui.annoFR    = uicontrol('parent',f,fillin{:},'position',[.66 .265 .06 .05],'Tag','concatCa',...
-                'style','edit');
+                'style','edit','String','30');
 exptGui.CaFRtog   = uicontrol('parent',f,fillin{:},'position',[.2 .225 .3 .03],'Tag','FRCa',...
                 'style','checkbox','string','Variable Ca framerate','callback',@toggleVis);
 exptGui.offset    = uicontrol('parent',f,fillin{:},'position',[.2 .175 .35 .03],'Tag','offset',...

@@ -5,9 +5,9 @@ row = [];
 p           = uipanel(h,ss.subpanel{:},'position',[5 96 710 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[10 0 70 0],'string','Audio data  ');
 h2.fid      = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[80 0 530 0],'string','',...
-                        'callback',{'Audio_Browse','fid'});
+                        'callback',{'Audio_Browse','fid',[]});
 temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
-                        'callback',{'Audio_Browse','fid'}');
+                        'callback',{'Audio_Browse','fid',h2.fid}');
 row(1).p     = p;
 row(1).scale = h2.fid;
 row(1).fix   = temp;
@@ -17,9 +17,9 @@ clear temp;
 p           = uipanel(h,ss.subpanel{:},'position',[5 65 710 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[10 0 70 0],'string','Call annots  ');
 h2.annot    = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[80 0 530 0],'string','',...
-                        'callback',{'Audio_Browse','annot'});
+                        'callback',{'Audio_Browse','annot',[]});
 temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
-                        'callback',{'Audio_Browse','annot'}');
+                        'callback',{'Audio_Browse','annot',h2.annot}');
 row(2).p     = p;
 row(2).scale = h2.annot;
 row(2).fix   = temp;
@@ -29,9 +29,9 @@ clear temp;
 p           = uipanel(h,ss.subpanel{:},'position',[5 34 710 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[20 0 60 0],'string','Log file  ');
 h2.meta     = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[80 0 275 0],'string','',...
-                        'callback',{'Audio_Browse','meta'});
+                        'callback',{'Audio_Browse','meta',[]});
 temp(1,1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[300 0 30 0],'string','...',...
-                        'callback',{'Audio_Browse','meta'});
+                        'callback',{'Audio_Browse','meta',h2.meta});
 temp(1,end+1) = uicontrol(p,ss.R{:},'style','text','position',ss.txt+[301 0 1 0],'string','  ');
 h2.metamenu = uicontrol(p,ss.L{:},'style','popupmenu','position',ss.box+[425 0 225 0],'string',' ',...
                         'callback',@Audio_changeMouse);

@@ -10,6 +10,8 @@ for f = fieldnames(cmap)'
 end
 
 channels = fieldnames(data.annot);
+channels(strcmpi(channels,'FR'))    = [];
+channels(strcmpi(channels,'time'))  = [];
 annot.channels = channels;
 gui.ctrl.annot.ch.String = {'',channels{:},'add new...','remove channel...'};
 bhvList = fieldnames(data.annot.(channels{1}))';

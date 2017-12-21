@@ -1,8 +1,8 @@
-function entryWindowAddBox(source,~)
+function entryWindowAddBox(source,eventdata)
 
 h = guidata(source);
 ss = h.ss;
-fn = strrep(h.expt.addField.String{h.expt.addField.Value},' ','_');
+fn = strrep(eventdata.Source.String{eventdata.Source.Value},' ','_');
 if(isempty(fn)|fn(1)=='_'|fn(1)=='-')
     return;
 end

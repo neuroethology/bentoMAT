@@ -1,11 +1,5 @@
 function processTable(source,~,parent)
+
 gui = guidata(source);
-
-[M,flag] = packExperiment(gui);
-if(flag)
-    return;
-end
-
-transferExptToGui(M,parent);
-
+transferToBento(parent,gui.mouse);
 close(gui.f);

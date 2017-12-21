@@ -1,6 +1,10 @@
-function Inscopix_Browse(source,~,fieldname)
+function Inscopix_Browse(source,~,fieldname,str)
     
 gui = guidata(source);
+pth = gui.pth;
+if(~isempty(str) & ~isempty(str.String))
+    [pth,~,~] = fileparts(str.String);
+end
 if(strcmpi(source.Style,'pushbutton'))
     switch fieldname
         case 'fid'
@@ -8,7 +12,7 @@ if(strcmpi(source.Style,'pushbutton'))
         case 'meta'
             typestr = {'*.txt', 'Ca imaging log files (*.txt)'};
     end
-    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',gui.pth);
+    [FileName,PathName,~] = uigetfile([typestr;{'*.*',  'All Files (*.*)'}],'Pick a file',pth);
     fname = [PathName FileName];
     if(FileName==0)
         return

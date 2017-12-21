@@ -5,9 +5,9 @@ row = [];
 p           = uipanel(h,ss.subpanel{:},'position',[5 96 700 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[30 0 80 0],'string','Video File  ');
 h2.fid      = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[110 0 500 0],'string','',...
-                        'callback',{'Behavior_Vid_Browse','fid'});
+                        'callback',{'Behavior_Vid_Browse','fid',[]});
 temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
-                        'callback',{'Behavior_Vid_Browse','fid'}');
+                        'callback',{'Behavior_Vid_Browse','fid',h2.fid}');
 align([temp,h2.fid],'distribute','center')
 row(1).p = p;
 row(1).scale = h2.fid;
@@ -18,9 +18,9 @@ clear temp;
 p           = uipanel(h,ss.subpanel{:},'position',[5 65 710 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[30 0 80 0],'string','Annotations  ');
 h2.anno     = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[110 0 500 0],'string','',...
-                        'callback',{'Behavior_Vid_Browse','anno'});
+                        'callback',{'Behavior_Vid_Browse','anno',[]});
 temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
-                        'callback',{'Behavior_Vid_Browse','anno'}');
+                        'callback',{'Behavior_Vid_Browse','anno',h2.anno}');
 align([temp,h2.anno],'distribute','center');
 row(2).p = p;
 row(2).scale = h2.anno;
@@ -31,9 +31,9 @@ clear temp;
 p           = uipanel(h,ss.subpanel{:},'position',[5 34 710 30]);
               uicontrol(p,ss.R{:},'style','text','position',ss.txt+[30 0 80 0],'string','Tracking data  ');
 h2.track    = uicontrol(p,ss.L{:},'style','edit','position',ss.box+[110 0 500 0],'string','',...
-                        'callback',{'Behavior_Vid_Browse','track'});
+                        'callback',{'Behavior_Vid_Browse','track',[]});
 temp(1)     = uicontrol(p,ss.C{:},'style','pushbutton','position',ss.box+[620 0 30 0],'string','...',...
-                        'callback',{'Behavior_Vid_Browse','track'}');
+                        'callback',{'Behavior_Vid_Browse','track',h2.track}');
 align([temp,h2.anno],'distribute','center');
 row(3).p = p;
 row(3).scale = h2.track;
