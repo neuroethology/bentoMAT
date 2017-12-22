@@ -4,6 +4,7 @@ function gui = drawAnnot(gui)
 annot.channels  = '';
 annot.activeCh  = '';
 annot.modified  = 0;
+annot.prev = [];
 annot.bhv   = struct();
 annot.show  = struct();
 annot.cmap  = struct();

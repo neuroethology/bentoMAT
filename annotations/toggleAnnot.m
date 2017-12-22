@@ -21,7 +21,7 @@ if(source.Value==1)
         set(gui.annot.Box.traces,'FaceColor',[.8 .8 .8]);
     end
     
-    gui.annot.highlightStart = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
+    gui.annot.highlightStart = max(round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR)-1,1);
     guidata(source,gui);
 else
     gui.annot.Box.traces.Visible = 'off';
@@ -39,7 +39,13 @@ else
     if(isempty(gui.annot.bhv)|~isfield(gui.annot.bhv,str))
         gui.annot.bhv.(str) = false(1,gui.ctrl.slider.Max);
     end
+    gui.annot.prev = gui.annot.bhv;
     gui.annot.bhv.(str)(inds) = strcmpi(source.Tag,'add');
+    if(gui.Keys.Shift & ~strcmpi(source.Tag,'add'))
+        for str = fieldnames(gui.annot.bhv)'
+            gui.annot.bhv.(str{:})(inds) = false;
+        end
+    end
     gui.annot.modified = 1;
     gui.annot.highlightStart = [];
     
