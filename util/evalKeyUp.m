@@ -61,6 +61,8 @@ switch eventdata.Key
             guidata(gui.h0,gui);
             updatePlot(gui.h0,[]);
         end
+    case 'h'
+        openHelpMenu();
     case 't'
         gui.ctrl.annot.annot.Value = mod(gui.ctrl.annot.annot.Value-2, length(gui.ctrl.annot.annot.String)-2) + 1;
     case 'g'
@@ -71,13 +73,28 @@ switch eventdata.Key
             start   = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
             if(start==1) start=2; end
             if(eventdata.Key=='b')
-                ind = 1 + find(gui.annot.bhv.(str)(2:start-2) & ~gui.annot.bhv.(str)(1:start-3),1,'last');
+                jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-2) & ~gui.annot.bhv.(s)(1:start-3),1,'last');
             else
-                ind = start - 1 + find(gui.annot.bhv.(str)(start:end) & ~gui.annot.bhv.(str)(start-1:end-1),1,'first');
+                jumpFun = @(s) start - 1 + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
+            end
+            ind=inf*(2*(eventdata.Key=='f')-1);
+            if(~gui.Keys.Shift)
+                for f = fieldnames(gui.annot.bhv)'
+                    i2 = jumpFun(f{:});
+                    if((eventdata.Key=='f' & i2<ind) | (eventdata.Key=='b' & i2>ind))
+                        indNum  = find(strcmpi(fieldnames(gui.annot.bhv),f{:}));
+                        ind     = i2;
+                    end
+                end
+                if(isinf(ind)) ind = []; end
+            else
+                ind = jumpFun(str);
+                indNum = find(strcmpi(fieldnames(gui.annot.bhv),str));
             end
             if(~isempty(ind))
                 if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox')) set(gui.ctrl.slider.text,'String',makeTime(ind/gui.data.annoFR));
                 else set(gui.ctrl.slider.text,'String',num2str(ind)); end
+                gui.ctrl.annot.annot.Value = indNum;
                 dummy = struct();
                 dummy.Source = gui.ctrl.slider.text;
                 updatePlot(gui.h0,dummy);

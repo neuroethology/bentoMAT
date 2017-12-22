@@ -32,6 +32,9 @@ gui     = drawWelcome(gui);
 gui = redrawPanels(gui);
 
 gui.Action      = 0;
+gui.Keys.Shift  = 0;
+gui.Keys.Ctrl   = 0;
+gui.Keys.Alt    = 0;
 gui.quitbutton  = 0;
 gui.ctrl.slider.timer = tic;
 
