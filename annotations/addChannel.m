@@ -46,7 +46,7 @@ end
 
 gui.annot.modified = 1;
 updateSliderAnnot(gui);
-parent.String = {'-- pick channel --',channels{:},'add new...','remove channel...'};
+parent.String = {channels{:},'add new...','remove channel...'};
 parent.Value = length(channels)+1;
 gui.annot.activeCh = channels{end};
 

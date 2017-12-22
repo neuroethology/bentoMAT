@@ -56,7 +56,7 @@ end
 
 guidata(parent,gui);
 
-parent.String = {'-- pick label --',labels{:},'add new...','remove label...'};
+parent.String = {labels{:},'add new...','remove label...'};
 parent.Value = length(labels)+1;
 
 close();
