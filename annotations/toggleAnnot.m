@@ -30,7 +30,7 @@ else
     set(gui.annot.Box.traces,'FaceColor',[.8 .8 .8])
     
     p1 = gui.annot.highlightStart;
-    p2 = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
+    p2 = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min)*gui.data.annoFR);
     if(p1<p2)
         inds = p1:p2;
     else

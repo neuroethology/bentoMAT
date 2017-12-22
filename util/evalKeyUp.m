@@ -73,9 +73,17 @@ switch eventdata.Key
             start   = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
             if(start==1) start=2; end
             if(eventdata.Key=='b')
-                jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-2) & ~gui.annot.bhv.(s)(1:start-3),1,'last');
+                if(gui.Keys.Ctrl)
+                    jumpFun = @(s) find(gui.annot.bhv.(s)(1:start-2) & ~gui.annot.bhv.(s)(2:start-1),1,'last');
+                else
+                    jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-2) & ~gui.annot.bhv.(s)(1:start-3),1,'last');
+                end
             else
-                jumpFun = @(s) start - 1 + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
+                if(gui.Keys.Ctrl)
+                    jumpFun = @(s) start - 2 + find(gui.annot.bhv.(s)(start-1:end-1) & ~gui.annot.bhv.(s)(start:end),1,'first');
+                else
+                    jumpFun = @(s) start - 1 + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
+                end
             end
             ind=inf*(2*(eventdata.Key=='f')-1);
             if(~gui.Keys.Shift)
