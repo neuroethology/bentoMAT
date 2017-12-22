@@ -13,7 +13,10 @@ channels = fieldnames(data.annot);
 channels(strcmpi(channels,'FR'))    = [];
 channels(strcmpi(channels,'time'))  = [];
 annot.channels = channels;
-gui.ctrl.annot.ch.String = {'',channels{:},'add new...','remove channel...'};
+if(isempty(annot.activeCh))
+    annot.activeCh = annot.channels{1};
+end
+gui.ctrl.annot.ch.String = {channels{:},'add new...','remove channel...'};
 bhvList = fieldnames(data.annot.(channels{1}))';
 bhvList(strcmpi(bhvList,'other'))=[];
 
@@ -38,5 +41,4 @@ for f = bhvList
 end
 gui.annot = annot;
 
-gui.ctrl.annot.annot.String = {'',bhvList{:},'add new...','remove field...'};
-% gui.ctrl.annot.annot.Value = 1;
+gui.ctrl.annot.annot.String = {bhvList{:},'add new...','remove field...'};

@@ -1,11 +1,6 @@
 function toggleAnnot(source,~)
 gui = guidata(source);
 
-if((gui.ctrl.annot.annot.Value==1)||(gui.ctrl.annot.ch.Value==1))
-    msgbox('Select channel and behavior first.');
-    source.Value=0;
-    return;
-end
 str = strrep(gui.ctrl.annot.annot.String{gui.ctrl.annot.annot.Value},' ','_');
 Ch = strrep(gui.ctrl.annot.ch.String{gui.ctrl.annot.ch.Value},' ','_');
 
