@@ -22,7 +22,7 @@ raw(nodata,:) = [];
 
 [startFlag,stopFlag,FRFlag]=deal(0);
 for f = 1:length(fset)
-    ind = find(~cellfun(@isempty,strfind(matchset,fset{f})));
+    ind = find(~cellfun(@isempty,strfind(lower(matchset),lower(fset{f}))));
     if(length(ind)>1)
         switch fset{f}
             case 'Start'
