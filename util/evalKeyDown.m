@@ -23,6 +23,10 @@ switch eventdata.Key
             gui.ctrl.slider.timer = tic;
         end
         gui.Action = [-gui.ctrl.slider.SliderStep(1) 0];
+    case 'shift'
+        gui.Keys.Shift = 1;
+    case 'control'
+        gui.Keys.Ctrl = 1;
 end
 
 guidata(gui.h0,gui);
