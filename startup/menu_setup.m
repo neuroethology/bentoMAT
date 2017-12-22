@@ -17,6 +17,8 @@ uimenu(mh.display,'Label','Set annotation colors','callback',@launchColorPick);
 uimenu(mh.display,'Label','Adjust audio scaling','Separator','on','callback',@setAudioThresholds);
 uimenu(mh.display,'Label','Sort units by CP','Separator','on','callback',@runCPsort);
 
+mh.help = uimenu(gui.h0,'Label','Help');
+uimenu(mh.help,'Label','Annotation Shortcuts','callback',@openHelpMenu);
 
 
 % mh.analyze = uimenu(gui.h0,'Label','Analysis','enable','off');
