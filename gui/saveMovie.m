@@ -41,11 +41,11 @@ if(specs.sliderOn)
     updateSlider(gui.h0,gui.ctrl.slider);
     updateSliderAnnot(gui);
 else
-    gui.enabled.ctrl = 0;
+    gui.enabled.ctrl(2) = 0;
 end
 redrawPanels(gui);
 
-if(specs.title~=1 && gui.enabled.movie)
+if(specs.title~=1 && all(gui.enabled.movie))
     if(specs.title==2)
         tstr = ['Mouse ' num2str(gui.data.info.mouse) ', stimulus: ' strrep(gui.data.stim,'_',' ')];
     elseif(specs.title==3)
@@ -72,7 +72,7 @@ end
 close(v);
 % -------------------------------------------------------------------------
 
-if(specs.title~=1 && gui.enabled.movie)
+if(specs.title~=1 && all(gui.enabled.movie))
     title(gui.movie.axes,'');
 end
 
@@ -93,7 +93,7 @@ gui.ctrl.slider.Min         = oldSlider.Min;
 gui.ctrl.slider.Max         = oldSlider.Max;
 updateSlider(gui.h0,gui.ctrl.slider);
 updateSliderAnnot(gui);
-gui.enabled.ctrl = 1;
+gui.enabled.ctrl(2) = 1;
 redrawPanels(gui);
 
 

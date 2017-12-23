@@ -59,27 +59,27 @@ data.info.session   = sess;
 data.info.trial     = tr;
 
 % now! load the movie
-if(gui.enabled.movie)
+if(gui.enabled.movie(1))
     if(newMovie)
         [gui,data]  = loadMovie(gui,data);
     else
         data.io.movie.reader = gui.data.io.movie.reader;
         gui = applySliderUpdates(gui,'movie',data.io.movie);
     end
-elseif(gui.enabled.traces)
+elseif(gui.enabled.traces(1))
     gui = applySliderUpdates(gui,'Ca',data);
 else
     gui = applySliderUpdates(gui,'audio',data);
 end
 
 % get tracking type if needed
-if(gui.enabled.tracker)
+if(gui.enabled.tracker(1))
     if(isfield(gui,'data'))
         data.tracking.fun = gui.data.tracking.fun;
     else
         data.tracking.fun = promptTrackType();
         if(isempty(data.tracking.fun))
-            gui.enabled.tracker = 0;
+            gui.enabled.tracker = [0 0];
         end
     end
     data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
@@ -99,8 +99,10 @@ data.rast = [nan(N,1) data.rast nan(N,1)]; % pad with nans for display
 
 gui.data = data;
 % add the behavior annotations to the gui
-if(gui.enabled.annot)
+if(gui.enabled.annot(1))
     gui = transferAnnot(gui,data);
-    set(gui.audio.bg,'visible','on');
-    updateSliderAnnot(gui);
+	if(gui.enabled.annot(2))
+		set(gui.audio.bg,'visible','on');
+		updateSliderAnnot(gui);
+		end
 end

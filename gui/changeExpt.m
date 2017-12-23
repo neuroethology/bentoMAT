@@ -11,7 +11,7 @@ sess    = ['session' sessList{get(gui.ctrl.expt.session,'Value')}];
 tr      = str2num(trList{get(gui.ctrl.expt.trial,'Value')});
 
 % determine whether we have to load a new seq movie (loading takes a while)
-if(~gui.enabled.movie)
+if(~gui.enabled.movie(1))
     newMovie = false;
 elseif(~strcmpi(source.Tag,'trial'))
     newMovie = true;

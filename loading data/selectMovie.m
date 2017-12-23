@@ -9,12 +9,12 @@ gui = guidata(useSource);
 [fname,pathname] = uigetfile([gui.config.root '*.mp4;*.avi;*.seq']);
 
 % prompt to remove traces if they exist:
-if(gui.enabled.traces)
+if(all(gui.enabled.traces))
     ans = questdlg('Keep current Ca traces?','loading new movie...','Yes');
     switch ans
         case 'No'
             gui = drawTraces(gui);
-            gui.enabled.traces = 0;
+            gui.enabled.traces = [0 0];
         case 'Cancel'
             return;
     end
@@ -33,10 +33,10 @@ gui = drawCtrl(gui);
 gui = drawTracker(gui);
 
 % toggle window visiblity
-gui.enabled.welcome = 0;
-gui.enabled.tracker = 0;
-gui.enabled.movie   = 1;
-gui.enabled.ctrl    = 1;
+gui.enabled.welcome = [0 0];
+gui.enabled.tracker = [0 0];
+gui.enabled.movie   = [1 1];
+gui.enabled.ctrl    = [1 1];
 
 % update everything
 gui = redrawPanels(gui);

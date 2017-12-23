@@ -12,7 +12,7 @@ end
 fid = fopen(fid,'w');
 % write metadata-----------------------------------------------------------
 fprintf(fid,'%s\n','Tracergui annotation file');
-if(gui.enabled.movie)
+if(gui.enabled.movie(1))
     nmov = length(trial.io.movie.fid);
     fstr = '%s ';
     for m = 1:nmov

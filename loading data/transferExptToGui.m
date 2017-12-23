@@ -10,10 +10,10 @@ else
 end
 [mouse,enabled] = unpackExperiment(raw);
 % toggle window visiblity
-gui.enabled.welcome = 0;
+gui.enabled.welcome = [0 0];
 gui.enabled.traces  = enabled.traces;
 gui.enabled.movie   = enabled.movie;
-gui.enabled.ctrl    = 1;
+gui.enabled.ctrl    = [1 1];
 gui.enabled.annot   = enabled.annot;
 gui.enabled.tracker = enabled.tracker;
 gui.enabled.audio   = enabled.audio;

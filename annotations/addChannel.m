@@ -13,9 +13,7 @@ end
 channels{end+1}     = strrep(newStr,'_',' ');
 gui                 = guidata(parent);
 gui.annot.channels  = channels;
-if(gui.enabled.annot==0)
-    gui.enabled.annot = 1;
-end
+gui.enabled.annot(1) = 1; % enable annots if they haven't been already
 
 %intitialize the new channel to be blank
 f = fieldnames(gui.annot.bhv);

@@ -14,6 +14,8 @@ mh.display = uimenu(gui.h0,'Label','Display');
 uimenu(mh.display,'Label','Select traces to show','callback',@pickUnits);
 uimenu(mh.display,'Label','Select annotations to show','callback',@pickAnnot);
 uimenu(mh.display,'Label','Set annotation colors','callback',@launchColorPick);
+uimenu(mh.display,'Label','Toggle object visibility...','Separator','on','callback',@toggleEnabled);
+
 uimenu(mh.display,'Label','Adjust audio scaling','Separator','on','callback',@setAudioThresholds);
 uimenu(mh.display,'Label','Sort units by CP','Separator','on','callback',@runCPsort);
 

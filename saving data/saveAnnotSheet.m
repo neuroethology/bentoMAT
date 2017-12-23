@@ -17,7 +17,7 @@ end
 % write metadata/summary to info sheet-------------------------------------
 info = {};
 info{1,1} = 'Annotation datasheet';
-if(gui.enabled.movie)
+if(gui.enabled.movie(1))
     info{2,1} = 'Movie file:';
     info{2,2} = trial.io.movie.fid;
 end

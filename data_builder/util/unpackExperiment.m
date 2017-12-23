@@ -30,12 +30,12 @@ if(isnumeric(raw{1,5})&~isnan(raw{1,5})) %if there's a common bhvr movie framera
     data(:,match.FR_Anno) = raw(1,5);
 end
 
-enabled.movie    = raw{1,11};
-enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)));
-enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)));
-enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)));
-enabled.features  = 0;%any(~cellfun(@isempty,data(:,match.Tracking)));
-enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)));
+enabled.movie    = raw{1,11}*[1 1];
+enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
+enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
+enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
+enabled.features  = 0;%any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
+enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
 
 
 mouse = struct();
@@ -57,7 +57,7 @@ for i=1:size(data,1)
     hasOffset       = ~isempty(offset)&&~any(isnan(offset));
     
     % load traces----------------------------------------------------------
-    if(enabled.traces && ~isempty(data{i,match.Calcium_imaging_file}))
+    if(enabled.traces(1) && ~isempty(data{i,match.Calcium_imaging_file}))
         fid     = [pth data{i,match.Calcium_imaging_file}];
         tstart  = data{i,match.Start_Ca};
         tstop   = data{i,match.Stop_Ca};
@@ -125,7 +125,7 @@ for i=1:size(data,1)
     end
     
     % link movies----------------------------------------------------------
-    if(enabled.movie && ~isempty(data{i,match.Behavior_movie}))
+    if(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))
         movieList = strsplit(data{i,match.Behavior_movie},';');
         for j = 1:length(movieList)
             strtemp.io.movie.fid{j} = strtrim([pth strtrim(movieList{j})]);
@@ -165,7 +165,7 @@ for i=1:size(data,1)
     end
     
     % add tracking data----------------------------------------------------
-    if(enabled.tracker)
+    if(enabled.tracker(1))
         if(~isempty(data{i,match.Tracking}))
             fid = [pth data{i,match.Tracking}];
             [~,~,ext] = fileparts(fid);
@@ -188,7 +188,7 @@ for i=1:size(data,1)
     end
         
     % add audio data-------------------------------------------------------
-    if(enabled.audio)
+    if(enabled.audio(1))
         if(~isempty(data{i,match.Audio_file}))
             [~,~,ext] = fileparts(data{i,match.Audio_file});
             if(strcmpi(ext,'.mat'))
@@ -236,7 +236,7 @@ for i=1:size(data,1)
     end
     
     % load annotations-----------------------------------------------------
-    if(enabled.annot && ~isempty(data{i,match.Annotation_file}))
+    if(enabled.annot(1) && ~isempty(data{i,match.Annotation_file}))
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
             if(j>1), suff = ['_file' num2str(j)]; else suff=''; end
@@ -295,7 +295,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax = tmax;
         strtemp.annoTime = (1:(tmax-tmin))/strtemp.annoFR;
         
-    elseif(enabled.movie && ~isempty(data{i,match.Behavior_movie}))
+    elseif(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))
         strtemp.io.annot = struct();
         strtemp.io.annot.fid   = [];
         strtemp.io.annot.tmin = strtemp.io.movie.tmin;
@@ -304,7 +304,7 @@ for i=1:size(data,1)
         strtemp.annot = struct();
         strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
         
-    elseif(enabled.audio && ~isempty(data{i,match.Audio_file}))
+    elseif(enabled.audio(1) && ~isempty(data{i,match.Audio_file}))
         strtemp.io.annot = struct();
         strtemp.io.annot.fid   = [];
         strtemp.io.annot.tmin = strtemp.audio.tmin;

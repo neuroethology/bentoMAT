@@ -33,79 +33,83 @@ switch eventdata.Key
     case 'control'
         gui.Keys.Ctrl = 0;
         guidata(gui.h0,gui);
-    case 'a'
-        if(~isempty(gui.annot.activeCh))
-            gui.ctrl.annot.toggleAnnot.Value = ~gui.ctrl.annot.toggleAnnot.Value;
-            toggleAnnot(gui.ctrl.annot.toggleAnnot);
-        end
-    case 's'
-        if(~isempty(gui.annot.activeCh))
-            if(gui.Keys.Ctrl)
-                % save annotations! to file?
-            else
-                quickSave(gui.ctrl.annot.save); % quickSave actually saves to file too.... fix this
+end
+if(gui.enabled.annot(2))
+    switch eventdata.Key
+        case 'a'
+            if(~isempty(gui.annot.activeCh))
+                gui.ctrl.annot.toggleAnnot.Value = ~gui.ctrl.annot.toggleAnnot.Value;
+                toggleAnnot(gui.ctrl.annot.toggleAnnot);
             end
-        end
-    case 'e'
-        if(~isempty(gui.annot.activeCh))
-            gui.ctrl.annot.toggleErase.Value = ~gui.ctrl.annot.toggleErase.Value;
-            toggleAnnot(gui.ctrl.annot.toggleErase);
-        end
-    case 'z'
-        if(gui.Keys.Ctrl && gui.annot.modified)
-            str     = strrep(gui.ctrl.annot.annot.String{gui.ctrl.annot.annot.Value},' ','_');
-            temp    = gui.annot.bhv;
-            gui.annot.bhv  = gui.annot.prev;
-            gui.annot.prev = temp;
-            updateSliderAnnot(gui);
-            guidata(gui.h0,gui);
-            updatePlot(gui.h0,[]);
-        end
-    case 'h'
-        openHelpMenu();
-    case 't'
-        gui.ctrl.annot.annot.Value = mod(gui.ctrl.annot.annot.Value-2, length(gui.ctrl.annot.annot.String)-2) + 1;
-    case 'g'
-        gui.ctrl.annot.annot.Value = mod(gui.ctrl.annot.annot.Value, length(gui.ctrl.annot.annot.String)-2) + 1;
-    case {'f','b'} % jump to next bout of a behavior
-        if(~isempty(gui.annot.activeCh))
-            str     = strrep(gui.ctrl.annot.annot.String{gui.ctrl.annot.annot.Value},' ','_');
-            start   = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
-            if(start==1) start=2; end
-            if(eventdata.Key=='b')
+        case 's'
+            if(~isempty(gui.annot.activeCh))
                 if(gui.Keys.Ctrl)
-                    jumpFun = @(s) find(gui.annot.bhv.(s)(1:start-2) & ~gui.annot.bhv.(s)(2:start-1),1,'last');
+                    % save annotations! to file?
                 else
-                    jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-2) & ~gui.annot.bhv.(s)(1:start-3),1,'last');
-                end
-            else
-                if(gui.Keys.Ctrl)
-                    jumpFun = @(s) start - 2 + find(gui.annot.bhv.(s)(start-1:end-1) & ~gui.annot.bhv.(s)(start:end),1,'first');
-                else
-                    jumpFun = @(s) start - 1 + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
+                    quickSave(gui.ctrl.annot.save); % quickSave actually saves to file too.... fix this
                 end
             end
-            ind=inf*(2*(eventdata.Key=='f')-1);
-            if(~gui.Keys.Shift)
-                for f = fieldnames(gui.annot.bhv)'
-                    i2 = jumpFun(f{:});
-                    if((eventdata.Key=='f' & i2<ind) | (eventdata.Key=='b' & i2>ind))
-                        indNum  = find(strcmpi(fieldnames(gui.annot.bhv),f{:}));
-                        ind     = i2;
+        case 'e'
+            if(~isempty(gui.annot.activeCh))
+                gui.ctrl.annot.toggleErase.Value = ~gui.ctrl.annot.toggleErase.Value;
+                toggleAnnot(gui.ctrl.annot.toggleErase);
+            end
+        case 'z'
+            if(gui.Keys.Ctrl && gui.annot.modified)
+                str     = strrep(gui.ctrl.annot.annot.String{gui.ctrl.annot.annot.Value},' ','_');
+                temp    = gui.annot.bhv;
+                gui.annot.bhv  = gui.annot.prev;
+                gui.annot.prev = temp;
+                updateSliderAnnot(gui);
+                guidata(gui.h0,gui);
+                updatePlot(gui.h0,[]);
+            end
+        case 'h'
+            openHelpMenu();
+        case 't'
+            gui.ctrl.annot.annot.Value = mod(gui.ctrl.annot.annot.Value-2, length(gui.ctrl.annot.annot.String)-2) + 1;
+        case 'g'
+            gui.ctrl.annot.annot.Value = mod(gui.ctrl.annot.annot.Value, length(gui.ctrl.annot.annot.String)-2) + 1;
+        case {'f','b'} % jump to next bout of a behavior
+            if(~isempty(gui.annot.activeCh))
+                str     = strrep(gui.ctrl.annot.annot.String{gui.ctrl.annot.annot.Value},' ','_');
+                start   = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
+                if(start==1) start=2; end
+                if(eventdata.Key=='b')
+                    if(gui.Keys.Ctrl)
+                        jumpFun = @(s) find(gui.annot.bhv.(s)(1:start-2) & ~gui.annot.bhv.(s)(2:start-1),1,'last');
+                    else
+                        jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-2) & ~gui.annot.bhv.(s)(1:start-3),1,'last');
+                    end
+                else
+                    if(gui.Keys.Ctrl)
+                        jumpFun = @(s) start - 2 + find(gui.annot.bhv.(s)(start-1:end-1) & ~gui.annot.bhv.(s)(start:end),1,'first');
+                    else
+                        jumpFun = @(s) start - 1 + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
                     end
                 end
-                if(isinf(ind)) ind = []; end
-            else
-                ind = jumpFun(str);
-                indNum = find(strcmpi(fieldnames(gui.annot.bhv),str));
+                ind=inf*(2*(eventdata.Key=='f')-1);
+                if(~gui.Keys.Shift)
+                    for f = fieldnames(gui.annot.bhv)'
+                        i2 = jumpFun(f{:});
+                        if((eventdata.Key=='f' & i2<ind) | (eventdata.Key=='b' & i2>ind))
+                            indNum  = find(strcmpi(fieldnames(gui.annot.bhv),f{:}));
+                            ind     = i2;
+                        end
+                    end
+                    if(isinf(ind)) ind = []; end
+                else
+                    ind = jumpFun(str);
+                    indNum = find(strcmpi(fieldnames(gui.annot.bhv),str));
+                end
+                if(~isempty(ind))
+                    if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox')) set(gui.ctrl.slider.text,'String',makeTime(ind/gui.data.annoFR));
+                    else set(gui.ctrl.slider.text,'String',num2str(ind)); end
+                    gui.ctrl.annot.annot.Value = indNum;
+                    dummy = struct();
+                    dummy.Source = gui.ctrl.slider.text;
+                    updatePlot(gui.h0,dummy);
+                end
             end
-            if(~isempty(ind))
-                if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox')) set(gui.ctrl.slider.text,'String',makeTime(ind/gui.data.annoFR));
-                else set(gui.ctrl.slider.text,'String',num2str(ind)); end
-                gui.ctrl.annot.annot.Value = indNum;
-                dummy = struct();
-                dummy.Source = gui.ctrl.slider.text;
-                updatePlot(gui.h0,dummy);
-            end
-        end
+    end
 end

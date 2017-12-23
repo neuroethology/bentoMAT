@@ -33,23 +33,19 @@ time = gui.ctrl.slider.Value;
 
 
 % update the movie panel
-if(gui.enabled.movie)
+if(all(gui.enabled.movie))
     [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
-    if(gui.enabled.tracker) % add tracking data if included
+    if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);
     end
     if(size(mov,3)==1)
         mov = repmat(mov,[1 1 3]);
     end
-    if(strcmpi(gui.data.io.movie.readertype,'seq')&&~gui.enabled.tracker)
-        set(gui.movie.img,'cdata',mov);
-    else
-        set(gui.movie.img,'cdata',mov);
-    end
+	set(gui.movie.img,'cdata',mov);
 end
 
 % update the audio spectrogram
-if(gui.enabled.audio)
+if(all(gui.enabled.audio))
     inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
@@ -60,7 +56,7 @@ if(gui.enabled.audio)
     set(gui.audio.img, 'xdata', tsub(inds)-time);
     set(gui.audio.img, 'ydata', [gui.audio.freqLo gui.audio.freqHi]);
     
-    if(gui.enabled.annot&~gui.enabled.traces)
+    if(all(gui.enabled.annot)&~all(gui.enabled.traces))
         set(gui.audio.axes,'ylim',      [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) gui.audio.freqHi]);
         set(gui.audio.zeroLine,'ydata', [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) gui.audio.freqHi]);
     else
@@ -73,7 +69,7 @@ end
 time = time - gui.ctrl.slider.Min;%gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
 
 % update the plotted traces
-if(gui.enabled.traces)
+if(all(gui.enabled.traces))
     inds = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
     inds = inds | [false inds(1:end-1)] | [inds(2:end) false];
     bump = gui.traces.yScale;
@@ -121,7 +117,7 @@ end
 
 
 % update annotations
-if(gui.enabled.annot)
+if(gui.enabled.annot(1))
     % update behavior pic
     win  = (-gui.traces.win*gui.data.annoFR):(gui.traces.win*gui.data.annoFR);
     inds = round(time*gui.data.annoFR) + round(win);
@@ -130,21 +126,28 @@ if(gui.enabled.annot)
     inds(inds>length(gui.data.annoTime)) = length(gui.data.annoTime);
     
     tmax    = round(gui.data.annoTime(end)*gui.data.annoFR);
-    if(gui.enabled.traces || gui.enabled.audio)
+    if(all(gui.enabled.traces) || all(gui.enabled.audio))
         img     = makeBhvImage(gui.annot.bhv,gui.annot.cmap,inds,tmax,gui.annot.show)*2/3+1/3;
         img(:,drop,:) = 1;
         img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
-        if(gui.enabled.traces)
+        if(~gui.enabled.annot(2))
+            img = [];
+        end
+        if(all(gui.enabled.traces))
             set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 bump*(length(show)+1)]);
         else
-            set(gui.audio.bg,'Visible','on');
+            if(gui.enabled.annot(2))
+                set(gui.audio.bg,'Visible','on');
+            else
+                set(gui.audio.bg,'Visible','off');
+            end
             set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end,1)/1000/5 0]);
         end
     end
         
     % update behavior-annotating box if it's active
     if(isfield(gui.ctrl,'annot'))
-        if((gui.ctrl.annot.toggleAnnot.Value||gui.ctrl.annot.toggleErase.Value)&&gui.enabled.traces)
+        if((gui.ctrl.annot.toggleAnnot.Value||gui.ctrl.annot.toggleErase.Value)&&all(gui.enabled.traces))
             set(gui.annot.Box.traces,'ydata',[0 0 bump*(length(show)+1) bump*(length(show)+1)]);
             set(gui.annot.Box.traces,'xdata',[gui.annot.highlightStart/gui.data.annoFR-time 0 0 gui.annot.highlightStart/gui.data.annoFR-time]);
         end
@@ -157,24 +160,26 @@ if(gui.enabled.annot)
         chName = gui.annot.channels{chNum};
         str = '';
         count=0;
-        if(strcmpi(gui.annot.activeCh,chName))
-            for f = fieldnames(gui.annot.bhv)'
-                if(gui.annot.bhv.(f{:})(frnum)&&gui.annot.show.(f{:}))
-                    str = [str strrep(f{:},'_',' ') ' '];
-                    count=count+1;
-                end
-            end
-        else %have to get inactive-channel data from gui.data :0
-            for f = fieldnames(gui.data.annot.(chName))'
-                if(~isempty(gui.data.annot.(chName).(f{:})))
-                    if(any((gui.data.annot.(chName).(f{:})(:,1)<=frnum) & (gui.data.annot.(chName).(f{:})(:,2)>=frnum)))
+        if(gui.enabled.annot(2))
+            if(strcmpi(gui.annot.activeCh,chName))
+                for f = fieldnames(gui.annot.bhv)'
+                    if(gui.annot.bhv.(f{:})(frnum)&&gui.annot.show.(f{:}))
                         str = [str strrep(f{:},'_',' ') ' '];
                         count=count+1;
                     end
                 end
+            else %have to get inactive-channel data from gui.data :0
+                for f = fieldnames(gui.data.annot.(chName))'
+                    if(~isempty(gui.data.annot.(chName).(f{:})))
+                        if(any((gui.data.annot.(chName).(f{:})(:,1)<=frnum) & (gui.data.annot.(chName).(f{:})(:,2)>=frnum)))
+                            str = [str strrep(f{:},'_',' ') ' '];
+                            count=count+1;
+                        end
+                    end
+                end
             end
         end
-        if(gui.enabled.movie)
+        if(all(gui.enabled.movie))
             set(gui.movie.annot(chNum),'string',str);
             if(count==1&strcmpi(gui.annot.activeCh,chName))
                 cswatch = gui.annot.cmap.(strrep(str(1:end-1),' ','_'));
@@ -187,7 +192,7 @@ if(gui.enabled.annot)
             else
                 set(gui.movie.annot(chNum),'fontweight','normal','fontsize',10);
             end
-        elseif(gui.enabled.traces)
+        elseif(all(gui.enabled.traces))
     %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)
         end
     end
