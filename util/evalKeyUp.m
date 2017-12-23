@@ -33,6 +33,10 @@ switch eventdata.Key
     case 'control'
         gui.Keys.Ctrl = 0;
         guidata(gui.h0,gui);
+    case 'h'
+        openHelpMenu();
+    case 'v'
+        toggleEnabled(source);
 end
 if(gui.enabled.annot(2))
     switch eventdata.Key
@@ -64,8 +68,6 @@ if(gui.enabled.annot(2))
                 guidata(gui.h0,gui);
                 updatePlot(gui.h0,[]);
             end
-        case 'h'
-            openHelpMenu();
         case 't'
             gui.ctrl.annot.annot.Value = mod(gui.ctrl.annot.annot.Value-2, length(gui.ctrl.annot.annot.String)-2) + 1;
         case 'g'

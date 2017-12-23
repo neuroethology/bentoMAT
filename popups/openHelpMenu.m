@@ -24,6 +24,7 @@ str = [str; {'s','Save changes to annotations'}];
 str = [str; {'',''}];
 str = [str; {'---Other---',''}];
 str = [str; {'h','Open this menu'}];
+str = [str; {'v','Toggle data visibility'}];
 str = [str; {'',''}];
 
 str(:,1) = pad(str(:,1),10,'both');

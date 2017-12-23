@@ -12,6 +12,7 @@ set(gui.h0,'dockcontrols','off','menubar','none',...
 % sets which panels are visible/being updated.
 gui.enabled.movie    = [0 0];
 gui.enabled.ctrl     = [0 0];
+gui.enabled.annot    = [0 0];
 gui.enabled.traces   = [0 0];
 gui.enabled.tracker  = [0 0];
 gui.enabled.audio    = [0 0];
