@@ -1,4 +1,4 @@
-function [data,enabled] =loadIOData(io,prev)
+function [data,enabled] = loadIOData(io,prev)
 % load and organize files associated with a data entry
 
 keyboard
@@ -11,8 +11,9 @@ for f = fieldnames(io)'
     else %it's a data file to be loaded
         if(~isempty(prev) && isfield(pref,f{:}) && strcmpi(data.(f{:}),prev.(f{:}))) %file is same as in prev
             
-        else
+        else % it's a new file, time to load it
             [pth,fname,ext] = fileparts(io.(f{:}));
         end
     end
 end
+keyboard
