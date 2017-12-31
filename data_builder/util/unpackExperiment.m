@@ -99,23 +99,23 @@ for i=1:size(data,1)
     if(isfield(match,'Alignments')&&~isempty(data{i,match.Alignments}))
         fid = [pth data{i,match.Alignments}];
         sessn = ['session' num2str(data{i,match.Sessn})];
-        load(fid);
-        strtemp.rast_matched  = strtemp.rast(alignedCells.(sessn),:);
-        strtemp.match         = alignedCells.(sessn);
-        if(isfield(bounds,['day' sessn(end)]))
+        temp = load(fid);
+        strtemp.rast_matched  = strtemp.rast(temp.alignedCells.(sessn),:);
+        strtemp.match         = temp.alignedCells.(sessn);
+        if(isfield(temp.bounds,['day' sessn(end)]))
             if(exist('ICs'))
-                strtemp.units         = ICs.(['day' sessn(end)]);
+                strtemp.units         = temp.ICs.(['day' sessn(end)]);
             else
                 strtemp.units = [];
             end
-            strtemp.bounds        = bounds.(['day' sessn(end)]);
-        elseif(isfield(bounds,sessn))
+            strtemp.bounds        = temp.bounds.(['day' sessn(end)]);
+        elseif(isfield(temp.bounds,sessn))
             if(exist('ICs'))
-                strtemp.units         = ICs.(sessn);
+                strtemp.units         = temp.ICs.(sessn);
             else
                 strtemp.units = [];
             end
-            strtemp.bounds        = bounds.(sessn);
+            strtemp.bounds        = temp.bounds.(sessn);
         else
             strtemp.units         = [];
         end
