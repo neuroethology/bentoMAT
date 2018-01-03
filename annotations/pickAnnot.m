@@ -4,9 +4,9 @@ gui = guidata(source);
 
 lbls = fieldnames(gui.annot.cmap);
 nbeh = length(lbls);
-ncol = ceil(nbeh/20);
+ncol = ceil(nbeh/10);
 nrows = ceil(nbeh/ncol);
-colwidth = 180;
+colwidth = 200;
 
 hfig = figure('dockcontrols','off','menubar','none',...
     'Tag','Annot browser','NumberTitle','off');
@@ -14,7 +14,12 @@ gui.browser = hfig;
 
 
 p = get(hfig,'position');
-set(hfig,'position',[p(1:2) ncol*colwidth nrows*35 + 50]);
+p0 = get(0,'screenSize');
+py = p0(4)-(nrows*35+50);
+if(py>0)
+    py = py/2;
+end
+set(hfig,'position',[p(1) py ncol*colwidth nrows*35+50]);
 
 bump = nrows*35;
 uicontrol('Style','text',...
@@ -35,7 +40,7 @@ for j = 1:ceil(nbeh/ncol)
             uicontrol('Style','text',...
                     'String',strrep(lbls{b},'_',' '),...
                     'HorizontalAlignment','left',...
-                    'Position',[60+(i-1)*colwidth bump 80 35]);
+                    'Position',[60+(i-1)*colwidth bump 120 35]);
         end
     end
 end

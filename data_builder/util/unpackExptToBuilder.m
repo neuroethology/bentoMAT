@@ -8,14 +8,16 @@ end
 [~,~,raw] = xlsread(pth,'Sheet1');
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
-for i = 3:size(raw,1)
-    inds = [4 5 9];
-    mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
-    raw(i,inds(find(mask))) = {''};
-    inds = [6 7 8 10 11 12];
-    mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
-    raw(i,inds(find(mask))) = {[]};
-end
+raw(cell2mat(cellfun(@(x) all(isnan(x)),raw,'uniformoutput',false))) = {''};
+
+% for i = 3:size(raw,1)
+%     inds = [4 5 9];
+%     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
+%     raw(i,inds(find(mask))) = {''};
+%     inds = [6 7 8 10 11 12];
+%     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
+%     raw(i,inds(find(mask))) = {[]};
+% end
 
 set(gui.root,'String',raw{1,1});
 
@@ -28,8 +30,9 @@ for i=1:length(fieldset)
 end
 [M,matchInds] = reconcileSheetFormats(gui,raw,fieldnames(fields));
 gui.t.Data = M;
+raw{1,20}='';
 
-if(~isnumeric(raw{1,3})) %variable Ca framerate
+if(any(~cellfun(@isempty,raw(3:end,matchInds.FR_Ca))))
     set(gui.CaFRtog,'Value',1);
     set(gui.CaFR,'Enable','off');
     set(gui.CaFRtxt,'Enable','off');
@@ -40,7 +43,7 @@ else
     set(gui.CaFRtxt,'Enable','on');
     gui.rowVis(matchInds.FR_Ca) = 0;
 end
-if(~isnumeric(raw{1,5})) %variable annot framerate
+if(any(~cellfun(@isempty,raw(3:end,matchInds.FR_Anno))))
     set(gui.annoFRtog,'Value',1);
     set(gui.annoFR,'Enable','off');
     set(gui.annoFRtxt,'Enable','off');
@@ -51,17 +54,23 @@ else
     set(gui.annoFRtxt,'Enable','on');
     gui.rowVis(matchInds.FR_Anno) = 0;
 end
-set(gui.CaMulti,   'Value', raw{1,7});
-set(gui.annoMulti, 'Value', raw{1,9});
-set(gui.incMovies, 'Value', raw{1,11});
-gui.rowVis(matchInds.Start_Ca)         = raw{1,7};
-gui.rowVis(matchInds.Stop_Ca)          = raw{1,7};
-gui.rowVis(matchInds.Start_Anno)       = raw{1,9};
-gui.rowVis(matchInds.Stop_Anno)        = raw{1,9};
-gui.rowVis(matchInds.Behavior_movie)   = raw{1,11};
-gui.rowVis(matchInds.Offset)           = raw{1,13};
-gui.rowVis(matchInds.Tracking)         = raw{1,15};
-gui.rowVis(matchInds.Audio_file)       = raw{1,17};
+set(gui.CaMulti,   'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Start_Ca))));
+set(gui.annoMulti, 'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Start_Anno))));
+set(gui.incMovies, 'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Behavior_movie))));
+set(gui.offset,    'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Offset))));
+set(gui.incTracking,'Value',  any(~cellfun(@isempty,raw(3:end,matchInds.Tracking))));
+set(gui.incAudio,  'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Audio_file))));
+
+if(size(raw,1)>=3)
+    gui.rowVis(matchInds.Start_Ca)         = any(~cellfun(@isempty,raw(3:end,matchInds.Start_Ca)));
+    gui.rowVis(matchInds.Stop_Ca)          = any(~cellfun(@isempty,raw(3:end,matchInds.Stop_Ca)));
+    gui.rowVis(matchInds.Start_Anno)       = any(~cellfun(@isempty,raw(3:end,matchInds.Start_Anno)));
+    gui.rowVis(matchInds.Stop_Anno)        = any(~cellfun(@isempty,raw(3:end,matchInds.Stop_Anno)));
+    gui.rowVis(matchInds.Behavior_movie)   = any(~cellfun(@isempty,raw(3:end,matchInds.Behavior_movie)));
+    gui.rowVis(matchInds.Offset)           = any(~cellfun(@isempty,raw(3:end,matchInds.Offset)));
+    gui.rowVis(matchInds.Tracking)         = any(~cellfun(@isempty,raw(3:end,matchInds.Tracking)));
+    gui.rowVis(matchInds.Audio_file)       = any(~cellfun(@isempty,raw(3:end,matchInds.Audio_file)));
+end
 gui.rowVis(isnan(gui.rowVis)) = 0;
 gui.incAudio.Value = gui.rowVis(matchInds.Audio_file);
 

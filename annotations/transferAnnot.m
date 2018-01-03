@@ -15,7 +15,7 @@ if(isempty(annot.activeCh))
     annot.activeCh = annot.channels{1};
 end
 gui.ctrl.annot.ch.String = {channels{:},'add new...','remove channel...'};
-bhvList = fieldnames(data.annot.(channels{1}))';
+bhvList = fieldnames(data.annot.(annot.activeCh))';
 bhvList(strcmpi(bhvList,'other'))=[];
 
 annot.bhv = struct();

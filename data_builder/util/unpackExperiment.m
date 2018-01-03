@@ -23,20 +23,20 @@ fieldset = strrep(fieldset,' ','_');
 fieldset = strrep(fieldset,'_#','');
 [data,match] = reconcileSheetFormats([],raw,fieldset);
 
-if(isnumeric(raw{1,3})&~isnan(raw{1,3})) %if there's a common Ca framerate
+if(isnumeric(raw{1,3})&&~isnan(raw{1,3})) %if there's a common Ca framerate
     data(:,match.FR_Ca) = raw(1,3);
 end
-if(isnumeric(raw{1,5})&~isnan(raw{1,5})) %if there's a common bhvr movie framerate
+if(isnumeric(raw{1,5})&&~isnan(raw{1,5})) %if there's a common bhvr movie framerate
     data(:,match.FR_Anno) = raw(1,5);
 end
 
-enabled.movie    = raw{1,11}*[1 1];
+enabled.movie    = any(~cellfun(@isempty,data(:,match.Behavior_movie)))*[1 1];
 enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
 enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
 enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
-enabled.features  = 0;%any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
+enabled.features  = [0 0];%any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
-
+% enabled.fineAnnot = [0 0];
 
 mouse = struct();
 prevCa = '';
@@ -239,7 +239,7 @@ for i=1:size(data,1)
     if(enabled.annot(1) && ~isempty(data{i,match.Annotation_file}))
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
-            annoList{j} = strip(strip(annoList{j},'left','.'),'left',filesep);
+            annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
             if(j>1), suff = ['_file' num2str(j)]; else suff=''; end
             if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
                 strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
