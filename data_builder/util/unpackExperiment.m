@@ -58,7 +58,7 @@ for i=1:size(data,1)
     
     % load traces----------------------------------------------------------
     if(enabled.traces(1) && ~isempty(data{i,match.Calcium_imaging_file}))
-        fid     = [pth data{i,match.Calcium_imaging_file}];
+        fid     = [pth strip(strip(data{i,match.Calcium_imaging_file},'left','.'),'left',filesep)];
         tstart  = data{i,match.Start_Ca};
         tstop   = data{i,match.Stop_Ca};
         CaFR    = data{i,match.FR_Ca};
@@ -128,7 +128,7 @@ for i=1:size(data,1)
     if(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))
         movieList = strsplit(data{i,match.Behavior_movie},';');
         for j = 1:length(movieList)
-            strtemp.io.movie.fid{j} = strtrim([pth strtrim(movieList{j})]);
+            strtemp.io.movie.fid{j} = strtrim([pth strip(strip(strtrim(movieList{j}),'left','.'),'left',filesep)]);
         end
         
         strtemp.io.movie.FR  = data{i,match.FR_Anno};
@@ -167,7 +167,7 @@ for i=1:size(data,1)
     % add tracking data----------------------------------------------------
     if(enabled.tracker(1))
         if(~isempty(data{i,match.Tracking}))
-            fid = [pth data{i,match.Tracking}];
+            fid = [pth strip(strip(data{i,match.Tracking},'left','.'),'left',filesep)];
             [~,~,ext] = fileparts(fid);
             if(strcmpi(ext,'.mat'))
                 strtemp.tracking.args = load(fid);
@@ -192,26 +192,26 @@ for i=1:size(data,1)
         if(~isempty(data{i,match.Audio_file}))
             [~,~,ext] = fileparts(data{i,match.Audio_file});
             if(strcmpi(ext,'.mat'))
-                fid             = [pth data{i,match.Audio_file}];
+                fid             = [pth strip(strip(data{i,match.Audio_file},'left','.'),'left',filesep)];
                 disp('Loading spectrogram...');
                 strtemp.audio   = load(fid);
                 disp('Done!');
                 
-            elseif(~isempty(ls([pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')])))
-                fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
+            elseif(~isempty(ls([pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)])))
+                fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
                 strtemp.audio   = load(fid);
                 
             else
                 disp(['Processing file ' data{i,match.Audio_file}]);
                 disp('Reading audio...');
-                fid             = [pth data{i,match.Audio_file}];
+                fid             = [pth strip(strip(data{i,match.Audio_file},'left','.'),'left',filesep)];
                 [y,Fs]          = audioread(fid);
                 disp('Generating spectrogram...');
                 win = hann(1024);
                 [~,f,t,psd]     = spectrogram(y,win,[],[],fs,'yaxis');
                 psd             = 10*log10(abs(double(psd)+eps));
                 disp('Saving spectrogram for future use...');
-                fid             = [pth strrep(data{i,match.Audio_file},ext,'_spectrogram.mat')];
+                fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
                 save(fid,'-v7.3','f','t','psd','Fs');
                 disp('Done!');
                 strtemp.audio.f   = f;
@@ -239,6 +239,7 @@ for i=1:size(data,1)
     if(enabled.annot(1) && ~isempty(data{i,match.Annotation_file}))
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
+            annoList{j} = strip(strip(annoList{j},'left','.'),'left',filesep);
             if(j>1), suff = ['_file' num2str(j)]; else suff=''; end
             if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
                 strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
