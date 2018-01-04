@@ -30,14 +30,16 @@ if(isnumeric(raw{1,5})&&~isnan(raw{1,5})) %if there's a common bhvr movie framer
     data(:,match.FR_Anno) = raw(1,5);
 end
 
-enabled.movie    = any(~cellfun(@isempty,data(:,match.Behavior_movie)))*[1 1];
-enabled.annot    = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
-enabled.traces   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
-enabled.tracker  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
+%window visibility:
+enabled.movie     = any(~cellfun(@isempty,data(:,match.Behavior_movie)))*[1 1];
+enabled.annot     = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
+enabled.traces    = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
+enabled.tracker   = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.features  = [0 0];%any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
-enabled.audio    = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
-% enabled.fineAnnot = [0 0];
+enabled.audio     = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
+enabled.fineAnnot = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 0];
 
+%load the data:
 mouse = struct();
 prevCa = '';
 rast   = [];
@@ -270,7 +272,7 @@ for i=1:size(data,1)
             else %load data in the old format, prepare to convert to sheet format when saved
                 if(raw{1,9})
                     frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
-                    strtemp.io.annot.fid = strrep([pth [pth annoList{j}]],'.txt',frame_suffix);
+                    strtemp.io.annot.fid = strrep([pth annoList{j}],'.txt',frame_suffix);
                     [atemp,~] = loadAnnotFile([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                     tmin(j) = data{i,match.Start_Anno};
                     tmax(j) = data{i,match.Stop_Anno};

@@ -39,4 +39,7 @@ for f = bhvList
 end
 gui.annot = annot;
 
+if(gui.ctrl.annot.annot.Value > length(bhvList))
+    gui.ctrl.annot.annot.Value = 1;
+end
 gui.ctrl.annot.annot.String = {bhvList{:},'add new...','remove field...'};

@@ -6,7 +6,7 @@ if(pullBg)
 end
 
 if(w<length(bg))
-    bgsmall = imresize(bg,w/length(bg));
+    bgsmall = imresize(bg,[size(bg,1) w]);
 else
     bgsmall = bg;
 end

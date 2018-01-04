@@ -10,13 +10,10 @@ else
 end
 [mouse,enabled] = unpackExperiment(raw);
 % toggle window visiblity
+gui.enabled         = enabled;
 gui.enabled.welcome = [0 0];
-gui.enabled.traces  = enabled.traces;
-gui.enabled.movie   = enabled.movie;
 gui.enabled.ctrl    = [1 1];
-gui.enabled.annot   = enabled.annot;
-gui.enabled.tracker = enabled.tracker;
-gui.enabled.audio   = enabled.audio;
+
 
 gui.traces.toPlot = 'rast'; %plot cells to start
 set(gui.ctrl.track.plotType,'Value',1);

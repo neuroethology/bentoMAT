@@ -19,14 +19,16 @@ if(~isempty(eventdata))
             updateSlider(source,gui.ctrl.slider);
 
         case 'winBox'
-            gui.traces.win   = str2num(eventdata.Source.String);
-            gui.features.win = str2num(eventdata.Source.String);
-            gui.audio.win    = str2num(eventdata.Source.String);
+            gui.traces.win      = str2num(eventdata.Source.String);
+            gui.features.win    = str2num(eventdata.Source.String);
+            gui.audio.win       = str2num(eventdata.Source.String);
+            gui.fineAnnot.win   = str2num(eventdata.Source.String);
             guidata(source,gui);
 
             set(gui.traces.axes,'xlim',[-gui.traces.win  gui.traces.win]);
             set(gui.features.axes,'xlim',[-gui.features.win  gui.features.win]);
             set(gui.audio.axes,'xlim',[-gui.audio.win  gui.audio.win]);
+            set(gui.fineAnnot.axes,'xlim',[-gui.fineAnnot.win  gui.fineAnnot.win]);
     end
 end
 time = gui.ctrl.slider.Value;
@@ -56,7 +58,7 @@ if(all(gui.enabled.audio))
     set(gui.audio.img, 'xdata', tsub(inds)-time);
     set(gui.audio.img, 'ydata', [gui.audio.freqLo gui.audio.freqHi]);
     
-    if(all(gui.enabled.annot)&~all(gui.enabled.traces))
+    if((all(gui.enabled.annot)||all(gui.enabled.fineAnnot))&&~all(gui.enabled.traces))
         set(gui.audio.axes,'ylim',      [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) gui.audio.freqHi]);
         set(gui.audio.zeroLine,'ydata', [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) gui.audio.freqHi]);
     else
@@ -126,8 +128,15 @@ if(gui.enabled.annot(1))
     inds(inds>length(gui.data.annoTime)) = length(gui.data.annoTime);
     
     tmax    = round(gui.data.annoTime(end)*gui.data.annoFR);
+    if(all(gui.enabled.fineAnnot)) % make a picture for all channels~!
+        img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmapDef,inds,tmax,gui.annot.show);
+        img(:,drop,:) = 1;
+        img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
+        set(gui.fineAnnot.img,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 1]);
+    end
+        
     if(all(gui.enabled.traces) || all(gui.enabled.audio))
-        img     = makeBhvImage(gui.annot.bhv,gui.annot.cmap,inds,tmax,gui.annot.show)*2/3+1/3;
+        img     = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
         img(:,drop,:) = 1;
         img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
         if(~gui.enabled.annot(2))
@@ -136,10 +145,15 @@ if(gui.enabled.annot(1))
         if(all(gui.enabled.traces))
             set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 bump*(length(show)+1)]);
         else
-            if(gui.enabled.annot(2))
+            if(gui.enabled.annot(2)) %this if/else shouldn't be necessary
                 set(gui.audio.bg,'Visible','on');
             else
                 set(gui.audio.bg,'Visible','off');
+            end
+            if(gui.enabled.fineAnnot)
+                img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmap,inds,tmax,gui.annot.show);
+                img(:,drop,:) = 1;
+                img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
             end
             set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end,1)/1000/5 0]);
         end

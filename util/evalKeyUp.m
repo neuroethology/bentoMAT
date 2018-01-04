@@ -94,7 +94,10 @@ if(gui.enabled.annot(2))
                 if(~gui.Keys.Shift)
                     for f = fieldnames(gui.annot.bhv)'
                         i2 = jumpFun(f{:});
-                        if((eventdata.Key=='f' & i2<ind) | (eventdata.Key=='b' & i2>ind))
+                        if(isempty(i2))
+                            continue;
+                        end
+                        if(((eventdata.Key=='f' && i2<ind) || (eventdata.Key=='b' && i2>ind)) && gui.annot.show.(f{:})==1)
                             indNum  = find(strcmpi(fieldnames(gui.annot.bhv),f{:}));
                             ind     = i2;
                         end
