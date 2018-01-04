@@ -10,6 +10,8 @@ while(~isempty(inds))
         str(1)=[];
         inds=inds-1;
         inds(1)=[];
+    else
+        break;
     end
 end
 
