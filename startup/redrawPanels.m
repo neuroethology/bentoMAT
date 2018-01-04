@@ -49,9 +49,9 @@ elseif(gui.enabled.movie(2) && gui.enabled.audio(2))
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
     
 elseif(gui.enabled.movie(2) && gui.enabled.fineAnnot(2))
-    gui.movie.panel.Position     = [0 ctrlSize+.1 1 1-.1-ctrlSize];
-    gui.fineAnnot.panel.Position = [0 ctrlSize 1 .1];
-    gui.ctrl.panel.Position      = [0 0 1 ctrlSize];
+    gui.movie.panel.Position     = [0 ctrlSize*.75+.15 1 1-.15-ctrlSize*.75];
+    gui.fineAnnot.panel.Position = [0 ctrlSize*.75 1 .15];
+    gui.ctrl.panel.Position      = [0 0 1 ctrlSize*.75];
     
 elseif(gui.enabled.movie(2) && gui.enabled.features(2))
     gui.movie.panel.Position    = [0 ctrlSize config.midline 1-ctrlSize];

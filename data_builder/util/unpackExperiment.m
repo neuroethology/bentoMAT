@@ -282,6 +282,7 @@ for i=1:size(data,1)
                     tmin(j) = 1;
                 end
             end
+            atemp  = rmBlankChannels(atemp);
             fields = fieldnames(atemp);
             for f = 1:length(fields)
                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});

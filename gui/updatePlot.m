@@ -127,14 +127,18 @@ if(gui.enabled.annot(1))
     inds(inds<=0) = 1;
     inds(inds>length(gui.data.annoTime)) = length(gui.data.annoTime);
     
+    
+    % make the fineAnnot pic if it's enabled
     tmax    = round(gui.data.annoTime(end)*gui.data.annoFR);
-    if(all(gui.enabled.fineAnnot)) % make a picture for all channels~!
+    if(all(gui.enabled.fineAnnot))
         img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmapDef,inds,tmax,gui.annot.show);
         img(:,drop,:) = 1;
         img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
-        set(gui.fineAnnot.img,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 1]);
+        set(gui.fineAnnot.img,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 1] + [1 -1]/(size(img,1)*2));
     end
-        
+    
+    
+    % add background images to traces/audio
     if(all(gui.enabled.traces) || all(gui.enabled.audio))
         img     = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
         img(:,drop,:) = 1;
@@ -184,7 +188,7 @@ if(gui.enabled.annot(1))
                 end
             else %have to get inactive-channel data from gui.data :0
                 for f = fieldnames(gui.data.annot.(chName))'
-                    if(~isempty(gui.data.annot.(chName).(f{:})))
+                    if(~isempty(gui.data.annot.(chName).(f{:}))&~strcmpi(f{:},'other'))
                         if(any((gui.data.annot.(chName).(f{:})(:,1)<=frnum) & (gui.data.annot.(chName).(f{:})(:,2)>=frnum)))
                             str = [str strrep(f{:},'_',' ') ' '];
                             count=count+1;
@@ -195,8 +199,8 @@ if(gui.enabled.annot(1))
         end
         if(all(gui.enabled.movie))
             set(gui.movie.annot(chNum),'string',str);
-            if(count==1&strcmpi(gui.annot.activeCh,chName))
-                cswatch = gui.annot.cmap.(strrep(str(1:end-1),' ','_'));
+            if(count==1)
+                cswatch = gui.annot.cmapDef.(strrep(str(1:end-1),' ','_'));
                 set(gui.movie.annot(chNum),'backgroundcolor',cswatch,'color',ones(1,3)*(1-round(mean(cswatch))));
             else
                 set(gui.movie.annot(chNum),'backgroundcolor',[.5 .5 .5],'color','w');
