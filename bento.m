@@ -1,7 +1,7 @@
 fclose all; clear gui;
 construct_gui();
 quitloop = 0;
-
+%%
 while(~quitloop)
     gui = guidata(gui.h0);
     if(any(gui.Action))

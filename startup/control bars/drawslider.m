@@ -11,7 +11,7 @@ slider.SliderStep = [1 1];
 slider.Pos        = gui.ctrl.panel.Position .* slider.panel.Position;
 slider.arrowW     = 0.025;
 slider.textW      = 0.125;
-slider.timer      = 0;
+slider.timer      = tic;
 
 aW = slider.arrowW;
 tW = slider.textW;
