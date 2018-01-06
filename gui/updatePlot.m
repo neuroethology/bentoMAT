@@ -13,6 +13,13 @@ if(~isempty(eventdata))
         case 'timeBox'
             gui.ctrl.slider.Value = getTime(gui.ctrl.slider.text.String)+gui.ctrl.slider.Min;
             updateSlider(source,gui.ctrl.slider);
+            
+        case 'fineAnnot'
+            t = gui.ctrl.slider.Value + eventdata.delta;
+            gui.ctrl.slider.Value = t;
+            updateSlider(source,gui.ctrl.slider);
+            t = t - gui.ctrl.slider.Min;
+            set(gui.ctrl.slider.text,'String',makeTime(t));
 
         case 'frameBox'
             gui.ctrl.slider.Value = (str2num(gui.ctrl.slider.text.String)-1)/gui.data.annoFR + gui.ctrl.slider.Min;

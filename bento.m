@@ -1,16 +1,16 @@
 fclose all; clear gui;
-quitloop = 0;
 construct_gui();
+quitloop = 0;
 
 while(~quitloop)
     gui = guidata(gui.h0);
     if(any(gui.Action))
         test = toc(gui.ctrl.slider.timer);
         if(test>0.1)
-            if(~strcmpi(gui.Action,'drag'))
-                hSlider = incSliderVal(gui.h0);
-            else
+            if(~isempty(strfind(gui.Action,'drag')))
                 hSlider = setSliderVal(gui.h0);
+            else
+                hSlider = incSliderVal(gui.h0);
             end
             updateSlider(gui.h0,hSlider);
             dummy.Source.Tag = 'slider';

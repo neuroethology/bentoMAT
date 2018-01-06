@@ -23,7 +23,7 @@ switch source.Tag
         end
 
     case 'marker'
-        gui.Action = 'drag';
+        gui.Action = 'dragslider';
 end
 
 guidata(parent,gui);
