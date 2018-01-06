@@ -11,6 +11,12 @@ end
 
 channels = fieldnames(data.annot);
 annot.channels = channels;
+
+gui.ctrl.annot.ch.Value = find(strcmpi(channels,annot.activeCh));
+if(isempty(gui.ctrl.annot.ch.Value))
+    gui.ctrl.annot.ch.Value = 1;
+    annot.activeCh = channels{1};
+end
 if(isempty(annot.activeCh))
     annot.activeCh = annot.channels{1};
 end
@@ -39,7 +45,4 @@ for f = bhvList
 end
 gui.annot = annot;
 
-if(gui.ctrl.annot.annot.Value > length(bhvList))
-    gui.ctrl.annot.annot.Value = 1;
-end
 gui.ctrl.annot.annot.String = {bhvList{:},'add new...','remove field...'};

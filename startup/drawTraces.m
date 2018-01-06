@@ -11,6 +11,8 @@ traces.traces       = plot(0,0,'color',[.1 .1 .1]);
 traces.zeroLine     = plot([0 0],get(gca,'ylim'),'k--');
 traces.bg           = image(ones(1,1,3),'hittest','off');
 uistack(traces.bg,'bottom');
+traces.axes.ButtonDownFcn = {@figBoxCheck,'traces'};
+traces.clickPt      = 0;
 
 xlabel('time (sec)');
 axis tight;

@@ -14,7 +14,7 @@ if(~isempty(eventdata))
             gui.ctrl.slider.Value = getTime(gui.ctrl.slider.text.String)+gui.ctrl.slider.Min;
             updateSlider(source,gui.ctrl.slider);
             
-        case 'fineAnnot'
+        case 'doubleClick'
             t = gui.ctrl.slider.Value + eventdata.delta;
             gui.ctrl.slider.Value = t;
             updateSlider(source,gui.ctrl.slider);
@@ -102,7 +102,7 @@ if(all(gui.enabled.traces))
         else
             gui.traces.traces(i) = plot(gui.traces.axes,...
                                         gui.data.CaTime(inds) - time,tr + order(i)*bump,...
-                                        'color',[.1 .1 .1]);
+                                        'color',[.1 .1 .1],'hittest','off');
         end
     end
     delete(gui.traces.traces(i+1:end));
