@@ -140,7 +140,7 @@ if(gui.enabled.annot(1))
     if(all(gui.enabled.fineAnnot))
         img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmapDef,inds,tmax,gui.annot.show);
         img(:,drop,:) = 1;
-        img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
+        img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*1.5,0);
         set(gui.fineAnnot.img,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 1] + [1 -1]/(size(img,1)*2));
     end
     

@@ -200,6 +200,7 @@ for i=1:size(data,1)
                 disp('Done!');
                 
             elseif(~isempty(ls([pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)])))
+                disp('Loading spectrogram...');
                 fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
                 strtemp.audio   = load(fid);
                 

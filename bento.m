@@ -1,9 +1,11 @@
-if(~exist('quitloop','var') | ~isvalid(gui.h0) | quitloop==1)
+if(~exist('quitloop','var') | ~exist('gui','var') | ~isstruct(gui) | ~isfield(gui,'h0') | ~isvalid(gui.h0) | quitloop==1)
     fclose all; clear gui;
     construct_gui();
-elseif(isvalid(gui.h0))
+elseif(exist('gui','var')&isstruct(gui)&isfield(gui,'h0')&isvalid(gui.h0))
     ans = questdlg('Keep data currently in Bento?','','Yes');
     switch ans
+        case 'Yes'
+            figure(gui.h0);
         case 'No'
             fclose all; clear gui;
             construct_gui();
