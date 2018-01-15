@@ -128,18 +128,15 @@ end
 % update annotations
 if(gui.enabled.annot(1))
     % update behavior pic
+    inds = find((gui.data.annoTime>=(time-gui.traces.win)) & (gui.data.annoTime<=(time+gui.traces.win)));
     win  = (-gui.traces.win*gui.data.annoFR):(gui.traces.win*gui.data.annoFR);
-    inds = round(time*gui.data.annoFR) + round(win);
-    drop = (inds<=0)|(inds>length(gui.data.annoTime));
-    inds(inds<=0) = 1;
-    inds(inds>length(gui.data.annoTime)) = length(gui.data.annoTime);
-    
+    win((win/gui.data.annoFR + time) > gui.data.annoTime(end))  = [];
+    win((win/gui.data.annoFR + time) < gui.data.annoTime(1))    = [];
     
     % make the fineAnnot pic if it's enabled
     tmax    = round(gui.data.annoTime(end)*gui.data.annoFR);
     if(all(gui.enabled.fineAnnot))
         img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmapDef,inds,tmax,gui.annot.show);
-        img(:,drop,:) = 1;
         img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*1.5,0);
         set(gui.fineAnnot.img,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 1] + [1 -1]/(size(img,1)*2));
     end
@@ -148,7 +145,6 @@ if(gui.enabled.annot(1))
     % add background images to traces/audio
     if(all(gui.enabled.traces) || all(gui.enabled.audio))
         img     = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
-        img(:,drop,:) = 1;
         img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
         if(~gui.enabled.annot(2))
             img = [];
@@ -163,7 +159,6 @@ if(gui.enabled.annot(1))
             end
             if(gui.enabled.fineAnnot)
                 img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmap,inds,tmax,gui.annot.show);
-                img(:,drop,:) = 1;
                 img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
             end
             set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end,1)/1000/5 0]);
@@ -179,8 +174,8 @@ if(gui.enabled.annot(1))
     end
     
     % display the current behavior in each channel~!
-    frnum = min(max(round(time*gui.data.annoFR),1),...
-                round((gui.data.io.annot.tmax - gui.data.io.annot.tmin)*gui.data.annoFR+1));
+    [~,i] = min(abs(win));
+    frnum = inds(i);
     for chNum = 1:length(gui.annot.channels)
         chName = gui.annot.channels{chNum};
         str = '';
