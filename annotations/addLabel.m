@@ -28,6 +28,7 @@ end
 gui.annot.bhv.(newStr)  = false(size(gui.data.annoTime));
 gui.annot.show.(newStr) = 1;
 gui.annot.cmap.(newStr) = newColor;
+gui.annot.cmapDef.(newStr) = newColor;
 gui.annot.modified = 1;
 
 % add the new label to gui.data
@@ -57,6 +58,6 @@ end
 guidata(parent,gui);
 
 parent.String = {labels{:},'add new...','remove label...'};
-parent.Value = length(labels)+1;
+parent.Value = length(labels);
 
 close();

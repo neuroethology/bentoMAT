@@ -47,8 +47,11 @@ elseif(gui.enabled.movie(2) && gui.enabled.audio(2))
     gui.movie.panel.Position  = [0 ctrlSize+.25 1 1-.25-ctrlSize];
     gui.audio.panel.Position  = [0 ctrlSize 1 .25];
     gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
+    if(gui.enabled.fineAnnot(2))
+        gui.fineAnnot.panel.Visible='off';
+    end
     
-elseif(gui.enabled.movie(2) && gui.enabled.fineAnnot(2))
+elseif(gui.enabled.movie(2) && gui.enabled.fineAnnot(2) && ~gui.enabled.audio(2))
     gui.movie.panel.Position     = [0 ctrlSize*.75+.15 1 1-.15-ctrlSize*.75];
     gui.fineAnnot.panel.Position = [0 ctrlSize*.75 1 .15];
     gui.ctrl.panel.Position      = [0 0 1 ctrlSize*.75];

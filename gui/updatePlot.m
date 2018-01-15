@@ -174,46 +174,48 @@ if(gui.enabled.annot(1))
     end
     
     % display the current behavior in each channel~!
-    [~,i] = min(abs(win));
-    frnum = inds(i);
-    for chNum = 1:length(gui.annot.channels)
-        chName = gui.annot.channels{chNum};
-        str = '';
-        count=0;
-        if(gui.enabled.annot(2))
-            if(strcmpi(gui.annot.activeCh,chName))
-                for f = fieldnames(gui.annot.bhv)'
-                    if(gui.annot.bhv.(f{:})(frnum)&&gui.annot.show.(f{:}))
-                        str = [str strrep(f{:},'_',' ') ' '];
-                        count=count+1;
-                    end
-                end
-            else %have to get inactive-channel data from gui.data :0
-                for f = fieldnames(gui.data.annot.(chName))'
-                    if(~isempty(gui.data.annot.(chName).(f{:}))&~strcmpi(f{:},'other'))
-                        if(any((gui.data.annot.(chName).(f{:})(:,1)<=frnum) & (gui.data.annot.(chName).(f{:})(:,2)>=frnum)))
+    if(~isempty(win))
+        [~,i] = min(abs(win));
+        frnum = inds(i);
+        for chNum = 1:length(gui.annot.channels)
+            chName = gui.annot.channels{chNum};
+            str = '';
+            count=0;
+            if(gui.enabled.annot(2))
+                if(strcmpi(gui.annot.activeCh,chName))
+                    for f = fieldnames(gui.annot.bhv)'
+                        if(gui.annot.bhv.(f{:})(frnum)&&gui.annot.show.(f{:}))
                             str = [str strrep(f{:},'_',' ') ' '];
                             count=count+1;
                         end
                     end
+                else %have to get inactive-channel data from gui.data :0
+                    for f = fieldnames(gui.data.annot.(chName))'
+                        if(~isempty(gui.data.annot.(chName).(f{:}))&~strcmpi(f{:},'other'))
+                            if(any((gui.data.annot.(chName).(f{:})(:,1)<=frnum) & (gui.data.annot.(chName).(f{:})(:,2)>=frnum)))
+                                str = [str strrep(f{:},'_',' ') ' '];
+                                count=count+1;
+                            end
+                        end
+                    end
                 end
             end
-        end
-        if(all(gui.enabled.movie))
-            set(gui.movie.annot(chNum),'string',str);
-            if(count==1)
-                cswatch = gui.annot.cmapDef.(strrep(str(1:end-1),' ','_'));
-                set(gui.movie.annot(chNum),'backgroundcolor',cswatch,'color',ones(1,3)*(1-round(mean(cswatch))));
-            else
-                set(gui.movie.annot(chNum),'backgroundcolor',[.5 .5 .5],'color','w');
+            if(all(gui.enabled.movie))
+                set(gui.movie.annot(chNum),'string',str);
+                if(count==1)
+                    cswatch = gui.annot.cmapDef.(strrep(str(1:end-1),' ','_'));
+                    set(gui.movie.annot(chNum),'backgroundcolor',cswatch,'color',ones(1,3)*(1-round(mean(cswatch))));
+                else
+                    set(gui.movie.annot(chNum),'backgroundcolor',[.5 .5 .5],'color','w');
+                end
+                if(strcmpi(gui.annot.activeCh,chName))
+                    set(gui.movie.annot(chNum),'fontweight','bold','fontsize',14);
+                else
+                    set(gui.movie.annot(chNum),'fontweight','normal','fontsize',10);
+                end
+            elseif(all(gui.enabled.traces))
+        %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)
             end
-            if(strcmpi(gui.annot.activeCh,chName))
-                set(gui.movie.annot(chNum),'fontweight','bold','fontsize',14);
-            else
-                set(gui.movie.annot(chNum),'fontweight','normal','fontsize',10);
-            end
-        elseif(all(gui.enabled.traces))
-    %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)
         end
     end
 end

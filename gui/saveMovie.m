@@ -47,13 +47,6 @@ else
 end
 redrawPanels(gui);
 
-frCut = round(specs.startTime*gui.data.annoFR);
-for chNum = 1:length(gui.annot.channels)
-    chName = gui.annot.channels{chNum};
-    for f = fieldnames(gui.data.annot.(chName))'
-        gui.data.annot.(chName).(f{:}) = gui.data.annot.(chName).(f{:}) - frCut;
-    end
-end
 gui.data.annoTime = gui.data.annoTime - specs.startTime;
 if(~isempty(gui.data.rast))
     gui.data.CaTime = gui.data.CaTime - specs.startTime;
