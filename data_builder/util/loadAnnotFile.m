@@ -19,6 +19,7 @@ listend = find(strcmp(M,''));
 listend = listend(2);
 conf = M(4:listend-1);
 for i = 1:length(conf)
+    conf{i} = strtrim(conf{i});
     conf{i} = conf{i}(1:end-2);
     conf{i} = strrep(conf{i},'-','_');
     if(~isstrprop(conf{i}(1),'alpha'))
