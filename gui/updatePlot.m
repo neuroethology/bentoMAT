@@ -44,13 +44,16 @@ time = gui.ctrl.slider.Value;
 % update the movie panel
 if(all(gui.enabled.movie))
     [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+%     mov = ones(size(mov),'uint8');
+%     mov = histeq(mov);
+%     mov = (double(mov) - mean(double(mov(:))))/std(double(mov(:)));
     if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);
     end
     if(size(mov,3)==1)
         mov = repmat(mov,[1 1 3]);
     end
-	set(gui.movie.img,'cdata',mov);
+	set(gui.movie.img,'cdata',mov);%(mov/3+.5));
 end
 
 % update the audio spectrogram

@@ -1,18 +1,28 @@
-function saveScreen(source,~)
+function saveScreen(source,~,movieOnly)
 
 gui = guidata(source);
 
-[FileName,PathName] = uiputfile(...
-{'*.eps;', 'EPS file (*.eps)';...
- '*.bmp', 'Bitmap file (*.bmp)';...
+ftypes = {'*.eps;', 'EPS file (*.eps)';...
  '*.jpg', 'JPEG image (*.jpg)';...
+ '*.bmp', 'Bitmap file (*.bmp)';...
  '*.fig','MATLAB Figure (*.fig)';...
  '*.png','Portable Network Graphics file (*.png)';...
  '*.tif','TIFF image (*.tif)';...
- '*.*',  'All Files (*.*)'},'Save As');
+ '*.*',  'All Files (*.*)'};
+if(movieOnly)
+    ftypes([1 4],:)=[];
+end
+
+[FileName,PathName] = uiputfile(ftypes,'Save As');
 saveDataName = fullfile(PathName,FileName);
-if(strcmpi(saveDataName(end-2:end),'eps'))
-    saveas(gui.h0, saveDataName,'epsc');
+
+if(movieOnly)
+    I = gui.movie.img.CData;
+    imwrite(I,saveDataName);
 else
-    saveas(gui.h0, saveDataName);
+    if(strcmpi(saveDataName(end-2:end),'eps'))
+            saveas(gui.h0, saveDataName,'epsc');
+    else
+        saveas(gui.h0, saveDataName);
+    end
 end
