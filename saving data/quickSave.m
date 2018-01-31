@@ -7,7 +7,8 @@ tr   = gui.data.info.trial;
 gui     = readoutAnnot(gui);
 gui.allData(m).(sess)(tr).annot = gui.data.annot;
 
-saveAnnotSheetTxt(gui,gui.data,m,sess,tr); %save the file too just to be safe
+suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(tr,'%03d') '.annot'];
+saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName); %save the file too just to be safe
 gui.annot.modified = 0;
 
 guidata(source,gui);

@@ -5,11 +5,22 @@ evaltime = tic;
 if(~isempty(eventdata))
     switch eventdata.Source.Tag
         case 'slider'
+            if(gui.Keys.Shift && any(gui.Action~=0))
+                chNum = strcmpi(gui.annot.activeCh,gui.annot.channels);
+                match = strrep(strtrim(gui.movie.annot(chNum).String),' ','_');
+                if(~isempty(match))
+                    inds    = gui.data.annoTime > (gui.ctrl.slider.Value - gui.ctrl.slider.Min);
+                    tNext   = gui.data.annoTime(find(gui.annot.bhv.(match)(inds),1,'first'));
+                    if(~isempty(tNext))
+                        gui.ctrl.slider.Value = gui.ctrl.slider.Value + tNext - gui.ctrl.slider.SliderStep(1);
+                    end
+                end
+            end
             if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox'))
                 set(gui.ctrl.slider.text,'String',makeTime(gui.ctrl.slider.Value-gui.ctrl.slider.Min+gui.ctrl.slider.SliderStep(1)));
             else
                 set(gui.ctrl.slider.text,'String',num2str(round((gui.ctrl.slider.Value-gui.ctrl.slider.Min)*gui.data.annoFR+1)));
-            end
+            end            
         case 'timeBox'
             gui.ctrl.slider.Value = getTime(gui.ctrl.slider.text.String)+gui.ctrl.slider.Min;
             updateSlider(source,gui.ctrl.slider);
@@ -42,18 +53,19 @@ time = gui.ctrl.slider.Value;
 
 
 % update the movie panel
-if(all(gui.enabled.movie))
-    [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
-%     mov = ones(size(mov),'uint8');
-%     mov = histeq(mov);
-%     mov = (double(mov) - mean(double(mov(:))))/std(double(mov(:)));
+if(all(gui.enabled.movie)||all(gui.enabled.tracker))
+    if(all(gui.enabled.movie))
+        [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+    else
+        mov = ones(size(mov),'uint8')*255;
+    end
     if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);
     end
     if(size(mov,3)==1)
         mov = repmat(mov,[1 1 3]);
     end
-	set(gui.movie.img,'cdata',mov);%(mov/3+.5));
+	set(gui.movie.img,'cdata',mov);
 end
 
 % update the audio spectrogram

@@ -33,7 +33,6 @@ info{7,3} = 'List of annotations:';
 
 channels = fieldnames(trial.annot);
 labels   = fieldnames(trial.annot.(channels{1}));
-cmap     = gui.annot.cmap;
 
 info(7+(1:length(channels)),1) = channels;
 info(7+(1:length(labels)),3) = labels;

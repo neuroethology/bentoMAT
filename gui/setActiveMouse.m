@@ -26,7 +26,8 @@ if(gui.annot.modified)
             return;
         case 'Yes'
             gui.allData(mOld).(sessOld)(trOld).annot = gui.data.annot;
-            saveAnnotSheetTxt(gui,gui.data,mOld,sessOld,trOld);
+			suggestedName = ['mouse' num2str(mOld) '_' sessOld '_' num2str(trOld,'%03d') '.annot'];
+            saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName);
             gui.annot.modified = 0;
         case 'No'
             gui.allData(mOld).(sessOld)(trOld).annot = gui.data.annot;

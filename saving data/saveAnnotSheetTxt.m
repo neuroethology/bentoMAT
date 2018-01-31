@@ -1,25 +1,27 @@
-function saveAnnotSheetTxt(gui,trial,mouse,session,tr)
+% function saveAnnotSheetTxt(movieNames,trial,suggestedName)
 
-fid     = trial.io.annot.fid;
-tmin    = trial.io.annot.tmin;
-tmax    = trial.io.annot.tmax;
+% fid     = trial.io.annot.fid;
+% tmin    = trial.io.annot.tmin;
+% tmax    = trial.io.annot.tmax;
 
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
-    suggestedName = ['mouse' num2str(mouse) '_' session '_' num2str(tr,'%03d') '.annot'];
-    [fname,pth] = uiputfile(suggestedName);
+    if(isempty(suggestedName))
+        suggestedName = 'annotations';
+    end
+    [fname,pth] = uiputfile([suggestedName '.annot']);
     fid = [pth fname];
 end
 fid = fopen(fid,'w');
 % write metadata-----------------------------------------------------------
 fprintf(fid,'%s\n','Tracergui annotation file');
-if(gui.enabled.movie(1))
-    nmov = length(trial.io.movie.fid);
+if(~isempty(movieNames))
+    nmov = length(movieNames);
     fstr = '%s ';
     for m = 1:nmov
         fstr = [fstr '%s '];
     end
     fstr = [fstr '\n'];
-    fprintf(fid,fstr,'Movie file(s): ',trial.io.movie.fid{:});
+    fprintf(fid,fstr,'Movie file(s): ',movieNames{:});
 end
 fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',trial.stim);

@@ -22,6 +22,7 @@ for i = 1:size(inds,1)
     disp(['Trial ' num2str(trial)]);
     
     dat     = data(m).(sess)(trial);
-    saveAnnotSheetTxt(gui,dat,m,sess,trial);
+	suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(trial,'%03d') '.annot'];
+    saveAnnotSheetTxt(trial.io.movie.fid,dat,suggestedName);
 end
 helpdlg('Done!');
