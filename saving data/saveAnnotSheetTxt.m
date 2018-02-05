@@ -1,8 +1,8 @@
-% function saveAnnotSheetTxt(movieNames,trial,suggestedName)
+function saveAnnotSheetTxt(movieNames,trial,suggestedName)
 
-% fid     = trial.io.annot.fid;
-% tmin    = trial.io.annot.tmin;
-% tmax    = trial.io.annot.tmax;
+fid     = trial.io.annot.fid;
+tmin    = trial.io.annot.tmin;
+tmax    = trial.io.annot.tmax;
 
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
     if(isempty(suggestedName))

@@ -34,12 +34,15 @@ switch(get(source,'Tag'))
     case('BhvMovies')
         gui.rowVis(15) = get(source,'Value');
         gui.t.Data(:,15) = {[]};
-    case('Tracking');
+    case('Tracking')
         gui.rowVis(16) = get(source,'Value');
         gui.t.Data(:,16) = {[]};
-    case('Audio');
+    case('Audio')
         gui.rowVis(17) = get(source,'Value');
         gui.t.Data(:,17) = {[]};
+    case('tSNE')
+        gui.rowVis(18) = get(source,'Value');
+        gui.t.Data(:,18) = {[]};
 end
 
 guidata(source,gui);

@@ -11,6 +11,7 @@ fineAnnot.img          = image();
 fineAnnot.img.ButtonDownFcn = {@figBoxCheck,'fineAnnot'};
 fineAnnot.zeroLine     = plot([0 0],[0 1],'k--');
 fineAnnot.clickPt      = 0;
+fineAnnot.txt          = text(0,0,'');
 
 axis tight;
 ylim([0 1]);

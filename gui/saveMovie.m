@@ -12,7 +12,7 @@ info.tmax = gui.ctrl.slider.Max - offset;
 data      = gui.data; % back up full versions of data
 annot     = gui.annot;
 
-specs        = getMovieSpecs(info);
+specs        = getMovieSpecs(gui,info);
 v            = VideoWriter(saveDataName,specs.profile);
 v.FrameRate  = specs.FR*specs.playback;
 if(strcmpi(specs.profile,'Motion JPEG AVI')|strcmpi(specs.profile,'MPEG-4'))
@@ -69,13 +69,31 @@ end
 % this is the actual save loop!--------------------------------------------
 open(v);
 temp = [];
-for t = (specs.startTime : 1/specs.FR : specs.endTime)
-    gui.ctrl.slider.text.String = makeTime(t-specs.startTime);
-    temp.Source.Tag = 'timeBox';
-    updatePlot(gui.h0,temp);
-    
-    img = getframe(gui.h0);
-    writeVideo(v,img);
+dt          = 1/specs.FR;
+if(strcmpi(specs.bhvr,'all'))
+    startTime   = specs.startTime;
+    endTime     = specs.endTime;
+else
+    bouts = convertToBouts(gui.annot.bhv.(specs.bhvr))/gui.data.annoFR;
+    bouts(bouts(:,2)<specs.startTime,:) = [];
+    bouts(bouts(:,1)>specs.endTime,:)   = [];
+    bouts = min(max(bouts,specs.startTime),specs.endTime);
+    startTime   = bouts(:,1);
+    endTime     = bouts(:,2);
+end
+
+for i = 1:length(startTime)
+    for t = startTime(i):dt:endTime(i)
+        gui.ctrl.slider.text.String = makeTime(t-specs.startTime);
+        temp.Source.Tag = 'timeBox';
+        updatePlot(gui.h0,temp);
+
+        img = getframe(gui.h0);
+        writeVideo(v,img);
+    end
+    for j=1:5
+        writeVideo(v,img); %add a pause at end of the bout
+    end
 end
 close(v);
 % -------------------------------------------------------------------------

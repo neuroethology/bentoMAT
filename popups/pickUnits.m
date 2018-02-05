@@ -9,6 +9,9 @@ function pickUnits(source,~)
         case 'PCs'
             plotStr = 'PC ';
             rast = gui.data.PCA'*gui.data.rast;
+        case 'dt'
+            plotStr = 'Cell ';
+            rast = gui.data.dt;
     end
     plotUnits   = gui.traces.show;
 

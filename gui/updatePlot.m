@@ -57,7 +57,7 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     if(all(gui.enabled.movie))
         [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
     else
-        mov = ones(size(mov),'uint8')*255;
+        mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;
     end
     if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);
@@ -100,8 +100,8 @@ if(all(gui.enabled.traces))
     show = find(gui.traces.show);
     [~,order] = sort(gui.traces.order(show));
     order     = max(order)-order+1;
-    [~,first] = min(order(show));
-    [~,last]  = max(order(show));
+    [~,first] = min(order);
+    [~,last]  = max(order);
     for i = 1:length(show)
         switch gui.traces.toPlot
             case 'rast'
@@ -110,6 +110,9 @@ if(all(gui.enabled.traces))
             case 'PCs'
                 tr = gui.data.PCA(:,show(end-i+1))'*gui.data.rast(:,inds) - ...
                      nanmean(gui.data.PCA(:,show(end-i+1))'*gui.data.rast);
+            case 'dt'
+                tr = gui.data.dt(show(end-i+1),inds) - ...
+                     nanmean(gui.data.dt(show(end-i+1),:));
         end
         if(i<=length(gui.traces.traces))
             set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
@@ -129,6 +132,9 @@ if(all(gui.enabled.traces))
         case 'PCs'
             traceOffset = [min(gui.data.PCA(:,last)'*gui.data.rast - gui.data.PCA(:,last)'*nanmean(gui.data.rast,2)) ...
                            max(gui.data.PCA(:,first)'*gui.data.rast   - gui.data.PCA(:,first)'*nanmean(gui.data.rast,2))];
+        case 'dt'
+            traceOffset = [min(gui.data.dt(last,:) - nanmean(gui.data.dt(last,:))) ...
+                           max(gui.data.dt(first,:)   - nanmean(gui.data.dt(first,:)))];
     end
     traceOffset(isnan(traceOffset)) = 0;
     if(isempty(traceOffset))
@@ -224,9 +230,9 @@ if(gui.enabled.annot(1))
                     set(gui.movie.annot(chNum),'backgroundcolor',[.5 .5 .5],'color','w');
                 end
                 if(strcmpi(gui.annot.activeCh,chName))
-                    set(gui.movie.annot(chNum),'fontweight','bold','fontsize',14);
+                    set(gui.movie.annot(chNum),'fontweight','bold','fontsize',18);
                 else
-                    set(gui.movie.annot(chNum),'fontweight','normal','fontsize',10);
+                    set(gui.movie.annot(chNum),'fontweight','normal','fontsize',14);
                 end
             elseif(all(gui.enabled.traces))
         %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)

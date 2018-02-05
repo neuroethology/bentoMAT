@@ -60,6 +60,7 @@ set(gui.incMovies, 'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Behavior
 set(gui.offset,    'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Offset))));
 set(gui.incTracking,'Value',  any(~cellfun(@isempty,raw(3:end,matchInds.Tracking))));
 set(gui.incAudio,  'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Audio_file))));
+set(gui.inctSNE,  'Value',    any(~cellfun(@isempty,raw(3:end,matchInds.tSNE))));
 
 if(size(raw,1)>=3)
     gui.rowVis(matchInds.Start_Ca)         = any(~cellfun(@isempty,raw(3:end,matchInds.Start_Ca)));
@@ -70,6 +71,7 @@ if(size(raw,1)>=3)
     gui.rowVis(matchInds.Offset)           = any(~cellfun(@isempty,raw(3:end,matchInds.Offset)));
     gui.rowVis(matchInds.Tracking)         = any(~cellfun(@isempty,raw(3:end,matchInds.Tracking)));
     gui.rowVis(matchInds.Audio_file)       = any(~cellfun(@isempty,raw(3:end,matchInds.Audio_file)));
+    gui.rowVis(matchInds.tSNE)             = any(~cellfun(@isempty,raw(3:end,matchInds.tSNE)));
 end
 gui.rowVis(isnan(gui.rowVis)) = 0;
 gui.incAudio.Value = gui.rowVis(matchInds.Audio_file);

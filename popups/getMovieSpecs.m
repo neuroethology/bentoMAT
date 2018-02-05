@@ -1,4 +1,4 @@
-function specs = getMovieSpecs(info)
+function specs = getMovieSpecs(gui,info)
 % first frame, last frame, framerate, profile, quality, background color, show scrollbar
 
 h.fig = figure(1);clf;
@@ -11,6 +11,7 @@ ss.R = {'units','normalized','fontsize',10,'horizontalalign','right'};
 ss.L = {'units','normalized','fontsize',10,'horizontalalign','left'};
 ss.C = {'units','normalized','fontsize',10,'horizontalalign','center'};
 strs = {'Motion JPEG AVI','Archival','Motion JPEG 2000','MPEG-4','Uncompressed AVI','Indexed AVI','Grayscale AVI'};
+bhvs = ['all';strrep(fieldnames(gui.annot.bhv),'_',' ')];
 
 h.quality  = uipanel(h.fig,ss.panel{:},'title','Quality settings','units','normalized','position',[.025 .6 .45 .35]);
 h.display  = uipanel(h.fig,ss.panel{:},'title','Display','units','normalized','position',[.025 .05 .45 .55]);
@@ -18,13 +19,16 @@ h.frames   = uipanel(h.fig,ss.panel{:},'title','Segment to save','units','normal
 h.go       = uipanel(h.fig,ss.panel{:},'bordertype','none','units','normalized','position',[.5 .6 .475 .375]);
 
 
-uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .6 .3 .3],'string','Start time');
-uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .3 .3 .3],'string','Stop time');
-uicontrol(h.frames,ss.R{:},'style','text','position',[.025 0 .3 .3],'string','Framerate (Hz)');
+uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .725 .3 .2],'string','Start time');
+uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .5 .3 .2],'string','Stop time');
+uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .275 .3 .2],'string','Framerate (Hz)');
+uicontrol(h.frames,ss.R{:},'style','text','position',[.025 .05 .3 .2],'string','Behavior');
 
-h.startTime = uicontrol(h.frames,ss.C{:},'style','edit','position',[.35 .7 .4 .25],'string',makeTime(info.tmin));
-h.endTime   = uicontrol(h.frames,ss.C{:},'style','edit','position',[.35 .4 .4 .25],'string',makeTime(info.tmax));
-h.FR        = uicontrol(h.frames,ss.C{:},'style','edit','position',[.35 .1 .4 .25],'string','30');
+h.startTime = uicontrol(h.frames,ss.C{:},'style','edit','position',[.4 .725 .4 .2],'string',makeTime(info.tmin));
+h.endTime   = uicontrol(h.frames,ss.C{:},'style','edit','position',[.4 .5 .4 .2],'string',makeTime(info.tmax));
+h.FR        = uicontrol(h.frames,ss.C{:},'style','edit','position',[.4 .275 .4 .2],'string','30');
+h.bhvr      = uicontrol(h.frames,ss.C{:},'style','popup','position',[.4 .05 .4 .2],...
+                        'string',bhvs);
 
 h.hi        = uicontrol(h.quality,ss.R{:},'style','text','position',[.05 .2 .15 .225],'string','Low ','enable','on');
 h.lo        = uicontrol(h.quality,ss.L{:},'style','text','position',[.8 .2 .15 .225],'string',' High','enable','on');
@@ -48,12 +52,15 @@ uicontrol(h.go,ss.C{:},'backgroundcolor',[.65 1 .65],'style','pushbutton','posit
           'string','Go!','callback','uiresume(gcbf)');
 
 guidata(h.fig,h);
-uiwait(h.fig);
+uiwait(h.fig); %-----------------------------------------------------------
+
+
 
 % extract settings!
 specs.startTime = getTime(h.startTime.String);
 specs.endTime   = getTime(h.endTime.String);
 specs.FR        = str2num(h.FR.String);
+specs.bhvr      = strrep(h.bhvr.String{h.bhvr.Value},' ','_');
 specs.playback  = str2num(strrep(h.playSpeed.String{h.playSpeed.Value},'x',''));
 
 specs.profile   = strs{h.profile.Value};

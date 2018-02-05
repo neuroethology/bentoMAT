@@ -1,10 +1,12 @@
-function openHelpMenu(~,~)
+% function openHelpMenu(~,~)
 
 str = {'---Playback Hotkeys---',''};
 str = [str;{[char(8592) ' ' char(8594)],'Step +/- one frame'}];
 str = [str; {'PgUp PgDown','Step +/- one second'}];
 str = [str; {'[Spacebar]','Start/stop playback'}];
 str = [str; {[char(8593) ' ' char(8595)],'inc/dec play speed'}];
+str = [str; {'[Shift]','(held down while playing) only'}];
+str = [str; {'','show episodes of current bhvr'}];
 str = [str; {'',''}];
 
 str = [str; {'---Navigating annotations---',''}];

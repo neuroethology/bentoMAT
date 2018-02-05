@@ -8,7 +8,7 @@ switch ext
     case '.csv'
         temp = csvread(pth);
         time = temp(:,1)';
-        rast = temp(:,5)';
+        rast = temp(:,2)';
         % get rid of artifacts
         rast((1:100))    = 0;
         rast(end-19:end) = 0;

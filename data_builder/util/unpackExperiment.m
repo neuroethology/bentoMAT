@@ -16,6 +16,9 @@ end
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 pth = raw{1,1};
+if(pth(end)~=filesep)
+    pth = [pth filesep];
+end
 
 fieldset = raw(2,:);
 fieldset = fieldset(cellfun(@ischar,fieldset));
@@ -37,6 +40,7 @@ enabled.traces    = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[
 enabled.tracker   = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.features  = [0 0];%any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.audio     = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
+enabled.tsne      = any(~cellfun(@isempty,data(:,match.tSNE)))*[1 0];
 enabled.fineAnnot = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 0];
 
 %load the data:
@@ -72,7 +76,7 @@ for i=1:size(data,1)
             end
             prevCa  = fid;
         end
-        cutCa = ~isempty(tstart)&&~isnan(tstart);
+        cutCa = ~any(isempty(tstart))&&~any(isnan(tstart));
         if(cutCa)
             if(~isnumeric(tstart))
                 tstart = str2num(tstart); tstop = str2num(tstop);
@@ -81,6 +85,8 @@ for i=1:size(data,1)
         else
             strtemp.rast = rast;
         end
+        drdt = [zeros(size(strtemp.rast(:,1),1),1) strtemp.rast(:,2:end)-strtemp.rast(:,1:end-1)];
+        strtemp.dt = smoothts(drdt,'g',50,10)*20;
         if(~isempty(CaTime))
             strtemp.CaTime   = CaTime;
             strtemp.CaFR     = 1/mean(CaTime(2:end)-CaTime(1:end-1)); % trust the timestamp over the user
@@ -125,6 +131,17 @@ for i=1:size(data,1)
         strtemp.rast_matched = [];
         strtemp.units = [];
     end
+    
+    % link tSNE/scatter data-----------------------------------------------
+%     if(enabled.tsne(1) && ~isempty(data{i,match.tSNE}))
+%         temp = load([pth data{i,match.tSNE}]);
+%         f = fieldnames(temp);
+%         temp=temp.(f{:});
+%         if(size(temp,1)==2)
+%             temp=temp';
+%         end
+%         strtemp.tsne = temp;
+%     end
     
     % link movies----------------------------------------------------------
     if(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))

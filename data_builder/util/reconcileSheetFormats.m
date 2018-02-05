@@ -5,7 +5,7 @@ if(~isempty(gui))
 else %hacks~
     matchset = {'Mouse','Sessn','Trial','Stim','Calcium imaging file','Start Ca',...
                 'Stop Ca','FR Ca','Alignments','Annotation file','Start Anno','Stop Anno',...
-                'FR Anno','Offset','Behavior movie','Tracking','Audio file'};
+                'FR Anno','Offset','Behavior movie','Tracking','Audio file','tSNE'};
 end
 matchset = strrep(matchset,' ','_');
 matchset = strrep(matchset,'_#','');
