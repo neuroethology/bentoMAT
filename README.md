@@ -27,7 +27,7 @@ Bento assumes all of your data can be found within a common parent directory (po
 
 You can link any combination of imaging data, behavior annotations, behavior movies, audio recordings, and tracking data (some of these are better supported than others at the moment.) A variety of data formats are supported for each field- see more below.
 
-### insert documentation on supported data formats here
+### (insert documentation on supported data formats here)
 
 ## Using the GUI
 Coming soon.
