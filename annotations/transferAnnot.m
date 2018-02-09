@@ -15,14 +15,22 @@ annot.channels = channels;
 gui.ctrl.annot.ch.Value = find(strcmpi(channels,annot.activeCh));
 if(isempty(gui.ctrl.annot.ch.Value))
     gui.ctrl.annot.ch.Value = 1;
-    annot.activeCh = channels{1};
+    annot.activeCh = [];
 end
 if(isempty(annot.activeCh))
-    annot.activeCh = annot.channels{1};
+    if(~isempty(channels))
+        annot.activeCh = channels{1};
+    else
+        annot.activeCh=[];
+    end
 end
 gui.ctrl.annot.ch.String = {channels{:},'add new...','remove channel...'};
-bhvList = fieldnames(data.annot.(annot.activeCh))';
-bhvList(strcmpi(bhvList,'other'))=[];
+if(~isempty(annot.activeCh))
+    bhvList = fieldnames(data.annot.(annot.activeCh))';
+    bhvList(strcmpi(bhvList,'other'))=[];
+else
+    bhvList = {};
+end
 
 annot.bhv = struct();
 for f = bhvList

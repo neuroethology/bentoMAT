@@ -18,6 +18,9 @@ uimenu(mh.display,'Label','Set annotation colors','callback',@launchColorPick);
 uimenu(mh.display,'Label','Toggle object visibility...','Separator','on','callback',@toggleEnabled);
 
 uimenu(mh.display,'Label','Adjust audio scaling','Separator','on','callback',@setAudioThresholds);
+
+uimenu(mh.display,'Label','Fix annot timing','Separator','on','callback',@bumpAnnot);
+
 uimenu(mh.display,'Label','Sort units by CP','Separator','on','callback',@runCPsort);
 
 mh.help = uimenu(gui.h0,'Label','Help');

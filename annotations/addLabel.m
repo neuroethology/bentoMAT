@@ -33,7 +33,7 @@ gui.annot.modified = 1;
 
 % add the new label to gui.data
 channels    = gui.annot.channels;
-for ch = channels'
+for ch = channels
     gui.data.annot.(ch{:}).(newStr) = [];
 end
 
@@ -48,7 +48,7 @@ mice = find(mask); %find all the mice that contain data
 for m = mice
     for s = sessionList'
         for tr = 1:length(gui.allData(m).(s{:}))
-            for ch = channels'
+            for ch = channels
                 gui.allData(m).(s{:})(tr).annot.(ch{:}).(newStr) = [];
             end
         end

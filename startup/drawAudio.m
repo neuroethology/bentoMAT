@@ -12,7 +12,6 @@ audio.bg           = image();set(audio.bg,'visible','off');
 audio.img          = image();
 audio.img.ButtonDownFcn = {@figBoxCheck,'audio'};
 audio.zeroLine     = plot([0 0],get(gca,'ylim'),'k--');
-colormap jet;
 
 audio.thrLo = -100;
 audio.thrHi = -40;

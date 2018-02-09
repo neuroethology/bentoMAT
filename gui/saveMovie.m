@@ -28,6 +28,9 @@ for i=1:length(gui.h0.Children)
 end
 
 oldSlider = gui.ctrl.slider;
+gui.ctrl.slider.Value       = specs.startTime   + offset;
+gui.ctrl.slider.Min         = specs.startTime   + offset;
+gui.ctrl.slider.Max         = specs.endTime     + offset;
 for i=1:length(gui.config.ctrl)
     gui.ctrl.(gui.config.ctrl{i}).panel.Visible='off';
 end
@@ -35,9 +38,6 @@ if(specs.sliderOn)
     gui.ctrl.slider.panel.Visible = 'on';
     gui.ctrl.labels.panel.Visible = 'on';
     gui.ctrl.labels.panel.BackgroundColor = specs.color;
-    gui.ctrl.slider.Value       = specs.startTime+offset;
-    gui.ctrl.slider.Min         = specs.startTime+offset;
-    gui.ctrl.slider.Max         = specs.endTime+offset;
 
     addLabelLegend(gui,specs);
     updateSlider(gui.h0,gui.ctrl.slider);
@@ -88,7 +88,15 @@ for i = 1:length(startTime)
         temp.Source.Tag = 'timeBox';
         updatePlot(gui.h0,temp);
 
-        img = getframe(gui.h0);
+        if(specs.sliderOn||(any(gui.enabled.movie(2)|gui.enabled.traces(2)|gui.enabled.audio(2))-1))
+            img = getframe(gui.h0);
+        elseif(gui.enabled.movie(2))
+            img = getframe(gui.movie.axes);
+        elseif(gui.enabled.traces(2))
+            img = getframe(gui.traces.axes);
+        elseif(gui.enabled.audio(2))
+            img = getframe(gui.audio.axes);
+        end
         writeVideo(v,img);
     end
     for j=1:5

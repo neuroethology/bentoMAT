@@ -68,13 +68,17 @@ for i=1:size(data,1)
         tstart  = data{i,match.Start_Ca};
         tstop   = data{i,match.Stop_Ca};
         CaFR    = data{i,match.FR_Ca};
-
+        
         if(~strcmpi(fid,prevCa)) %save some time by not re-loading files used previously
             [rast,CaTime]    = unpackCaData(fid);
             if(size(rast,1)>size(rast,2))
                 rast=rast';
             end
             prevCa  = fid;
+            strtemp.rast = rast;
+%             [~,ctrs] = kmeans(zscore(rast')',10,'replicates',10);
+            ctrs = rast;
+            strtemp.ctrs = ctrs;
         end
         cutCa = ~any(isempty(tstart))&&~any(isnan(tstart));
         if(cutCa)
@@ -82,11 +86,10 @@ for i=1:size(data,1)
                 tstart = str2num(tstart); tstop = str2num(tstop);
             end
             strtemp.rast = rast(:,tstart:tstop);
-        else
-            strtemp.rast = rast;
+            strtemp.ctrs = ctrs(:,tstart:tstop);
         end
         drdt = [zeros(size(strtemp.rast(:,1),1),1) strtemp.rast(:,2:end)-strtemp.rast(:,1:end-1)];
-        strtemp.dt = smoothts(drdt,'g',50,10)*20;
+        strtemp.ddt = smoothts(drdt,'g',50,10)*20;
         if(~isempty(CaTime))
             strtemp.CaTime   = CaTime;
             strtemp.CaFR     = 1/mean(CaTime(2:end)-CaTime(1:end-1)); % trust the timestamp over the user
@@ -172,7 +175,11 @@ for i=1:size(data,1)
                 otherwise
                     tmax = inf;
                     for j = 1:length(strtemp.io.movie.fid)
+                        try
                         info = VideoReader(strtemp.io.movie.fid{j});
+                        catch
+                            keyboard
+                        end
                         tmax = min([tmax round(info.Duration*info.FrameRate)]);
                     end
             end
@@ -278,7 +285,11 @@ for i=1:size(data,1)
                     tmin(j) = data{i,match.Start_Anno};
                     tmax(j) = data{i,match.Stop_Anno};
                 else
+                    try
                     [atemp,tmin(j),tmax(j)] = loadAnnotSheetTxt([pth annoList{j}]);
+                    catch
+                        keyboard
+                    end
                 end
             elseif(strcmpi(annoList{j}(end-2:end),'csv')) %temporary MUPET support
                 strtemp.io.annot.fid{j} = [pth annoList{j}];
@@ -302,11 +313,18 @@ for i=1:size(data,1)
             end
             atemp  = rmBlankChannels(atemp);
             fields = fieldnames(atemp);
+            if(j==1)
+                strtemp.annot = struct();
+            end
             for f = 1:length(fields)
                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
+        try
         strtemp.annot = orderfields(strtemp.annot);
+        catch
+            keyboard
+        end
         tmin = min(tmin);tmax=max(tmax);
         
         if(isnan(tmax))

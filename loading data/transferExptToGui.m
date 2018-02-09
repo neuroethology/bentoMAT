@@ -14,9 +14,7 @@ gui.enabled         = enabled;
 gui.enabled.welcome = [0 0];
 gui.enabled.ctrl    = [1 1];
 
-
 gui.traces.toPlot = 'rast'; %plot cells to start
-set(gui.ctrl.track.plotType,'Value',1);
 
 if(isfield(gui,'data')) gui = rmfield(gui,'data'); end
 gui.allData         = mouse;                %stores all mice!

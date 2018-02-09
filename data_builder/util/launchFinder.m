@@ -20,5 +20,6 @@ gui.tCa         = uitable('parent',h,fillin{:},'position',[.01 .01 .98 .81],'col
                 'CellSelectionCallback',@(src,evnt)set(src,'UserData',evnt.Indices));
 
 uicontrol('style','pushbutton',fillin{:},'position',[.8 .88 .15 .035],'string','Go','callback',@findFiles);
-uicontrol('style','pushbutton',fillin{:},'position',[.625 .835 .30 .035],'string','<< Add  ','callback',@addFile);
+uicontrol('style','pushbutton',fillin{:},'position',[.625  .835 .30 .035],'string','<< Add  ','callback',{@addFile,1});
+uicontrol('style','pushbutton',fillin{:},'position',[.3125 .835 .30 .035],'string','<< Append  ','callback',{@addFile,0});
 guidata(h,gui);

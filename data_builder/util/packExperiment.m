@@ -3,7 +3,7 @@ function [M,flag] = packExperiment(gui)
 % blank out any accidental text that made it into hidden columns
 gui.t.Data(:,~gui.rowVis) = {[]};
 flag=0;
-M = [cell(1,length(gui.t.Data)); get(gui.t,'ColumnName')'; gui.t.Data];
+M = [cell(1,size(gui.t.Data,2)); get(gui.t,'ColumnName')'; gui.t.Data];
 
 % get path
 pth = get(gui.root,'string');

@@ -107,3 +107,10 @@ if(gui.enabled.annot(1))
 		updateSliderAnnot(gui);
 		end
 end
+
+% % add the ID of the stimulus
+% if(gui.enabled.movie(1))
+%     gui.movie.stim.String = strrep(gui.data.stim,'_',' ');
+% elseif(gui.enabled.traces(1))
+%     gui.traces.stim.String = strrep(gui.data.stim,'_',' ');
+% end

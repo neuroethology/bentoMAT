@@ -1,8 +1,8 @@
 function addLabelLegend(gui,specs)
 
 p = gui.ctrl.labels.panel;
-tmin = max(round(specs.startTime*specs.FR),1);
-tmax = round(specs.endTime*specs.FR)-1;
+tmin = max(round(specs.startTime*gui.data.annoFR),1);
+tmax = round(specs.endTime*gui.data.annoFR)-1;
 
 keep = {};
 for f = fieldnames(gui.annot.show)'

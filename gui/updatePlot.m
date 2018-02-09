@@ -51,20 +51,15 @@ if(~isempty(eventdata))
 end
 time = gui.ctrl.slider.Value;
 
-
 % update the movie panel
 if(all(gui.enabled.movie)||all(gui.enabled.tracker))
-    if(all(gui.enabled.movie))
-        [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
-    else
-        mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;
-    end
+    if(all(gui.enabled.movie)), [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+    else, mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;  end
+	
     if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);
     end
-    if(size(mov,3)==1)
-        mov = repmat(mov,[1 1 3]);
-    end
+    if(size(mov,3)==1), mov = repmat(mov,[1 1 3]); end
 	set(gui.movie.img,'cdata',mov);
 end
 
@@ -90,59 +85,40 @@ if(all(gui.enabled.audio))
 end
 
 %now change time to be relative to start of relevant movie segment
-time = time - gui.ctrl.slider.Min;%gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
-
+time = time - gui.ctrl.slider.Min; %gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
 % update the plotted traces
 if(all(gui.enabled.traces))
-    inds = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
-    inds = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    bump = gui.traces.yScale;
-    show = find(gui.traces.show);
-    [~,order] = sort(gui.traces.order(show));
-    order     = max(order)-order+1;
-    [~,first] = min(order);
-    [~,last]  = max(order);
-    for i = 1:length(show)
-        switch gui.traces.toPlot
-            case 'rast'
-                tr = gui.data.rast(show(end-i+1),inds) - ...
-                     nanmean(gui.data.rast(show(end-i+1),:));
-            case 'PCs'
-                tr = gui.data.PCA(:,show(end-i+1))'*gui.data.rast(:,inds) - ...
-                     nanmean(gui.data.PCA(:,show(end-i+1))'*gui.data.rast);
-            case 'dt'
-                tr = gui.data.dt(show(end-i+1),inds) - ...
-                     nanmean(gui.data.dt(show(end-i+1),:));
+    inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
+    inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
+    show        = find(gui.traces.show);
+    [~,order]   = sort(gui.traces.order(show));
+    order       = max(order)-order+1;
+    bump        = gui.traces.yScale;
+    
+    [tr,lims] = getFormattedTraces(gui,inds,order);
+    
+    if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image'))
+        set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',[2 10-.5/length(show)*8],'cdata',tr*64);
+        set(gui.traces.axes,'ylim',[1 10+.5/length(show)]);
+        set(gui.traces.zeroLine,'ydata',[1 10]);
+    else
+        set(gui.traces.tracesIm,'visible','off');
+        for i = 1:length(show)
+            if(i<=length(gui.traces.traces))
+                set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
+                                         'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+            else
+                gui.traces.traces(i) = plot(gui.traces.axes, gui.data.CaTime(inds) - time,...
+                                                 (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10, 'color',[.1 .1 .1],'hittest','off');
+            end
         end
-        if(i<=length(gui.traces.traces))
-            set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
-                                     'ydata',tr + order(i)*bump);
-        else
-            gui.traces.traces(i) = plot(gui.traces.axes,...
-                                        gui.data.CaTime(inds) - time,tr + order(i)*bump,...
-                                        'color',[.1 .1 .1],'hittest','off');
-        end
+        if(isempty(i)) i = 0; end
+        delete(gui.traces.traces(i+1:end));
+        gui.traces.traces(i+1:end) = [];
+        set(gui.traces.axes,'ylim',[1 10]);
+        set(gui.traces.zeroLine,'ydata',[1 10]);
+        uistack(gui.traces.traces,'top');
     end
-    delete(gui.traces.traces(i+1:end));
-    gui.traces.traces(i+1:end)=[];
-    switch gui.traces.toPlot
-        case 'rast'
-            traceOffset = [min(gui.data.rast(last,:) - nanmean(gui.data.rast(last,:))) ...
-                           max(gui.data.rast(first,:)   - nanmean(gui.data.rast(first,:)))];
-        case 'PCs'
-            traceOffset = [min(gui.data.PCA(:,last)'*gui.data.rast - gui.data.PCA(:,last)'*nanmean(gui.data.rast,2)) ...
-                           max(gui.data.PCA(:,first)'*gui.data.rast   - gui.data.PCA(:,first)'*nanmean(gui.data.rast,2))];
-        case 'dt'
-            traceOffset = [min(gui.data.dt(last,:) - nanmean(gui.data.dt(last,:))) ...
-                           max(gui.data.dt(first,:)   - nanmean(gui.data.dt(first,:)))];
-    end
-    traceOffset(isnan(traceOffset)) = 0;
-    if(isempty(traceOffset))
-        traceOffset = [0 0];
-    end
-    set(gui.traces.axes,'ylim',[bump bump*length(show)] + traceOffset);
-    set(gui.traces.zeroLine,'ydata',[bump bump*length(show)] + traceOffset);
-    uistack(gui.traces.traces,'top');
 end
 
 
@@ -171,7 +147,7 @@ if(gui.enabled.annot(1))
             img = [];
         end
         if(all(gui.enabled.traces))
-            set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 bump*(length(show)+1)]);
+            set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 10]);
         else
             if(gui.enabled.annot(2)) %this if/else shouldn't be necessary
                 set(gui.audio.bg,'Visible','on');
@@ -241,11 +217,46 @@ if(gui.enabled.annot(1))
     end
 end
 
-
 %check if Action was updated while we were busy (so we don't overwrite it)
 g2 = guidata(source);
-gui.Action=g2.Action;
+gui.Action = g2.Action;
 
 guidata(source,gui);
 pause(min(gui.ctrl.slider.SliderStep(1) - toc(evaltime),0));
 drawnow;
+end
+
+function [traces,lims] = getFormattedTraces(gui,inds,order)
+
+    if(strcmpi(gui.traces.toPlot,'PCA'))
+        traces = gui.data.PCA(:,gui.traces.show)'*gui.data.rast;
+    else
+        traces = gui.data.(gui.traces.toPlot)(gui.traces.show,:);
+    end
+    
+    switch gui.ctrl.track.plotType.scaling.String{gui.ctrl.track.plotType.scaling.Value}
+        case 'raw'
+            traces = traces-min(traces(:));
+            traces = traces/max(traces(:));
+            
+        case 'zscored (by session)'
+            if(strcmpi(gui.traces.toPlot,'PCA'))
+                all = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
+            else
+                all = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
+                all = all(gui.traces.show,:);
+            end
+            mu  = mean(all,2);
+            sig = std(all,[],2);
+            traces = (bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)+5)/10;
+            
+        case 'zscored (by trial)'
+            traces = zscore(traces(:,2:end-1)')';
+            traces = (traces+5)/10;
+    end
+    
+    traces  = traces(order,:);
+    lims    = [min(traces(:)) max(traces(:))];
+    traces  = traces(:,inds);
+    
+end
