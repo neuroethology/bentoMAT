@@ -21,7 +21,13 @@ The easiest way to keep your local version up to date is to clone this git repos
 A copy of the code is also posted to the Anderson lab private server, however this copy is less frequently updated.
 
 ## Creating your first experiment
-Coming soon.
+Clicking "New Experiment" in the welcome menu brings up a window in which you can enter experiment metadata + paths to your data; entered text can be saved into an excel sheet ("Save info") and reloaded in subsequent sessions ("Edit experiment"/"Load experiment" in the main menu).
+
+Bento assumes all of your data can be found within a common parent directory (possibly split among subdirectories.) Setting the path of this parent directory, then hitting "Launch File Finder", allows you to search for files within your parent directory and add them to the table.
+
+You can link any combination of imaging data, behavior annotations, behavior movies, audio recordings, and tracking data (some of these are better supported than others at the moment.) A variety of data formats are supported for each field- see more below.
+
+### (insert documentation on supported data formats here)
 
 ## Using the GUI
 Coming soon.
