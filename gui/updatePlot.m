@@ -68,7 +68,7 @@ if(all(gui.enabled.audio))
     inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
-    img    = scaleAudio(gui,gui.data.audio.psd(:,find(inds)));
+    img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
     fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
     set(gui.audio.img, 'cdata', img(fshow,:)*64);
@@ -235,7 +235,17 @@ function [traces,lims] = getFormattedTraces(gui,inds,order)
     end
     
     switch gui.ctrl.track.plotType.scaling.String{gui.ctrl.track.plotType.scaling.Value}
-        case 'raw'
+        case 'raw (scaled by session)'
+            if(strcmpi(gui.traces.toPlot,'PCA'))
+                all = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
+            else
+                all = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
+                all = all(gui.traces.show,:);
+            end
+            traces = traces - min(all(:));
+            traces = traces/max(all(:));
+            
+        case 'raw (scaled by trial)'
             traces = traces-min(traces(:));
             traces = traces/max(traces(:));
             
@@ -248,7 +258,7 @@ function [traces,lims] = getFormattedTraces(gui,inds,order)
             end
             mu  = mean(all,2);
             sig = std(all,[],2);
-            traces = (bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)+5)/10;
+            traces = (bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)+8)/16;
             
         case 'zscored (by trial)'
             traces = zscore(traces(:,2:end-1)')';

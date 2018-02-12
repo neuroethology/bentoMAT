@@ -20,7 +20,7 @@ while(~quitloop)
     gui = guidata(gui.h0);
     if(any(gui.Action))
         test = toc(gui.ctrl.slider.timer);
-        if(test>0.1)
+        if(test>0.15)
             if(~isempty(strfind(gui.Action,'drag')))
                 hSlider = setSliderVal(gui.h0);
             else
