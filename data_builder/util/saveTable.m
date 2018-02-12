@@ -11,11 +11,11 @@ if(FileName)
     end
     if(isunix)
         try
-            javaaddpath([mfilename('fullpath') 'poi-library/ooxml-lib/dom4j-1.6.1.jar']);
-            javaaddpath([mfilename('fullpath') 'poi-library/ooxml-lib/xmlbeans-2.3.0.jar']);
-            javaaddpath([mfilename('fullpath') 'poi-library/poi-3.9-20121203.jar']);
-            javaaddpath([mfilename('fullpath') 'poi-library/poi-ooxml-3.9-20121203.jar']);
-            javaaddpath([mfilename('fullpath') 'poi-library/poi-ooxml-schemas-3.9-20121203.jar']);
+            javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/dom4j-1.6.1.jar']);
+            javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/xmlbeans-2.3.0.jar']);
+            javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/poi-3.8-20120326.jar']);
+            javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/poi-ooxml-3.8-20120326.jar']);
+            javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/poi-ooxml-schemas-3.8-20120326.jar']);
             xlwrite([PathName FileName],M); % for linux computers
         catch
             disp('Save failed. Make sure you have Apache POI 3.8 or 3.9 on your Matlab Java path:');
