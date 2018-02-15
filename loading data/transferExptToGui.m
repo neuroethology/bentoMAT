@@ -10,6 +10,7 @@ else
 end
 [mouse,enabled,pth] = unpackExperiment(raw);
 gui.pth = pth;
+
 % toggle window visiblity
 gui.enabled         = enabled;
 gui.enabled.welcome = [0 0];

@@ -1,4 +1,4 @@
-function unpackExptToBuilder(source,pth,gui)
+function unpackExptToBuilder(source,pth,gui,parent)
 if(strcmpi(class(source),'matlab.ui.Figure'))
     useSource = source;
 else
@@ -10,18 +10,10 @@ raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 raw(cell2mat(cellfun(@(x) all(isnan(x)),raw,'uniformoutput',false))) = {''};
 
-% for i = 3:size(raw,1)
-%     inds = [4 5 9];
-%     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
-%     raw(i,inds(find(mask))) = {''};
-%     inds = [6 7 8 10 11 12];
-%     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
-%     raw(i,inds(find(mask))) = {[]};
-% end
+set(gui.root,'String',raw{1,1}); %parent directory
+parent.pth = raw{1,1}; guidata(parent.h0,parent); %save parent directory in main bento gui also
 
-set(gui.root,'String',raw{1,1});
-
-fieldset = raw(2,:);
+fieldset = raw(2,:); % list of data fields in the excel sheet
 fields = struct();
 for i=1:length(fieldset)
     str = strrep(fieldset{i},' ','_');
@@ -32,7 +24,7 @@ end
 gui.t.Data = M;
 raw{1,20}='';
 
-if(any(~cellfun(@isempty,raw(3:end,matchInds.FR_Ca))))
+if(any(~cellfun(@isempty,M(:,matchInds.FR_Ca))))
     set(gui.CaFRtog,'Value',1);
     set(gui.CaFR,'Enable','off');
     set(gui.CaFRtxt,'Enable','off');
@@ -43,7 +35,7 @@ else
     set(gui.CaFRtxt,'Enable','on');
     gui.rowVis(matchInds.FR_Ca) = 0;
 end
-if(any(~cellfun(@isempty,raw(3:end,matchInds.FR_Anno))))
+if(any(~cellfun(@isempty,M(:,matchInds.FR_Anno))))
     set(gui.annoFRtog,'Value',1);
     set(gui.annoFR,'Enable','off');
     set(gui.annoFRtxt,'Enable','off');
@@ -63,15 +55,12 @@ set(gui.incAudio,  'Value',   any(~cellfun(@isempty,raw(3:end,matchInds.Audio_fi
 set(gui.inctSNE,  'Value',    any(~cellfun(@isempty,raw(3:end,matchInds.tSNE))));
 
 if(size(raw,1)>=3)
-    gui.rowVis(matchInds.Start_Ca)         = any(~cellfun(@isempty,raw(3:end,matchInds.Start_Ca)));
-    gui.rowVis(matchInds.Stop_Ca)          = any(~cellfun(@isempty,raw(3:end,matchInds.Stop_Ca)));
-    gui.rowVis(matchInds.Start_Anno)       = any(~cellfun(@isempty,raw(3:end,matchInds.Start_Anno)));
-    gui.rowVis(matchInds.Stop_Anno)        = any(~cellfun(@isempty,raw(3:end,matchInds.Stop_Anno)));
-    gui.rowVis(matchInds.Behavior_movie)   = any(~cellfun(@isempty,raw(3:end,matchInds.Behavior_movie)));
-    gui.rowVis(matchInds.Offset)           = any(~cellfun(@isempty,raw(3:end,matchInds.Offset)));
-    gui.rowVis(matchInds.Tracking)         = any(~cellfun(@isempty,raw(3:end,matchInds.Tracking)));
-    gui.rowVis(matchInds.Audio_file)       = any(~cellfun(@isempty,raw(3:end,matchInds.Audio_file)));
-    gui.rowVis(matchInds.tSNE)             = any(~cellfun(@isempty,raw(3:end,matchInds.tSNE)));
+    for str = intersect(fieldnames(matchInds),fieldnames(fields))'
+        gui.rowVis(matchInds.(str{:})) = any(~cellfun(@isempty,raw(3:end,fields.(str{:}))));
+    end
+    for str = setdiff(fieldnames(matchInds),fieldnames(fields))'
+        gui.rowVis(matchInds.(str{:}))  = 0;
+    end
 end
 gui.rowVis(isnan(gui.rowVis)) = 0;
 gui.incAudio.Value = gui.rowVis(matchInds.Audio_file);

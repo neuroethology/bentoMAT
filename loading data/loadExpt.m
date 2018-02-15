@@ -16,7 +16,7 @@ gui = guidata(useSource);
 switch action
     case 'edit'
         exptBuilder = build_experiment(source,[]);
-        unpackExptToBuilder(exptBuilder.f,[PathName FileName],exptBuilder);
+        unpackExptToBuilder(exptBuilder.f,[PathName FileName],exptBuilder,gui);
     case 'load'
         transferExptToGui([PathName FileName],gui);
 end
