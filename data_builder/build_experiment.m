@@ -9,7 +9,11 @@ function exptGui = build_experiment(source,~)
 %   - Tracking data, tracking data format
 
 gui = guidata(source);
-pth = pwd;
+if(isfield(gui,'pth'))
+    pth = gui.pth;
+else
+    pth = pwd;
+end
 
 fillin = {'units','normalized','fontsize',11};
 f = figure(999);clf;
@@ -19,13 +23,14 @@ set(f,'units','pixels','dockcontrols','off','menubar','none','NumberTitle','off'
 uicontrol('style','text',fillin{:},'position',[0 .85 1 .15],'string','');
 uicontrol('style','text',fillin{:},'position',[0 .925 1 .05],'string','Experiment manager','fontweight','bold');
 uicontrol('style','text',fillin{:},'position',[.04 .875 .12 .05],'string','Parent directory:','horizontalalign','right');
-exptGui.root = uicontrol('style','edit',fillin{:},'position',[.17 .886 .42 .045],'string',pth,'horizontalalign','left');
+exptGui.root    = uicontrol('style','edit',fillin{:},'position',[.17 .886 .42 .045],'string',pth,'horizontalalign','left','callback',{@setBentoPth,gui,0});
+exptGui.setRoot = uicontrol('style','pushbutton',fillin{:},'position',[.6 .886 .05 .045],'string','...','callback',{@setBentoPth,gui,1});
 
 cnames          = {'Mouse','Sessn','Trial','Stim',...
                    'Calcium imaging file','Start Ca','Stop Ca','FR Ca','Alignments',...
                    'Annotation file','Start Anno','Stop Anno','FR Anno','Offset',...
                    'Behavior movie','Tracking','Audio file','tSNE'};
-exptGui.rowVis  = [1 1 1 1 1 0 0 0 0 1 0 0 0 0 0 0 0 0];
+exptGui.rowVis  = [1 1 1 1 1 0 0 0 0 1 0 0 0 0 1 1 0 0];
 colSizes        = ones(1,length(exptGui.rowVis)).*exptGui.rowVis;
 exptGui.t       = uitable('parent',f,fillin{:},'position',[.01 .355 .98 .52],'columnname',cnames,'rowname','',...
                 'columneditable',true,'columnwidth',mat2cell(colSizes,1,ones(1,length(colSizes))),...
@@ -62,9 +67,9 @@ exptGui.annoFRtog = uicontrol('parent',f,fillin{:},'position',[.3 .2 .35 .03],'T
                 'style','checkbox','string','Variable annot. framerate','callback',@toggleVis);
             
 exptGui.incTracking = uicontrol('parent',f,fillin{:},'position',[.575 .3 .35 .03],'Tag','Tracking',...
-                'style','checkbox','string','Link tracking data','callback',@toggleVis);
+                'style','checkbox','string','Link tracking data','value',1,'callback',@toggleVis);
 exptGui.incMovies = uicontrol('parent',f,fillin{:},'position',[.575 .25 .35 .03],'Tag','BhvMovies',...
-                'style','checkbox','string','Link behavior movies','callback',@toggleVis);
+                'style','checkbox','string','Link behavior movies','value',1,'callback',@toggleVis);
 exptGui.incAudio  = uicontrol('parent',f,fillin{:},'position',[.575 .2 .35 .03],'Tag','Audio',...
                 'style','checkbox','string','Link audio data','callback',@toggleVis);
 exptGui.inctSNE   = uicontrol('parent',f,fillin{:},'position',[.575 .15 .35 .03],'Tag','tSNE',...

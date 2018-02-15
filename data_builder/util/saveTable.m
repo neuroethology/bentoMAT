@@ -16,6 +16,7 @@ if(FileName)
             javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/poi-3.8-20120326.jar']);
             javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/poi-ooxml-3.8-20120326.jar']);
             javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/poi-ooxml-schemas-3.8-20120326.jar']);
+            javaaddpath([fileparts(mfilename('fullpath')) '/poi_library/stax-api-1.0.1.jar']);
             xlwrite([PathName FileName],M); % for linux computers
         catch
             disp('Save failed. Make sure you have Apache POI 3.8 or 3.9 on your Matlab Java path:');

@@ -1,4 +1,8 @@
-gui = struct();
+if(~isstruct(gui))
+    gui = struct();
+    if(hasfield(gui,'data')), gui = rmfield(gui,'data'); end
+    if(hasfield(gui,'allData')), gui = rmfield(gui,'allData'); end
+end
 
 gui.h0 = figure(20);clf;
 set(gui.h0,'dockcontrols','off','menubar','none',...

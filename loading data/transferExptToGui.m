@@ -8,7 +8,8 @@ if(iscell(data))
 else
     [~,~,raw]   = xlsread(data,'Sheet1');
 end
-[mouse,enabled] = unpackExperiment(raw);
+[mouse,enabled,pth] = unpackExperiment(raw);
+gui.pth = pth;
 % toggle window visiblity
 gui.enabled         = enabled;
 gui.enabled.welcome = [0 0];
@@ -16,7 +17,7 @@ gui.enabled.ctrl    = [1 1];
 
 gui.traces.toPlot = 'rast'; %plot cells to start
 
-if(isfield(gui,'data')) gui = rmfield(gui,'data'); end
+if(isfield(gui,'data')), gui = rmfield(gui,'data'); end
 gui.allData         = mouse;                %stores all mice!
 gui.allPopulated    = cell2mat(raw(3:end,1:3)); %keeps a list of which mouse/sess/trials are populated
 mouseList           = unique(gui.allPopulated(:,1));

@@ -1,4 +1,4 @@
-function [mouse,enabled] = unpackExperiment(raw)
+function [mouse,enabled,pth] = unpackExperiment(raw)
 % parses the metadata in the excel sheet, then loads all of the listed
 % files and formats their data.
 for i = 3:size(raw,1)
