@@ -41,12 +41,20 @@ if(~isempty(eventdata))
             gui.features.win    = str2num(eventdata.Source.String);
             gui.audio.win       = str2num(eventdata.Source.String);
             gui.fineAnnot.win   = str2num(eventdata.Source.String);
+            gui.features.win    = str2num(eventdata.Source.String);
             guidata(source,gui);
 
-            set(gui.traces.axes,'xlim',[-gui.traces.win  gui.traces.win]);
-            set(gui.features.axes,'xlim',[-gui.features.win  gui.features.win]);
-            set(gui.audio.axes,'xlim',[-gui.audio.win  gui.audio.win]);
-            set(gui.fineAnnot.axes,'xlim',[-gui.fineAnnot.win  gui.fineAnnot.win]);
+            set(gui.traces.axes,   'xlim',gui.traces.win*[-1 1]);
+            set(gui.audio.axes,    'xlim',gui.audio.win*[-1 1]);
+            set(gui.fineAnnot.axes,'xlim',gui.fineAnnot.win*[-1 1]);
+            gui.features.axes.Xlim = gui.features.win*[-1 1];
+            
+            for i = 1:length(gui.features.feat)
+                set(gui.features.feat(i).axes,'xlim',[-gui.features.win  gui.features.win]);
+                gui.features.feat(i).label.Position(1) = -gui.features.win*.975;
+                gui.features.feat(i).label.Position(2) = ...
+                    max(gui.data.tracking.features(:,gui.features.feat(i).featNum))*.975;
+            end
     end
 end
 time = gui.ctrl.slider.Value;
@@ -61,6 +69,17 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     end
     if(size(mov,3)==1), mov = repmat(mov,[1 1 3]); end
 	set(gui.movie.img,'cdata',mov);
+end
+
+% update the plotted features~!
+if(all(gui.enabled.features) && isfield(gui.features,'feat'))
+    inds  = (gui.data.annoTime >= (time-gui.features.win)) & (gui.data.annoTime <= (time+gui.features.win));
+    inds  = inds | [false inds(1:end-1)] | [inds(2:end) false];
+    
+    for i = 1:length(gui.features.feat)
+        set(gui.features.feat(i).trace,'xdata',gui.data.annoTime(inds) - time,...
+            'ydata',gui.data.tracking.features(inds,gui.features.feat(i).featNum));
+    end
 end
 
 % update the audio spectrogram
@@ -140,7 +159,7 @@ if(gui.enabled.annot(1))
     
     
     % add background images to traces/audio
-    if(all(gui.enabled.traces) || all(gui.enabled.audio))
+    if(all(gui.enabled.traces) || all(gui.enabled.audio) || all(gui.enabled.features))
         img     = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
         img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
         if(~gui.enabled.annot(2))
@@ -148,7 +167,15 @@ if(gui.enabled.annot(1))
         end
         if(all(gui.enabled.traces))
             set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 10]);
-        else
+        end
+        if(all(gui.enabled.features))
+            for i=1:length(gui.features.feat)
+                set(gui.features.feat(i).bg,'cdata',img*2/3+1/3,...
+                    'XData',win/gui.data.annoFR,...
+                    'YData',gui.features.feat(i).axes.YLim+[-1 1]);
+            end
+        end
+        if(all(gui.enabled.audio))
             if(gui.enabled.annot(2)) %this if/else shouldn't be necessary
                 set(gui.audio.bg,'Visible','on');
             else

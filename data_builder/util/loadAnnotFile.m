@@ -57,9 +57,9 @@ for i = 1:2
     
     Mtemp(:,1) = strrep(Mtemp(:,1),'-','_');
     for j = 1:size(Mtemp,1)
-        if(strcmpi(Mtemp{j,1},'other'))
-            continue;
-        end
+%         if(strcmpi(Mtemp{j,1},'other'))
+%             continue;
+%         end
         times = [Mtemp{j,2} Mtemp{j,3}];
         annot.(str).(Mtemp{j,1})   = [annot.(str).(Mtemp{j,1}); times];
     end

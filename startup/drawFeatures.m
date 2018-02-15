@@ -8,15 +8,16 @@ if(isfield(gui,'tracker'))
 end
 
 features.panel        = uipanel('position',[0 0 1 1],'bordertype','none');
-features.axes         = axes('parent',features.panel,'ytick',[]); hold on;
-features.yScale       = 1;
 features.win          = 20;
-features.traces       = plot(0,0,'color',[.1 .1 .1]);
-features.zeroLine     = plot([0 0],get(gca,'ylim'),'k--');
+features.clickPt      = 0;
+features.axes.XLim    = [-20 20];
+features.feat         = [];
 
-xlabel('time (sec)');
-axis tight;
-xlim(features.win*[-1 1]);
+features.menu         = uicontrol('parent',features.panel,'Style','popupmenu',...
+                        'String',{''},'units','normalized','Position', [.275 0.025 .325 0.05]);
+uicontrol('parent',features.panel,'Style','pushbutton',...
+                        'String','Add','units','normalized','Position', [.615 0.03 .1 .05],...
+                        'Callback',@addFeature);
 
 
 gui.features = features;

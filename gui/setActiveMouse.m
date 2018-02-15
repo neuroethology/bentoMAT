@@ -83,6 +83,22 @@ if(gui.enabled.tracker(1))
             gui.enabled.tracker = [0 0];
         end
     end
+    if(isfield(data.tracking.args,'features'))
+        gui.features.menu.String = data.tracking.args.features;
+        gui.enabled.features = [1 1];
+        if(exist([data.tracking.fun '_features.m'],'file'))
+            data.tracking.features = eval([data.tracking.fun '_features(data.tracking.args)']);
+        else
+            data.tracking.features = promptFeatures(data);
+        end
+        if(isempty(data.tracking.features))
+            gui.enabled.features = [0 0];
+        end
+    else
+        gui.enabled.features = [0 0];
+    end
+    gui = redrawPanels(gui);
+    
     data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
     data.tracking.active(1:end) = {1}; %default active settings
     data.tracking.inactive  = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features

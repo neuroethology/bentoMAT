@@ -12,7 +12,11 @@ if(strcmpi(parent,'slider'))
     scale   = (gui.ctrl.slider.Max - gui.ctrl.slider.Min);
     offset  = gui.ctrl.slider.Min - gui.ctrl.slider.Marker.Position(3)/2;
 else
-    obj     = gui.(parent).axes;
+    if(~strcmpi(parent,'features'))
+        obj = gui.(parent).axes;
+    else
+        obj = gui.features.feat(1).axes;
+    end
     scale   = -(obj.XLim(2) - obj.XLim(1));
     offset  = gui.(parent).clickPt(1);
 end

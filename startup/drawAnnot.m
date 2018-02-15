@@ -13,8 +13,6 @@ annot.cmapDef = loadPreferredCmap(); %default colors to use
 % adds patches to show annotation edits on the trace/tracker axes
 annot.Box.traces     = patch([0 0 0 0],[0 0 0 0],[.8 .8 .8],...
                         'parent',gui.traces.axes,'visible','off');
-annot.Box.features   = patch([0 0 0 0],[0 0 0 0],[.8 .8 .8],...
-                        'parent',gui.features.axes,'visible','off');
 
 
 gui.annot = annot;

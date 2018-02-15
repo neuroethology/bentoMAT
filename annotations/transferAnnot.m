@@ -11,6 +11,12 @@ end
 
 channels = fieldnames(data.annot);
 annot.channels = channels;
+bhvList = {};
+for ch = channels'
+    bhvList = [bhvList fieldnames(data.annot.(ch{:}))'];
+end
+bhvList(strcmpi(bhvList,'other'))=[];
+
 
 gui.ctrl.annot.ch.Value = find(strcmpi(channels,annot.activeCh));
 if(isempty(gui.ctrl.annot.ch.Value))
@@ -25,20 +31,15 @@ if(isempty(annot.activeCh))
     end
 end
 gui.ctrl.annot.ch.String = {channels{:},'add new...','remove channel...'};
-if(~isempty(annot.activeCh))
-    bhvList = fieldnames(data.annot.(annot.activeCh))';
-    bhvList(strcmpi(bhvList,'other'))=[];
-else
-    bhvList = {};
-end
+
 
 annot.bhv = struct();
 for f = bhvList
-    if(~isempty(annot.activeCh)) %if one of the annotation channels is being displayed
+    % if the behavior is in the active channel
+    if(~isempty(annot.activeCh) && isfield(data.annot.(annot.activeCh),f{:}))
         annot.bhv.(f{:}) = convertToRast(data.annot.(annot.activeCh).(f{:}),length(data.annoTime));
-    else
-        annot.bhv.(f{:}) = false(1,length(data.annoTime));
     end
+    % for all behaviors
     if(~isfield(annot.show,f{:}))
         annot.show.(f{:}) = 1;
     end

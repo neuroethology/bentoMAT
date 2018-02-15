@@ -196,7 +196,12 @@ for i=1:size(data,1)
             fid = [pth strip(strip(data{i,match.Tracking},'left','.'),'left',filesep)];
             [~,~,ext] = fileparts(fid);
             if(strcmpi(ext,'.mat'))
-                strtemp.tracking.args = load(fid);
+                temp = load(fid);
+                f = fieldnames(temp);
+                if(length(f)==1)
+                    temp=temp.(f{:});
+                end
+                strtemp.tracking.args = temp;
             elseif(strcmpi(ext,'.json'))
                 if(exist('jsondecode','builtin'))
                     strtemp.tracking.args = jsondecode(fileread(fid));
