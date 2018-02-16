@@ -2,7 +2,7 @@ function setBentoPth(source,~,parent,doPrompt)
 
 exptGui = guidata(source);
 if(doPrompt)
-    pth = uigetdir(exptGui.root.String,'Select Bento parent directory');
+    pth = uigetdir(exptGui.root.String,'Select parent directory of your data');
     if(~pth) % no directory selected
         return;
     end

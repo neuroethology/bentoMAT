@@ -47,13 +47,13 @@ if(~isempty(eventdata))
             set(gui.traces.axes,   'xlim',gui.traces.win*[-1 1]);
             set(gui.audio.axes,    'xlim',gui.audio.win*[-1 1]);
             set(gui.fineAnnot.axes,'xlim',gui.fineAnnot.win*[-1 1]);
-            gui.features.axes.Xlim = gui.features.win*[-1 1];
+            gui.features.axes.XLim = gui.features.win*[-1 1];
             
             for i = 1:length(gui.features.feat)
                 set(gui.features.feat(i).axes,'xlim',[-gui.features.win  gui.features.win]);
                 gui.features.feat(i).label.Position(1) = -gui.features.win*.975;
                 gui.features.feat(i).label.Position(2) = ...
-                    max(gui.data.tracking.features(:,gui.features.feat(i).featNum))*.975;
+                    max(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[]))*.975;
             end
     end
 end
@@ -71,14 +71,16 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
 	set(gui.movie.img,'cdata',mov);
 end
 
-% update the plotted features~!
+% update the plotted features
 if(all(gui.enabled.features) && isfield(gui.features,'feat'))
     inds  = (gui.data.annoTime >= (time-gui.features.win)) & (gui.data.annoTime <= (time+gui.features.win));
     inds  = inds | [false inds(1:end-1)] | [inds(2:end) false];
     
     for i = 1:length(gui.features.feat)
+        channel = regexp(gui.features.feat(i).tag(3:5),'[\d]','match');
+        channel = str2num(channel{:});
         set(gui.features.feat(i).trace,'xdata',gui.data.annoTime(inds) - time,...
-            'ydata',gui.data.tracking.features(inds,gui.features.feat(i).featNum));
+            'ydata',gui.data.tracking.features(channel,inds,gui.features.feat(i).featNum));
     end
 end
 

@@ -1,6 +1,16 @@
 function feats = promptFeatures(data)
 
-% insert some kinda prompt to ask which field has the features in it
 f = fieldnames(data.args);
+f(strcmpi(f,'features'))=[];
 
-feats = [];
+[selection,flag] = listdlg('ListString',f,'SelectionMode','single',...
+                            'PromptString','Which variable contains features?');
+
+if(flag)
+    feats       = data.args.(selection);
+    if(length(size(data.args.(selection)))==2)
+        feats   = permute(feats,[3 1 2]);
+    end
+else
+    feats = [];
+end

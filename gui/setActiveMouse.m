@@ -84,11 +84,13 @@ if(gui.enabled.tracker(1))
         end
     end
     if(isfield(data.tracking.args,'features'))
-        gui.features.menu.String = data.tracking.args.features;
+        gui.features.menu.String        = data.tracking.args.features;
         gui.enabled.features = [1 1];
-        if(exist([data.tracking.fun '_features.m'],'file'))
+        if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
             data.tracking.features = eval([data.tracking.fun '_features(data.tracking.args)']);
-        else
+        elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support
+            data.tracking.features = MARS_top_features(data.tracking.args);
+        else % just ask which variable to use and hope for the best
             data.tracking.features = promptFeatures(data);
         end
         if(isempty(data.tracking.features))
@@ -98,6 +100,7 @@ if(gui.enabled.tracker(1))
         gui.enabled.features = [0 0];
     end
     gui = redrawPanels(gui);
+    gui.features.channels.String    = num2str((1:size(data.tracking.features,1))');
     
     data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
     data.tracking.active(1:end) = {1}; %default active settings
