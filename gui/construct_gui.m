@@ -1,4 +1,4 @@
-if(~isstruct(gui))
+if(~exist('gui','var')|~isstruct(gui))
     gui = struct();
     if(hasfield(gui,'data')), gui = rmfield(gui,'data'); end
     if(hasfield(gui,'allData')), gui = rmfield(gui,'allData'); end
