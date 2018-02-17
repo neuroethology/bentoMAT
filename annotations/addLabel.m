@@ -1,6 +1,5 @@
-function addLabel(source,~,labels,textfield,parent)
+function addLabel(labels,newStr,parent)
 
-newStr = textfield.String;
 newStr(ismember(newStr,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
 newStr = strrep(newStr,' ','_');
 
@@ -31,12 +30,6 @@ gui.annot.cmap.(newStr) = newColor;
 gui.annot.cmapDef.(newStr) = newColor;
 gui.annot.modified = 1;
 
-% add the new label to gui.data
-channels    = gui.annot.channels;
-for ch = channels
-    gui.data.annot.(ch{:}).(newStr) = [];
-end
-
 %add the new label to gui.allData:
 sessionList = fieldnames(gui.allData);
 mask        = false(1,length(gui.allData));
@@ -48,9 +41,7 @@ mice = find(mask); %find all the mice that contain data
 for m = mice
     for s = sessionList'
         for tr = 1:length(gui.allData(m).(s{:}))
-            for ch = channels
-                gui.allData(m).(s{:})(tr).annot.(ch{:}).(newStr) = [];
-            end
+            gui.allData(m).(s{:})(tr).annot.(gui.annot.activeCh).(newStr) = [];
         end
     end
 end
@@ -59,5 +50,3 @@ guidata(parent,gui);
 
 parent.String = {labels{:},'add new...','remove label...'};
 parent.Value = length(labels);
-
-close();

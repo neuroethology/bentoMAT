@@ -54,4 +54,5 @@ for f = bhvList
 end
 gui.annot = annot;
 
-gui.ctrl.annot.annot.String = {bhvList{:},'add new...','remove field...'};
+f = fieldnames(data.annot.(annot.activeCh));
+gui.ctrl.annot.annot.String = {f{:},'add new...','remove field...'};

@@ -58,6 +58,7 @@ data                = gui.allData(m).(sess)(tr);
 data.info.mouse     = m;
 data.info.session   = sess;
 data.info.trial     = tr;
+set(gui.h0,'name',data.stim);
 
 % now! load the movie
 if(gui.enabled.movie(1))
@@ -100,7 +101,7 @@ if(gui.enabled.tracker(1))
         gui.enabled.features = [0 0];
     end
     gui = redrawPanels(gui);
-    gui.features.channels.String    = num2str((1:size(data.tracking.features,1))');
+    gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
     
     data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
     data.tracking.active(1:end) = {1}; %default active settings

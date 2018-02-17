@@ -34,33 +34,15 @@ function addNewFieldPopup(gui,parent,fieldname)
             labels  = fieldnames(gui.annot.bhv);
     end
 
-    h = figure('dockcontrols','off','menubar','none','NumberTitle','off');
-    p = get(h,'Position');
-    set(h,'Position',[p(1:2) 350 100]);
-
-    uicontrol('Style','text',...
-                'HorizontalAlignment','left',...
-                'String',['Name of new ' fieldname ':'],...
-                'Position', [20 60 200 20]);
-    temp2 = uicontrol('Style','pushbutton',...
-                'String','Accept',...
-                'Position', [245 60 80 30]);
-    uicontrol('Style','pushbutton',...
-                'String','Cancel',...
-                'Position', [245 20 80 30],...
-                'Callback',@closeBrowser);
-    newStr = uicontrol('Style','edit',...
-                'String','',...
-                'Position', [20 20 200 30]);
-
+    prompt = ['Name of new ' fieldname ':'];
+    newStr = inputdlg(prompt);
+    
     switch fieldname
         case 'channel'
-            set(temp2,'Callback',{@addChannel,labels,newStr,parent});
+            addChannel(labels,newStr,parent);
         case 'annot'
-            set(temp2,'Callback',{@addLabel,labels,newStr,parent});
+            addLabel(labels,newStr,parent);
     end
-
-    uicontrol(newStr);
 end
 
 function removeFieldPopup(gui,parent,fieldname)

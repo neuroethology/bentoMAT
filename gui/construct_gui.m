@@ -1,7 +1,7 @@
 if(~exist('gui','var')|~isstruct(gui))
     gui = struct();
-    if(hasfield(gui,'data')), gui = rmfield(gui,'data'); end
-    if(hasfield(gui,'allData')), gui = rmfield(gui,'allData'); end
+    if(isfield(gui,'data')), gui = rmfield(gui,'data'); end
+    if(isfield(gui,'allData')), gui = rmfield(gui,'allData'); end
 end
 
 gui.h0 = figure(20);clf;

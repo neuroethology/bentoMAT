@@ -1,6 +1,5 @@
-function addChannel(source,~,channels,textfield,parent)
+function addChannel(channels,newStr,parent)
 
-newStr = textfield.String;
 newStr(ismember(newStr,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
 newStr = strrep(newStr,' ','_');
 
@@ -10,13 +9,13 @@ if(isempty(newStr))
 end
 
 %save the new channel name:
-channels{end+1}     = strrep(newStr,'_',' ');
+channels{end+1}     = newStr;
 gui                 = guidata(parent);
 gui.annot.channels  = channels;
 gui.enabled.annot(1)     = 1; % enable annots if they haven't been already
 gui.enabled.fineAnnot(1) = 1;
 
-%intitialize the new channel to be blank
+%intitialize the new channel to be blank in all behaviors
 f = fieldnames(gui.annot.bhv);
 blank = struct();
 for i=1:length(f)
@@ -50,5 +49,3 @@ parent.Value = length(channels);
 gui.annot.activeCh = channels{end};
 
 guidata(parent,gui);
-
-close();
