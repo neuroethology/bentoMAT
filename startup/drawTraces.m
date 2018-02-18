@@ -4,7 +4,8 @@ if(isfield(gui,'traces'))
     delete(gui.traces.panel);
 end
 traces.panel        = uipanel('position',[0 0 1 1],'bordertype','none');
-traces.axes         = axes('parent',traces.panel,'ytick',[]); hold on;
+traces.axes         = axes('parent',traces.panel,'ytick',[],...
+                           'position',[0.1 0.11 0.85 .815]); hold on;
 traces.yScale       = 1;
 traces.win          = 20;
 traces.traces       = [];
