@@ -1,3 +1,4 @@
+addpath(genpath('./.'));
 if(~exist('quitloop','var') | ~exist('gui','var') | ~isstruct(gui) | ~isfield(gui,'h0') | ~isvalid(gui.h0) | quitloop==1)
     fclose all;
     construct_gui();

@@ -2,7 +2,6 @@
 
 str = {'---Playback Hotkeys---',''};
 str = [str;{[char(8592) ' ' char(8594)],'Step +/- one frame'}];
-str = [str; {'PgUp PgDown','Step +/- one second'}];
 str = [str; {'[Spacebar]','Start/stop playback'}];
 str = [str; {[char(8593) ' ' char(8595)],'inc/dec play speed'}];
 str = [str; {'[Shift]','(held down while playing) only'}];
@@ -11,10 +10,10 @@ str = [str; {'',''}];
 
 str = [str; {'---Navigating annotations---',''}];
 str = [str; {'t/g','Cycle current behavior'}];
-str = [str; {'f','Next bout (any bhvr)'}];
-str = [str; {'b','Prev bout (any bhvr)'}];
-str = [str; {'[Shift]+f','Next bout (current bhvr)'}];
-str = [str; {'[Shift]+b','Prev bout (current bhvr)'}];
+str = [str; {'PgDown','Next bout (any bhvr)'}];
+str = [str; {'PgUp','Prev bout (any bhvr)'}];
+str = [str; {'[Shift]+PgDown','Next bout (current bhvr)'}];
+str = [str; {'[Shift]+PgUp','Prev bout (current bhvr)'}];
 str = [str; {'',''}];
 
 str = [str; {'---Modifying annotations---',''}];
