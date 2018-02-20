@@ -16,7 +16,7 @@ else
     color = 'gcrgcrgcrgcrgcr';
     color = [color color color];
 end
-if(length(gui.data.io.movie.fid)>1)
+if(isfield(gui.data.io.movie,'fid')&length(gui.data.io.movie.fid)>1)
     dims = [gui.data.io.movie.reader.width];
     if(dims(1)~=max(dims))
         pad = (max(dims)-dims(1))/2;

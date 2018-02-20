@@ -70,8 +70,10 @@ if(gui.enabled.movie(1))
     end
 elseif(gui.enabled.traces(1))
     gui = applySliderUpdates(gui,'Ca',data);
-else
+elseif(gui.enabled.audio(1))
     gui = applySliderUpdates(gui,'audio',data);
+else
+    gui = applySliderUpdates(gui,'annot',data);
 end
 
 % get tracking type if needed
@@ -103,9 +105,14 @@ if(gui.enabled.tracker(1))
     gui = redrawPanels(gui);
     gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
     
-    data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
+    if(isfield(data.io.movie,'tmax'))
+        data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
+        data.tracking.inactive  = cell(1,data.io.movie.tmax-data.io.movie.tmin+1);
+    else
+        data.tracking.active    = cell(1,length(data.tracking.features));
+        data.tracking.inactive  = cell(1,length(data.tracking.features));
+    end
     data.tracking.active(1:end) = {1}; %default active settings
-    data.tracking.inactive  = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
     data.tracking.inactive(1:end) = {2:1e5};
     data.tracking.crop      = [];
 end

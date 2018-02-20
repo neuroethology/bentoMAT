@@ -62,8 +62,13 @@ time = gui.ctrl.slider.Value;
 
 % update the movie panel
 if(all(gui.enabled.movie)||all(gui.enabled.tracker))
-    if(all(gui.enabled.movie)), [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
-    else, mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;  end
+    if(all(gui.enabled.movie))
+        [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+    elseif(gui.enabled.movie(1))
+        mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;
+    else
+        mov = ones(1024,540,'uint8')*255;
+    end
 	
     if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);

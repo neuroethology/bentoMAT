@@ -5,7 +5,8 @@ if(isfield(gui,'audio'))
 end
 
 audio.panel        = uipanel('position',[0 0 1 1],'bordertype','none');
-audio.axes         = axes('parent',audio.panel,'ytick',0:25:100); hold on;
+audio.axes         = axes('parent',audio.panel,'ytick',0:25:100,...
+                          'position',[0.1 0.11 0.85 .815]); hold on;
 audio.yScale       = 1;
 audio.win          = 20;
 audio.bg           = image();set(audio.bg,'visible','off');

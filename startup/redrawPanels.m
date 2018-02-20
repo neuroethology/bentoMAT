@@ -21,8 +21,8 @@ for i = 1:length(enabled)
     end
 end
 
-leftOn  = gui.enabled.movie(2)|gui.enabled.audio(2)|gui.enabled.fineAnnot(2);
-rightOn = gui.enabled.traces(2)|gui.enabled.features(2);
+leftOn  = gui.enabled.movie(2);
+rightOn = gui.enabled.traces(2)|gui.enabled.features(2)|gui.enabled.audio(2)|gui.enabled.fineAnnot(2);
 
 if(leftOn && rightOn)
     leftWidth = config.midline;
@@ -35,75 +35,58 @@ rightStart = leftWidth;
 rightWidth = 1-leftWidth;
     
 %time for the world's shittiest panel layout code!
+bump = 0;
 if(leftOn)
-    if(gui.enabled.movie(2))
-        if(gui.enabled.ctrl(2))
-            gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
-            if(gui.enabled.audio(2))
-                gui.movie.panel.Position = [0 ctrlSize+.25 leftWidth 1-.25-ctrlSize];
-                gui.audio.panel.Position = [0 ctrlSize leftWidth .25];
-                gui.fineAnnot.panel.Visible='off'; % merge fineAnnot with audio if both are turned on
-            elseif(gui.enabled.fineAnnot(2))
-                gui.movie.panel.Position = [0 ctrlSize+.25 leftWidth 1-.25-ctrlSize];
-                gui.fineAnnot.panel.Position = [0 ctrlSize leftWidth .25];
-            else
-                gui.movie.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
-            end
-        else
-            if(gui.enabled.audio(2))
-                gui.movie.panel.Position = [0 .25 leftWidth 1-.25];
-                gui.audio.panel.Position = [0 0 leftWidth .25];
-                gui.fineAnnot.panel.Visible='off';
-            elseif(gui.enabled.fineAnnot(2))
-                gui.movie.panel.Position = [0 .25 leftWidth 1-.25];
-                gui.fineAnnot.panel.Position = [0 0 leftWidth .25];
-            else
-                gui.movie.panel.Position = [0 0 leftWidth 1];
-            end
-        end
-    elseif(gui.enabled.ctrl(2))
+    
+    if(gui.enabled.ctrl(2)) % control panel at the bottom
         gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
-        if(gui.enabled.audio(2))
-            gui.audio.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
-            gui.fineAnnot.panel.Visible='off';
-        elseif(gui.enabled.fineAnnot(2))
-            gui.fineAnnot.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
-        else
-            gui.ctrl.panel.Position = [0 0 leftWidth 1];
-        end
-    elseif(gui.enabled.audio(2))
-        
-        if(gui.enabled.ctrl(2))
-            gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
-            gui.audio.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
-            gui.fineAnnot.panel.Visible='off';
-        else
-            gui.audio.panel.Position = [0 0 leftWidth 1];
-            gui.fineAnnot.panel.Visible='off';
-        end
-    else %only fineAnnot is on
-        if(gui.enabled.ctrl(2))
-            gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
-            gui.fineAnnot.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
-        else
-            gui.fineAnnot.panel.Position = [0 0 leftWidth 1];
-        end
+        bump = ctrlSize;
     end
+    
+    if(gui.enabled.audio(2)) %then audio/fineAnnot
+        gui.audio.panel.Position = [0 bump leftWidth .25];
+        gui.fineAnnot.panel.Visible='off'; % merge fineAnnot with audio if both are turned on
+        bump=bump+.25;
+    elseif(gui.enabled.fineAnnot(2))
+        gui.fineAnnot.panel.Position = [0 bump leftWidth .25];
+        bump=bump+.25;
+    end
+    
+    gui.movie.panel.Position = [0 bump leftWidth 1-bump]; %remaining space goes to the movie
+    
 end
+
+bump = 0;
 if(rightOn)
-    if(~leftOn && gui.enabled.ctrl(2))
-        gui.ctrl.panel.Position = [0 0 1 ctrlSize];
-        if(gui.enabled.traces(2))
+    if(~leftOn && (gui.enabled.ctrl(2)||gui.enabled.audio(2)||gui.enabled.fineAnnot(2)))
+        
+        if(gui.enabled.ctrl(2)) %control panel first
+            gui.ctrl.panel.Position = [0 0 1 ctrlSize];
+            bump = ctrlSize;
+        end
+        
+        if(gui.enabled.audio(2)) %then audio/fineAnnot if applicable
+            gui.audio.panel.Position = [0 bump 1 bump+.2];
+            gui.fineAnnot.panel.Visible='off';
+            bump = bump+.2;
+        elseif(gui.enabled.fineAnnot(2))
+            gui.fineAnnot.panel.Position = [0 bump 1 bump+.1];
+            bump = bump+.25;
+        end
+        
+        if(gui.enabled.traces(2)) %then divide remaining space between features + traces
             if(gui.enabled.features(2))
-                gui.traces.panel.Position =   [0 .5+ctrlSize 1 .5-ctrlSize/2];
-                gui.features.panel.Position = [0    ctrlSize 1 .5-ctrlSize/2];
+                gui.features.panel.Position = [0  bump 1 (1-bump)/2];
+                gui.traces.panel.Position =   [0 bump+(1-bump)/2 1 (1-bump)/2];
             else
-                gui.traces.panel.Position = [0 ctrlSize 1 1-ctrlSize];
+                gui.traces.panel.Position = [0 bump 1 1-bump];
             end
         else
-            gui.features.panel.Position = [0 ctrlSize 1 1-ctrlSize];
+            gui.features.panel.Position = [0 bump 1 1-bump];
         end
-    else
+        
+    else % don't have to worry about ctrl/audio/fineAnnot placement
+        
         if(gui.enabled.traces(2))
             if(gui.enabled.features(2))
                 gui.traces.panel.Position = [rightStart .5 rightWidth .5];
@@ -114,5 +97,6 @@ if(rightOn)
         else
             gui.features.panel.Position = [rightStart 0 rightWidth 1];
         end
+        
     end
 end
