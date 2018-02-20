@@ -10,8 +10,8 @@ switch ext
         time = temp(:,1)';
         rast = temp(:,2)';
         % get rid of artifacts
-        rast((1:100))    = 0;
-        rast(end-19:end) = 0;
+        rast((1:500))    = nan;
+        rast(end-119:end) = nan;
         
     case {'.xls','.xlsx'}
         % Prabhat's fiberphotometry data

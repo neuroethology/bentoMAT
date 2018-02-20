@@ -22,7 +22,7 @@ for i = 1:length(enabled)
 end
 
 leftOn  = gui.enabled.movie(2);
-rightOn = gui.enabled.traces(2)|gui.enabled.features(2)|gui.enabled.audio(2)|gui.enabled.fineAnnot(2);
+rightOn = gui.enabled.traces(2)|gui.enabled.features(2)|(~gui.enabled.movie(2)&(gui.enabled.audio(2)|gui.enabled.fineAnnot(2)));
 
 if(leftOn && rightOn)
     leftWidth = config.midline;

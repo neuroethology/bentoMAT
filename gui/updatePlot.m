@@ -73,6 +73,10 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     if(all(gui.enabled.tracker)) % add tracking data if included
         mov = applyTracking(gui,mov,time);
     end
+    % apply crop+zoom if turned on
+    if(isfield(gui.data,'tracking')&&isfield(gui.data.tracking,'crop')&&~isempty(gui.data.tracking.crop))
+        mov = imcrop(mov,gui.data.tracking.crop);
+    end
     if(size(mov,3)==1), mov = repmat(mov,[1 1 3]); end
 	set(gui.movie.img,'cdata',mov);
 end

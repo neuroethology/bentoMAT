@@ -72,8 +72,3 @@ else
         mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
     end
 end
-
-% apply crop+zoom if turned on
-if(~isempty(gui.data.tracking.crop))
-    mov = imcrop(mov,gui.data.tracking.crop);
-end

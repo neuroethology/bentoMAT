@@ -58,7 +58,6 @@ data                = gui.allData(m).(sess)(tr);
 data.info.mouse     = m;
 data.info.session   = sess;
 data.info.trial     = tr;
-set(gui.h0,'name',data.stim);
 
 % now! load the movie
 if(gui.enabled.movie(1))
