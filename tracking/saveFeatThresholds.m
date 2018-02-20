@@ -5,9 +5,13 @@ gui = guidata(source);
 [mask,params] = getThresholdedFeatureMask(gui);
 
 if(~isfield(gui.features,'savedFilters'))
-    gui.features.savedFilters = params;
+    gui.features.savedFilters{1} = params;
 else
-    gui.features.savedFilters(end+1) = params;
+    try
+    gui.features.savedFilters{end+1} = params;
+    catch
+        keyboard
+    end
 end
 
 if(strcmpi(gui.annot.activeCh,'thresholded_features'))
@@ -18,6 +22,7 @@ if(strcmpi(gui.annot.activeCh,'thresholded_features'))
         return;
     end
     newStr  = [newStr{:}];
+    newStr = strrep(newStr,' ','_');
     labels  = fieldnames(gui.annot.bhv);
     labels = strrep(labels,'_',' ');
     

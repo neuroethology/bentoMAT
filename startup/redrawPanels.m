@@ -1,7 +1,6 @@
 function gui = redrawPanels(gui)
 % this gets called when the user makes a change to the data being viewed-
-% eg, opens a movie, adds tracking data, etc. In the future, there will
-% also be a menu option that will let you toggle ui elements on/off.
+% eg, opens a movie, adds tracking data, etc. It is terrible.
 enabled     = fieldnames(gui.enabled);
 config      = gui.config;
 
@@ -22,70 +21,98 @@ for i = 1:length(enabled)
     end
 end
 
-if(gui.enabled.movie(2) && gui.enabled.traces(2))
-    gui.movie.panel.Position  = [0 ctrlSize config.midline 1-ctrlSize];
-    gui.ctrl.panel.Position   = [0 0 config.midline ctrlSize];
-    
-    if(gui.enabled.traces(2) && gui.enabled.features(2) && gui.enabled.audio(2))
-        gui.traces.panel.Position   = [config.midline 0    1-config.midline 0.5];
-        gui.features.panel.Position = [config.midline 0.5  1-config.midline 0.25];
-        gui.audio.panel.Position    = [config.midline 0.75 1-config.midline 0.25];
-        
-    elseif(gui.enabled.traces(2) && gui.enabled.features(2))
-        gui.traces.panel.Position   = [config.midline 0 1-config.midline 0.5];
-        gui.features.panel.Position = [config.midline 0.5 1-config.midline 0.5];
-        
-    elseif(gui.enabled.traces(2) && gui.enabled.audio(2))
-        gui.traces.panel.Position   = [config.midline 0 1-config.midline 0.7];
-        gui.audio.panel.Position    = [config.midline 0.7 1-config.midline 0.3];
-        
-    else
-        gui.traces.panel.Position   = [config.midline 0 1-config.midline 1];
-    end
-    
-elseif(gui.enabled.movie(2) && gui.enabled.audio(2))
-    gui.movie.panel.Position  = [0 ctrlSize+.25 1 1-.25-ctrlSize];
-    gui.audio.panel.Position  = [0 ctrlSize 1 .25];
-    gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
-    if(gui.enabled.fineAnnot(2))
-        gui.fineAnnot.panel.Visible='off';
-    end
-    
-elseif(gui.enabled.movie(2) && gui.enabled.fineAnnot(2) && ~gui.enabled.audio(2))
-    gui.movie.panel.Position     = [0 ctrlSize*.75+.15 1 1-.15-ctrlSize*.75];
-    gui.fineAnnot.panel.Position = [0 ctrlSize*.75 1 .15];
-    gui.ctrl.panel.Position      = [0 0 1 ctrlSize*.75];
-    
-elseif(gui.enabled.movie(2) && gui.enabled.features(2))
-    gui.movie.panel.Position    = [0 ctrlSize config.midline 1-ctrlSize];
-    gui.ctrl.panel.Position     = [0 0 config.midline ctrlSize];
-    gui.features.panel.Position = [config.midline 0 1-config.midline 1];
-    
-elseif(gui.enabled.movie(2))
-    gui.movie.panel.Position  = [0 ctrlSize 1 1-ctrlSize];
-    gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
-    
-elseif(gui.enabled.traces(2) && gui.enabled.features(2))
-    gui.traces.panel.Position    = [0 ctrlSize 0.5 1-ctrlSize];
-    gui.features.panel.Position  = [0.5 ctrlSize 1 1-ctrlSize];
-    gui.ctrl.panel.Position      = [0 0 1 ctrlSize];
-    
-elseif(gui.enabled.traces(2) && gui.enabled.audio(2))
-    gui.traces.panel.Position   = [0 ctrlSize       1 1-.3-ctrlSize];
-    gui.audio.panel.Position    = [0 0.3+ctrlSize   1 0.3];
-    gui.ctrl.panel.Position      = [0 0 1 ctrlSize];
-    
-elseif(gui.enabled.traces(2))
-    gui.traces.panel.Position = [0 ctrlSize 1 1-ctrlSize];
-    gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
-    
-elseif(gui.enabled.features(2))
-    gui.features.panel.Position = [0 ctrlSize 1 1-ctrlSize];
-    gui.ctrl.panel.Position   = [0 0 1 ctrlSize];
-    
-elseif(gui.enabled.audio(2))
-    gui.audio.panel.Position    = [0 ctrlSize 1 1-ctrlSize];
-    gui.ctrl.panel.Position      = [0 0 1 ctrlSize];
+leftOn  = gui.enabled.movie(2)|gui.enabled.audio(2)|gui.enabled.fineAnnot(2);
+rightOn = gui.enabled.traces(2)|gui.enabled.features(2);
+
+if(leftOn && rightOn)
+    leftWidth = config.midline;
+elseif(rightOn)
+    leftWidth = 0;
 else
-    gui.welcome.panel.Position = [0 0 1 1];
+    leftWidth = 1;
+end
+rightStart = leftWidth;
+rightWidth = 1-leftWidth;
+    
+%time for the world's shittiest panel layout code!
+if(leftOn)
+    if(gui.enabled.movie(2))
+        if(gui.enabled.ctrl(2))
+            gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
+            if(gui.enabled.audio(2))
+                gui.movie.panel.Position = [0 ctrlSize+.25 leftWidth 1-.25-ctrlSize];
+                gui.audio.panel.Position = [0 ctrlSize leftWidth .25];
+                gui.fineAnnot.panel.Visible='off'; % merge fineAnnot with audio if both are turned on
+            elseif(gui.enabled.fineAnnot(2))
+                gui.movie.panel.Position = [0 ctrlSize+.25 leftWidth 1-.25-ctrlSize];
+                gui.fineAnnot.panel.Position = [0 ctrlSize leftWidth .25];
+            else
+                gui.movie.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
+            end
+        else
+            if(gui.enabled.audio(2))
+                gui.movie.panel.Position = [0 .25 leftWidth 1-.25];
+                gui.audio.panel.Position = [0 0 leftWidth .25];
+                gui.fineAnnot.panel.Visible='off';
+            elseif(gui.enabled.fineAnnot(2))
+                gui.movie.panel.Position = [0 .25 leftWidth 1-.25];
+                gui.fineAnnot.panel.Position = [0 0 leftWidth .25];
+            else
+                gui.movie.panel.Position = [0 0 leftWidth 1];
+            end
+        end
+    elseif(gui.enabled.ctrl(2))
+        gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
+        if(gui.enabled.audio(2))
+            gui.audio.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
+            gui.fineAnnot.panel.Visible='off';
+        elseif(gui.enabled.fineAnnot(2))
+            gui.fineAnnot.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
+        else
+            gui.ctrl.panel.Position = [0 0 leftWidth 1];
+        end
+    elseif(gui.enabled.audio(2))
+        
+        if(gui.enabled.ctrl(2))
+            gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
+            gui.audio.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
+            gui.fineAnnot.panel.Visible='off';
+        else
+            gui.audio.panel.Position = [0 0 leftWidth 1];
+            gui.fineAnnot.panel.Visible='off';
+        end
+    else %only fineAnnot is on
+        if(gui.enabled.ctrl(2))
+            gui.ctrl.panel.Position = [0 0 leftWidth ctrlSize];
+            gui.fineAnnot.panel.Position = [0 ctrlSize leftWidth 1-ctrlSize];
+        else
+            gui.fineAnnot.panel.Position = [0 0 leftWidth 1];
+        end
+    end
+end
+if(rightOn)
+    if(~leftOn && gui.enabled.ctrl(2))
+        gui.ctrl.panel.Position = [0 0 1 ctrlSize];
+        if(gui.enabled.traces(2))
+            if(gui.enabled.features(2))
+                gui.traces.panel.Position =   [0 .5+ctrlSize 1 .5-ctrlSize/2];
+                gui.features.panel.Position = [0    ctrlSize 1 .5-ctrlSize/2];
+            else
+                gui.traces.panel.Position = [0 ctrlSize 1 1-ctrlSize];
+            end
+        else
+            gui.features.panel.Position = [0 ctrlSize 1 1-ctrlSize];
+        end
+    else
+        if(gui.enabled.traces(2))
+            if(gui.enabled.features(2))
+                gui.traces.panel.Position = [rightStart .5 rightWidth .5];
+                gui.features.panel.Position = [rightStart 0 rightWidth .5];
+            else
+                gui.traces.panel.Position = [rightStart 0 rightWidth 1];
+            end
+        else
+            gui.features.panel.Position = [rightStart 0 rightWidth 1];
+        end
+    end
 end
