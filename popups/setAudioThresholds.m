@@ -1,4 +1,4 @@
-function setAudioThresholds(source,~)
+function setAudioThresholds(source)
 
 gui         = guidata(source);
 

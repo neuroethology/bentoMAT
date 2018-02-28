@@ -1,4 +1,4 @@
-function saveScreen(source,~,movieOnly)
+function saveScreen(source,movieOnly)
 
 gui = guidata(source);
 

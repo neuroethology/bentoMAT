@@ -1,4 +1,4 @@
-function runCPsort(source,~)
+function runCPsort(source)
 % ask the user which trials and conditions to use for CP analysis
 
 gui = guidata(source);

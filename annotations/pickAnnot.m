@@ -59,5 +59,6 @@ cbox = getButtonImage(gui.annot.cmap.(str),source.Value);
 set(source,'CData',cbox);
 
 updateSliderAnnot(gui);
+updateLegend(gui,1);
 updatePlot(parent,[]);
 end

@@ -36,9 +36,10 @@ end
 %window visibility:
 enabled.movie     = any(~cellfun(@isempty,data(:,match.Behavior_movie)))*[1 1];
 enabled.annot     = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
+enabled.legend    = enabled.annot;
 enabled.traces    = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
 enabled.tracker   = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
-enabled.features  = [0 0];%any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
+enabled.features  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.audio     = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
 enabled.tsne      = any(~cellfun(@isempty,data(:,match.tSNE)))*[1 0];
 enabled.fineAnnot = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 0];
@@ -305,9 +306,9 @@ for i=1:size(data,1)
                 tmax(j) = length(strtemp.audio.t);
             else %load data in the old format, prepare to convert to sheet format when saved
                 if(raw{1,9})
-                    frame_suffix = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
+                    frame_suffix            = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
                     strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.txt',frame_suffix);
-                    [atemp,~] = loadAnnotFile([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                    [atemp,~]               = loadAnnotFile([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                     tmin(j) = data{i,match.Start_Anno};
                     tmax(j) = data{i,match.Stop_Anno};
                 else
@@ -316,7 +317,7 @@ for i=1:size(data,1)
                     tmin(j) = 1;
                 end
             end
-            atemp  = rmBlankChannels(atemp);
+%             atemp  = rmBlankChannels(atemp);
             fields = fieldnames(atemp);
             if(j==1)
                 strtemp.annot = struct();
@@ -325,12 +326,9 @@ for i=1:size(data,1)
                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
-        try
-        strtemp.annot = orderfields(strtemp.annot);
-        catch
-            keyboard
-        end
-        tmin = min(tmin);tmax=max(tmax);
+        strtemp.annot   = orderfields(strtemp.annot);
+        tmin = min(tmin);
+        tmax = max(tmax);
         
         if(isnan(tmax))
             tmin = strtemp.io.movie.tmin;

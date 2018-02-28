@@ -1,4 +1,4 @@
-function bumpAnnot(source,~)
+function bumpAnnot(source)
     gui         = guidata(source);
     
     h = figure('dockcontrols','off','menubar','none',...

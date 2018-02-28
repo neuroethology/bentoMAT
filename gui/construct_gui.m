@@ -22,6 +22,7 @@ gui.enabled.tracker   = [0 0];
 gui.enabled.audio     = [0 0];
 gui.enabled.features  = [0 0];
 gui.enabled.fineAnnot = [0 0];
+gui.enabled.legend    = [0 0];
 gui.enabled.welcome   = [1 1];
 
 gui.config  = loadConfig();
@@ -34,6 +35,7 @@ gui     = drawAudio(gui);
 gui     = drawAnnot(gui);
 gui     = drawfineAnnot(gui);
 gui     = drawCtrl(gui);
+gui     = drawLegend(gui);
 gui     = drawWelcome(gui);
 
 gui = redrawPanels(gui);

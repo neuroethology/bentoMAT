@@ -202,10 +202,9 @@ if(gui.enabled.annot(1))
     end
         
     % update behavior-annotating box if it's active
-    if(isfield(gui.ctrl,'annot'))
-        if((gui.ctrl.annot.toggleAnnot.Value||gui.ctrl.annot.toggleErase.Value)&&all(gui.enabled.traces))
-            set(gui.annot.Box.traces,'ydata',[0 0 bump*(length(show)+1) bump*(length(show)+1)]);
-            set(gui.annot.Box.traces,'xdata',[gui.annot.highlightStart/gui.data.annoFR-time 0 0 gui.annot.highlightStart/gui.data.annoFR-time]);
+    if(isfield(gui.ctrl,'annot') && (gui.annot.highlighting(1)~=0))
+        if(all(gui.enabled.traces))
+            set(gui.annot.Box.traces,'xdata',(gui.annot.highlightStart/gui.data.annoFR-time)*[1 0 0 1]);
         end
     end
     
@@ -213,6 +212,7 @@ if(gui.enabled.annot(1))
     if(~isempty(win))
         [~,i] = min(abs(win));
         frnum = inds(i);
+        gui.annot.activeBeh = '';
         for chNum = 1:length(gui.annot.channels)
             chName = gui.annot.channels{chNum};
             str = '';
@@ -222,6 +222,7 @@ if(gui.enabled.annot(1))
                     for f = fieldnames(gui.annot.bhv)'
                         if(gui.annot.bhv.(f{:})(frnum)&&gui.annot.show.(f{:}))
                             str = [str strrep(f{:},'_',' ') ' '];
+                            gui.annot.activeBeh = f{:};
                             count=count+1;
                         end
                     end
@@ -245,9 +246,9 @@ if(gui.enabled.annot(1))
                     set(gui.movie.annot(chNum),'backgroundcolor',[.5 .5 .5],'color','w');
                 end
                 if(strcmpi(gui.annot.activeCh,chName))
-                    set(gui.movie.annot(chNum),'fontweight','bold','fontsize',18);
+                    set(gui.movie.annot(chNum),'fontweight','bold','fontsize',14);
                 else
-                    set(gui.movie.annot(chNum),'fontweight','normal','fontsize',14);
+                    set(gui.movie.annot(chNum),'fontweight','normal','fontsize',10);
                 end
             elseif(all(gui.enabled.traces))
         %         set(gui.traces.annot,'string',str); %display text on traces plot (need to create+place this object)

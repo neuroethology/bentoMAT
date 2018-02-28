@@ -1,4 +1,4 @@
-function saveMovie(source,~)
+function saveMovie(source)
 
 gui = guidata(source);
 [FileName,PathName] = uiputfile(...

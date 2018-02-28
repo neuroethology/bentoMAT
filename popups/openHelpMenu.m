@@ -1,4 +1,4 @@
-% function openHelpMenu(~,~)
+function openHelpMenu(source)
 
 str = {'---Playback Hotkeys---',''};
 str = [str;{[char(8592) ' ' char(8594)],'Step +/- one frame'}];

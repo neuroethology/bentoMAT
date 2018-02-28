@@ -17,14 +17,15 @@ fclose(fid);
 % get full list of labels
 listend = find(strcmp(M,''));
 listend = listend(2);
-conf = M(4:listend-1);
-for i = 1:length(conf)
-    conf{i} = strtrim(conf{i});
-    conf{i} = conf{i}(1:end-2);
-    conf{i} = strrep(conf{i},'-','_');
-    if(~isstrprop(conf{i}(1),'alpha'))
-        conf{i} = ['x' conf{i}];
-        M = strrep(M,conf{i}(2:end),conf{i});
+labelList = M(4:listend-1);
+for i = 1:length(labelList)
+    labelList{i} = strtrim(labelList{i});
+    
+    labelList{i} = labelList{i}(1:end-2);
+    labelList{i} = strrep(labelList{i},'-','_');
+    if(~isstrprop(labelList{i}(1),'alpha'))
+        labelList{i} = ['x' labelList{i}];
+        M = strrep(M,labelList{i}(2:end),labelList{i});
     end
 end
 
@@ -32,8 +33,8 @@ inds = [find(~cellfun(@isempty,strfind(M,'-----'))); length(M)+3];
 annot = struct();
 for i = 1:2
     str = ['Ch' num2str(i)];
-    for b=1:length(conf)
-        annot.(str).(conf{b}) = [];
+    for b=1:length(labelList)
+        annot.(str).(labelList{b}) = [];
     end
 end
 

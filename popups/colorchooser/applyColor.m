@@ -13,6 +13,7 @@ guidata(gui.h0,gui);
 
 updateSliderAnnot(gui);
 updatePlot(gui.h0,[]);
-updatePreferredCmap(gui.annot.cmap);
+updateLegend(gui);
+updatePreferredCmap(gui.annot.cmapDef,gui.annot.hotkeysDef);
 
 close(data.h0);

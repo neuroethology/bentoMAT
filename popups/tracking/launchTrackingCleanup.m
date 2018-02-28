@@ -1,4 +1,4 @@
-function launchTrackingCleanup(source,~)
+function launchTrackingCleanup(source)
 gui  = guidata(source);
 time    = gui.ctrl.slider.Value;
 frnum   = floor(time*gui.data.annoFR)+1;

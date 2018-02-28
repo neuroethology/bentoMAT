@@ -4,13 +4,18 @@ fid     = trial.io.annot.fid{:};
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
 
+%always prompt the save path?
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
     if(isempty(suggestedName))
         suggestedName = 'annotations';
     end
-    [fname,pth] = uiputfile([suggestedName '.annot']);
+    [fname,pth] = uiputfile([pth filesep suggestedName]);
+    fid = [pth fname];
+else
+    [fname,pth] = uiputfile(fid);
     fid = [pth fname];
 end
+
 fid = fopen(fid,'w');
 % write metadata-----------------------------------------------------------
 fprintf(fid,'%s\n','Tracergui annotation file');

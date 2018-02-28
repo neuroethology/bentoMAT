@@ -27,7 +27,7 @@ if(gui.annot.modified)
         case 'Yes'
             gui.allData(mOld).(sessOld)(trOld).annot = gui.data.annot;
 			suggestedName = ['mouse' num2str(mOld) '_' sessOld '_' num2str(trOld,'%03d') '.annot'];
-            saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName);
+            saveAnnotSheetTxt(gui.data.io.movie.fid,gui.data,suggestedName);
             gui.annot.modified = 0;
         case 'No'
             gui.allData(mOld).(sessOld)(trOld).annot = gui.data.annot;
@@ -133,6 +133,10 @@ if(gui.enabled.annot(1))
 		updateSliderAnnot(gui);
 		end
 end
+% clean out the annotations
+resetAnnotText(gui);
+% update the legend
+updateLegend(gui);
 
 % % add the ID of the stimulus
 % if(gui.enabled.movie(1))

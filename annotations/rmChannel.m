@@ -1,30 +1,28 @@
-function rmChannel(source,~,toDelete,parent)
-gui = guidata(parent);
-g2  = guidata(source);
+function gui = rmChannel(gui,toDelete)
 
-ind = toDelete.Value;
-toDelete = toDelete.String{ind};
-channels = g2.chList.String;
-channels = setdiff(channels,toDelete);
-g2.chList.String = channels;
+if(isempty(toDelete))
+    return;
+end
 
-parent.String       = {channels{:},'add new...','remove channel...'};
-if(strcmpi(toDelete,gui.annot.activeCh)) % active channel was deleted
-    parent.Value        = min(ind,length(channels));
-    gui.annot.activeCh  = channels{parent.Value};
-    gui                 = transferAnnot(gui,gui.data);
+newChannels              = setdiff(gui.annot.channels,toDelete);
+if(isempty(newChannels))
+    newChannels = {''};
+end
+gui.annot.channels       = newChannels;
+gui.ctrl.annot.ch.String = newChannels;
+
+% remove channel from active annotations
+for ch = toDelete'
+    gui.data.annot      = rmfield(gui.data.annot,ch{:});
+end
+
+% update the drop-down menu
+gui.ctrl.annot.ch.String = newChannels;
+if(any(strcmpi(toDelete,gui.annot.activeCh))) % need to set a new active channel
+    gui.ctrl.annot.ch.Value  = 1;
+    gui.annot.activeCh  = newChannels{1};
+    gui = transferAnnot(gui,gui.data);
     updateSliderAnnot(gui);
 else
-    parent.Value        = find(strcmpi(channels,gui.annot.activeCh));
+    gui.ctrl.annot.ch.Value = find(strcmpi(gui.annot.channels,gui.annot.activeCh));
 end
-
-gui.annot.channels  = channels;
-gui.data.annot      = rmfield(gui.data.annot,toDelete);
-
-if(any(gui.enabled.movie))
-    for i=ind:length(gui.movie.annot)-1
-        gui.movie.annot(i).String = '';
-    end
-end
-guidata(gui.h0,gui);
-updatePlot(gui.h0,[]);

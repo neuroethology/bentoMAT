@@ -3,7 +3,8 @@ function gui = transferAnnot(gui,data)
 % the gui understands.
 annot = gui.annot;
 
-cmap = annot.cmapDef;
+cmap    = annot.cmapDef;
+hotkeys = annot.hotkeysDef;
 used = [0 0 0;1 1 1];
 for f = fieldnames(cmap)'
     used = [used;cmap.(f{:})];
@@ -27,13 +28,18 @@ if(isempty(annot.activeCh))
     if(~isempty(channels))
         annot.activeCh = channels{1};
     else
-        annot.activeCh=[];
+        annot.activeCh='';
+        channels = {''};
     end
 end
-gui.ctrl.annot.ch.String = {channels{:},'add new...','remove channel...'};
+gui.ctrl.annot.ch.String = channels;
 
 
-annot.bhv = struct();
+annot.bhv        = struct();
+annot.cmap       = struct();
+annot.hotkeys    = struct();
+
+flag = 0;
 for f = bhvList
     % if the behavior is in the active channel
     if(~isempty(annot.activeCh) && isfield(data.annot.(annot.activeCh),f{:}))
@@ -43,16 +49,27 @@ for f = bhvList
     if(~isfield(annot.show,f{:}))
         annot.show.(f{:}) = 1;
     end
+    
     if(isfield(cmap,f{:}))
-        annot.cmap.(f{:}) = cmap.(f{:});
+        annot.cmap.(f{:})       = cmap.(f{:});
     else
-        annot.cmap.(f{:}) = distinguishable_colors(1,used);
-        annot.cmapDef.(f{:}) = annot.cmap.(f{:});
+        annot.cmap.(f{:})       = distinguishable_colors(1,used);
+        annot.cmapDef.(f{:})    = annot.cmap.(f{:});
         used = [used; annot.cmap.(f{:})];
-        updatePreferredCmap(annot.cmapDef);
+        flag = 1;
     end
+    
+    if(isfield(hotkeys,f{:}) && ~strcmpi(hotkeys.(f{:}),'_'))
+        annot.hotkeys.(hotkeys.(f{:})) = f{:};
+    else
+        annot.hotkeysDef.(f{:}) = '_'; %default if no hotkey is assigned
+        flag = 1;
+    end
+end
+
+if(flag)
+    updatePreferredCmap(annot.cmapDef,annot.hotkeysDef);
 end
 gui.annot = annot;
 
-f = fieldnames(data.annot.(annot.activeCh));
-gui.ctrl.annot.annot.String = {f{:},'add new...','remove field...'};
+

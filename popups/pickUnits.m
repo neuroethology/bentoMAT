@@ -1,4 +1,4 @@
-function pickUnits(source,~)
+function pickUnits(source)
     parent      = source;
     gui         = guidata(source);
     

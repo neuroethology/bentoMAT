@@ -14,7 +14,7 @@ fineAnnot.zeroLine     = plot([0 0],[0 1],'k--');
 fineAnnot.clickPt      = 0;
 fineAnnot.txt          = text(0,0,'');
 
-axis tight;
+xlim([-1 1]*fineAnnot.win);
 ylim([0 1]);
 
 gui.fineAnnot = fineAnnot;
