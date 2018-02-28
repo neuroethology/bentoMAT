@@ -23,7 +23,7 @@ function gui = toggleAnnot(gui,toggle,key,lastKey)
                 for str = fieldnames(gui.annot.bhv)'
                     gui.annot.bhv.(str{:})(inds) = false;
                 end
-            else
+            elseif(isfield(gui.annot.hotkeys,lastKey))
                 str = gui.annot.hotkeys.(lastKey);
                 gui.annot.bhv.(str)(inds) = ~any(strcmpi(key,{'delete','backspace'}));
             end
@@ -37,24 +37,28 @@ end
 
 function toggleAnnotBoxes(gui, toggle, key)
     if(strcmpi(toggle,'on'))
-        gui.annot.Box.traces.Visible = 'on';
-        uistack(gui.annot.Box.traces,'up');
-        set(gui.annot.Box.traces,'Ydata',kron(get(gui.traces.axes,'ylim'), [1 1]));
-        set(gui.annot.Box.traces,'Xdata',[0 0 0 0]);
-        
-        %set box color
-        if(any(strcmpi(key,{'delete','backspace'})))
-            set(gui.annot.Box.traces,'FaceColor',[.8 .8 .8]);
-        else
-            str = gui.annot.hotkeys.(key);
-            set(gui.annot.Box.traces,'FaceColor',gui.annot.cmap.(str)/3+2/3);
+        for f = fieldnames(gui.annot.Box)'
+            gui.annot.Box.(f{:}).Visible = 'on';
+            uistack(gui.annot.Box.(f{:}),'up');
+            set(gui.annot.Box.(f{:}),'Ydata',kron(get(gui.(f{:}).axes,'ylim'), [1 1]));
+            set(gui.annot.Box.(f{:}),'Xdata',[0 0 0 0]);
+
+            %set box color
+            if(any(strcmpi(key,{'delete','backspace'})))
+                set(gui.annot.Box.(f{:}),'FaceColor',[.8 .8 .8]);
+            else
+                str = gui.annot.hotkeys.(key);
+                set(gui.annot.Box.(f{:}),'FaceColor',gui.annot.cmap.(str)/3+2/3);
+            end
         end
         
     else
-        gui.annot.Box.traces.Visible = 'off';
-        uistack(gui.annot.Box.traces,'bottom');
-        set(gui.annot.Box.traces,'Ydata',[0 0 0 0]);
-        set(gui.annot.Box.traces,'FaceColor',[.8 .8 .8])
+        for f = fieldnames(gui.annot.Box)'
+            gui.annot.Box.(f{:}).Visible = 'off';
+            uistack(gui.annot.Box.(f{:}),'bottom');
+            set(gui.annot.Box.(f{:}),'Ydata',[0 0 0 0]);
+            set(gui.annot.Box.(f{:}),'FaceColor',[.8 .8 .8])
+        end
     end
 end
 

@@ -203,8 +203,10 @@ if(gui.enabled.annot(1))
         
     % update behavior-annotating box if it's active
     if(isfield(gui.ctrl,'annot') && (gui.annot.highlighting(1)~=0))
-        if(all(gui.enabled.traces))
-            set(gui.annot.Box.traces,'xdata',(gui.annot.highlightStart/gui.data.annoFR-time)*[1 0 0 1]);
+        for f = fieldnames(gui.annot.Box)'
+            if(all(gui.enabled.(f{:})))
+                set(gui.annot.Box.(f{:}),'xdata',(gui.annot.highlightStart/gui.data.annoFR-time)*[1 0 0 1]);
+            end
         end
     end
     

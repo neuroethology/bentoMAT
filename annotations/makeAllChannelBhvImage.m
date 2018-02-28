@@ -1,21 +1,21 @@
-function img = makeAllChannelBhvImage(gui,annot,cmap,inds,tmax,showAnnot)
+function img = makeAllChannelBhvImage(gui,data,cmap,inds,tmax,showAnnot)
 
-chList = fieldnames(annot);
+chList = fieldnames(data);
 
 img = ones(length(chList),tmax,3);
 for ch = 1:length(chList)
     
-    bhvList = fieldnames(annot.(chList{ch}));
+    bhvList = fieldnames(data.(chList{ch}));
     
     for i = 1:length(bhvList)
         show = (~isfield(showAnnot,bhvList{i})) || (isfield(showAnnot,bhvList{i}) && showAnnot.(bhvList{i}));
-        if(show && ~isempty(annot.(chList{ch}).(bhvList{i})) && ~strcmpi(bhvList{i},'other'))
+        if(show && ~strcmpi(bhvList{i},'other'))
             
             if(strcmpi(chList{ch},gui.annot.activeCh))
                 hits = gui.annot.bhv.(bhvList{i});
                 img(ch,hits~=0,:)   = ones(sum(hits),1)*cmap.(bhvList{i});
-            else
-                use = annot.(chList{ch}).(bhvList{i});
+            elseif(~isempty(data.(chList{ch}).(bhvList{i})))
+                use = data.(chList{ch}).(bhvList{i});
                 if(~isempty(inds))
                     use(use(:,2)<inds(1),:) = [];
                     use(use(:,1)>inds(end),:) = [];

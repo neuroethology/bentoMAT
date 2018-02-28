@@ -16,5 +16,7 @@ annot.hotkeys       = struct();
 % adds patches to show annotation edits on the trace/tracker axes
 annot.Box.traces     = patch([0 0 0 0],[0 0 0 0],[.8 .8 .8],...
                         'parent',gui.traces.axes,'visible','off');
+annot.Box.fineAnnot  = patch([0 0 0 0],[0 0 0 0],[.8 .8 .8],...
+                        'parent',gui.fineAnnot.axes,'visible','off');
 
 gui.annot = annot;
