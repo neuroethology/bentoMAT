@@ -304,7 +304,7 @@ for i=1:size(data,1)
                 atemp.singing.sing = round(M(:,2:3)/dt * 1.0000356445); % what's up, MUPET :\
                 tmin(j) = 1;
                 tmax(j) = length(strtemp.audio.t);
-            else %load data in the old format, prepare to convert to sheet format when saved
+            else %load data in the old format, OR ETHOVISION, prepare to convert to sheet format when saved
                 if(raw{1,9})
                     frame_suffix            = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
                     strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.txt',frame_suffix);

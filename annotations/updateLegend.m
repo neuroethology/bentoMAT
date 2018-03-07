@@ -26,14 +26,14 @@ function updateLegend(gui,showHidden)
         bump = bump+.05;
         for i = 1:length(bhvList)
             patch([.01 .125 .125 .01],[.01 .01 .05 .05]+bump,gui.annot.cmap.(bhvList{i}),...
-                'parent',gui.legend.axes,'ButtonDownFcn',{@updateAnnot,gui,bhvList{i}});
+                'parent',gui.legend.axes,'ButtonDownFcn',{@updateAnnot,gui.h0,bhvList{i}});
 
             text(.3, .025+bump,strrep(bhvList{i},'_',' '),'parent',gui.legend.axes,...
-                'ButtonDownFcn',{@updateAnnot,gui,bhvList{i}});
+                'ButtonDownFcn',{@updateAnnot,gui.h0,bhvList{i}});
             if(isfield(hotkeys,bhvList{i}))
                 text(.215, .025+bump,['[' hotkeys.(bhvList{i}) ']'],...
                         'horizontalalignment','center','parent',gui.legend.axes,...
-                        'ButtonDownFcn',{@updateAnnot,gui,bhvList{i}});
+                        'ButtonDownFcn',{@updateAnnot,gui.h0,bhvList{i}});
             end
 
             bump=bump+.05;
@@ -46,9 +46,9 @@ function updateLegend(gui,showHidden)
         bump = bump+.05;
             for i = 1:length(hiddenList)
                 patch([.05 .165 .165 .05],[.01 .01 .05 .05]+bump,gui.annot.cmap.(hiddenList{i})/2+.5,...
-                    'edgecolor','none','parent',gui.legend.axes,'ButtonDownFcn',{@updateAnnot,gui,hiddenList{i}});
+                    'edgecolor','none','parent',gui.legend.axes,'ButtonDownFcn',{@updateAnnot,gui.h0,hiddenList{i}});
                 text(.19, .025+bump,['\it ' strrep(hiddenList{i},'_',' ')],'color',[.25 .25 .25],...
-                    'parent',gui.legend.axes,'ButtonDownFcn',{@updateAnnot,gui,hiddenList{i}});
+                    'parent',gui.legend.axes,'ButtonDownFcn',{@updateAnnot,gui.h0,hiddenList{i}});
                 bump=bump+.05;
             end
     end
@@ -56,7 +56,8 @@ function updateLegend(gui,showHidden)
     ylim(gui.legend.axes,[-(1-bump)/2 1-(1-bump)/2]);
 end
 
-function updateAnnot(~,~,gui,str)
+function updateAnnot(~,~,h0,str)
+    gui = guidata(h0);
     gui.annot.show.(str) = ~gui.annot.show.(str);
     guidata(gui.h0,gui);
 

@@ -17,16 +17,17 @@ switch ext
         % Prabhat's fiberphotometry data
     case '.mat'
         temp = load(pth);
-        if(isfield(temp,'neuron'))    %NMF data
-            rast = temp.neuron.C_raw;
-        else                          %Ryan's data
-            temp = load(pth);
-            f    = fieldnames(temp);
-            if(length(f)==1)
-                rast = temp.(f{1});
+        f    = fieldnames(temp);
+        if(length(f)==1)
+            if(isstruct(temp.(f{1})) && hasfield(temp.(f{1}),'C_raw')) %CNMFE data
+                rast = temp.(f{1}).C_raw;
             else
-                disp(['unsure which variable to read in ' fname]);
+                rast = temp.(f{1}); %assume it's a matrix of traces
             end
+        elseif(isfield(temp,'neuron'))    %also CNMFE data data
+            rast = temp.neuron.C_raw;
+        else
+            disp(['unsure which variable to read in ' fname]);
         end
         time = [];
     case '.flr'
