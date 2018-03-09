@@ -19,7 +19,7 @@ switch ext
         temp = load(pth);
         f    = fieldnames(temp);
         if(length(f)==1)
-            if(isstruct(temp.(f{1})) && hasfield(temp.(f{1}),'C_raw')) %CNMFE data
+            if(isstruct(temp.(f{1})) && isfield(temp.(f{1}),'C_raw')) %CNMFE data
                 rast = temp.(f{1}).C_raw;
             else
                 rast = temp.(f{1}); %assume it's a matrix of traces

@@ -258,9 +258,9 @@ for i=1:size(data,1)
             strtemp.audio.t   = strtemp.audio.t(2:2:end);
             strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
             
-            if(hasOffset)
-                strtemp.audio.t  = strtemp.audio.t + offset;
-            end
+%             if(hasOffset)
+%                 strtemp.audio.t  = strtemp.audio.t + offset;
+%             end
             strtemp.audio.tmin = strtemp.audio.t(1,1);
             strtemp.audio.tmax = strtemp.audio.t(1,end);
         else

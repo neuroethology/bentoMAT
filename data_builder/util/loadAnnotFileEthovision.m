@@ -17,7 +17,7 @@ labels = strrep(labels,' ','_');
 
 ind_start = find(~cellfun(@isempty,strfind(M,'RAW LOG')));
 ind_stop  = find(~cellfun(@isempty,strfind(M,'FULL LOG')));
-M = regexp(M(ind_start+4:ind_stop-3),' *','split');
+M = regexp(M(ind_start+4:ind_stop-2),' *','split');
 if(length(M{1})==4)
     M{1} = M{1}(2:end);
 end
@@ -29,6 +29,7 @@ Mactions([Mactions{:,1}]=='k',:)=[];
 Mactions([Mactions{:,1}]=='r',:)=[];
 
 tmax = max([M{:,2}]);
+
 annot.Ch1 = struct();
 ratIn = find([M{:,1}]=='r');
 annot.Ch2.rat = [M{ratIn,2} tmax];
