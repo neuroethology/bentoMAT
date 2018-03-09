@@ -16,7 +16,7 @@ else
     color = 'gcrgcrgcrgcrgcr';
     color = [color color color];
 end
-if(isfield(gui.data.io.movie,'fid')&length(gui.data.io.movie.fid)>1)
+if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
     dims = [gui.data.io.movie.reader.width];
     if(dims(1)~=max(dims))
         pad = (max(dims)-dims(1))/2;
@@ -59,16 +59,20 @@ if(size(pts,2)<=4)
 else
     for j=1:size(plotActive,1)
         for i = 3:2:size(plotActive,2)
-            mov = insertShape(mov,'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',color(j));
-            mov = insertShape(mov,'FilledCircle',[plotActive(j,i:i+1) 6],'color',color(j));
+            if(isnumeric(color)), c = color(j,:);
+            else, c = color(j); end
+            mov = insertShape(mov,'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',c);
+            mov = insertShape(mov,'FilledCircle',[plotActive(j,i:i+1) 6],'color',c);
         end
-        mov = insertShape(mov,'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
+%         mov = insertShape(mov,'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
     end
     for j=1:size(plotInactive,1)
+        if(isnumeric(color)), c = color(j,:);
+        else, c = color(j); end
         for i = 3:2:size(plotInactive,2)
-            mov = insertShape(mov,'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color',color(j));
-            mov = insertShape(mov,'FilledCircle',[plotInactive(j,i:i+1) 6],'color',color(j));
+            mov = insertShape(mov,'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color',c);
+            mov = insertShape(mov,'FilledCircle',[plotInactive(j,i:i+1) 6],'color',c);
         end
-        mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
+%         mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
     end
 end
