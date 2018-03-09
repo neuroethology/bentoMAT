@@ -86,6 +86,7 @@ if(gui.enabled.tracker(1))
         end
     end
     if(isfield(data.tracking.args,'features'))
+        gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
         gui.features.menu.String        = data.tracking.args.features;
         gui.enabled.features = [1 1];
         if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
@@ -102,7 +103,6 @@ if(gui.enabled.tracker(1))
         gui.enabled.features = [0 0];
     end
     gui = redrawPanels(gui);
-    gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
     
     if(isfield(data.io.movie,'tmax'))
         data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
