@@ -36,7 +36,6 @@ for i=1:length(gui.config.ctrl)
 end
 if(specs.sliderOn)
     gui.ctrl.slider.panel.Visible = 'on';
-    gui.ctrl.labels.panel.Visible = 'on';
     gui.ctrl.labels.panel.BackgroundColor = specs.color;
 
     addLabelLegend(gui,specs);
@@ -122,7 +121,6 @@ end
 
 for i=1:length(gui.config.ctrl)
     gui.ctrl.(gui.config.ctrl{i}).panel.Visible='on';
-    gui.ctrl.labels.panel.Visible = 'off';
     gui.ctrl.labels.panel.BackgroundColor = oldColor;
 end
 gui.ctrl.slider.Value       = oldSlider.Value;
