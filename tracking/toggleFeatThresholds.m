@@ -24,27 +24,23 @@ end
 
 if(flag) % when switching into threshold mode, also change annotation channels
     if(~any(strcmpi(gui.annot.channels,'thresholded_features')))
-        addChannel(gui.annot.channels, 'thresholded_features', gui.ctrl.annot.ch);
-        gui=guidata(gui.h0);
+        gui = addChannel(gui, 'thresholded_features');
         for f = fieldnames(gui.annot.bhv)'
             gui.annot.bhv = rmfield(gui.annot.bhv,f{:});
         end
         gui.ctrl.annot.annot.Value = 1;
-        guidata(gui.h0,gui);
-        labels = {};
     else
         gui.ctrl.annot.ch.Value = find(strcmpi(gui.annot.channels,'thresholded_features'));
-        updateFields(gui.ctrl.annot.ch,[],'channel');
-        labels = fieldnames(gui.data.annot.thresholded_features);
     end
-    addLabel(labels, 'unsaved_feature', gui.ctrl.annot.annot);
+    gui = addLabel(gui, 'unsaved_feature');
 else
     gui.annot.bhv = rmfield(gui.annot.bhv,'unsaved_feature');
-    gui.ctrl.annot.annot.String(strcmpi(gui.ctrl.annot.annot.String,'unsaved_feature')) = [];
     guidata(gui.h0,gui);
     updateSliderAnnot(gui);
 end
 
+guidata(gui.h0,gui);
+updateLegend(gui,1);
 updatePlot(gui.h0,[]);
 
 

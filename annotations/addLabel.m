@@ -34,7 +34,7 @@ if(any(strcmpi(fieldnames(gui.annot.hotkeysDef),newStr)))
     hotkey = gui.annot.hotkeysDef.(newStr);
     gui.annot.hotkeys.(hotkey) = newStr;
 
-else
+elseif(~strcmpi(newStr,'unsaved_feature'))
     hotkey = inputdlg(['Assign hotkey for ' strrep(newStr,'_',' ') '?']);
     hotkey = regexprep(hotkey{:},'[^a-zA-z]','');
     

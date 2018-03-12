@@ -22,16 +22,13 @@ if(strcmpi(gui.annot.activeCh,'thresholded_features'))
         return;
     end
     newStr  = [newStr{:}];
-    newStr = strrep(newStr,' ','_');
-    labels  = fieldnames(gui.annot.bhv);
-    labels = strrep(labels,'_',' ');
+    newStr  = strrep(newStr,' ','_');
     
-    guidata(gui.h0,gui);
-    addLabel(labels,newStr,gui.ctrl.annot.annot);
+    gui = addLabel(gui,newStr);
     gui.ctrl.annot.annot.Value = 1;
-    gui = guidata(gui.h0);
     newStr(ismember(newStr,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
     gui.annot.bhv.(newStr) = mask;
 end
 
 guidata(gui.h0,gui);
+updateLegend(gui,1);

@@ -3,6 +3,7 @@ function [rast,time] = unpackCaData(pth)
 [~,fname,ext] = fileparts(pth);
 disp(['Loading Ca file ' fname '...']);
 
+[rast,time]=deal([]);
 % add cases to this switch statement for other data types~?
 switch ext
     case '.csv'
@@ -15,6 +16,7 @@ switch ext
         
     case {'.xls','.xlsx'}
         % Prabhat's fiberphotometry data
+        rast = [];
     case '.mat'
         temp = load(pth);
         f    = fieldnames(temp);
@@ -28,6 +30,7 @@ switch ext
             rast = temp.neuron.C_raw;
         else
             disp(['unsure which variable to read in ' fname]);
+            rast = [];
         end
         time = [];
     case '.flr'

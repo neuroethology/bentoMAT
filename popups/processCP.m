@@ -16,7 +16,7 @@ for tr = tr1'
     data    = gui.allData(m).(sess)(trList(tr));
     mtemp = false(1,length(data.annoTime));
     for f = bhv1'
-        if(~strcmpi(f{:},'no label'))
+        if(~strcmpi(f{:},'no label') && isfield(data.annot.(ch1{:}),f{:}))
             mtemp = mtemp|convertToRast(data.annot.(ch1{:}).(f{:}),length(data.annoTime));
         else
             mtemp2 = false(size(mtemp));

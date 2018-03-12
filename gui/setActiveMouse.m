@@ -86,7 +86,7 @@ if(gui.enabled.tracker(1))
         end
     end
     if(isfield(data.tracking.args,'features'))
-        gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
+        gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.args.features,1))')));
         gui.features.menu.String        = data.tracking.args.features;
         gui.enabled.features = [1 1];
         if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
