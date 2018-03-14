@@ -1,7 +1,7 @@
 function patchify(img,xran,yran,colors)
 
 dt = (xran(2)-xran(1))/length(img);
-for iq = 1:max(img)
+for iq = 1:max(double(img))
     sig = (img==iq);
 
     t_begin = find(diff([0 sig])==1);
