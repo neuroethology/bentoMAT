@@ -203,6 +203,7 @@ for i=1:size(data,1)
                     temp=temp.(f{:});
                 end
                 strtemp.tracking.args = temp;
+                strtemp.io.feat.fid = fid;
             elseif(strcmpi(ext,'.json'))
                 if(exist('jsondecode','builtin'))
                     strtemp.tracking.args = jsondecode(fileread(fid));
@@ -217,6 +218,8 @@ for i=1:size(data,1)
         else
             strtemp.tracking.args = [];
         end
+    else
+        strtemp.io.feat = [];
     end
         
     % add audio data-------------------------------------------------------

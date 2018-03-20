@@ -1,7 +1,6 @@
 function cropMovie(source,~,type)
 
-h   = guidata(source);
-gui = guidata(h.guifig);
+gui   = guidata(source);
 
 if(strcmpi(type,'revert'))
     gui.data.tracking.crop = [];
