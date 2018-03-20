@@ -241,19 +241,19 @@ for i=1:size(data,1)
                 disp(['Processing file ' data{i,match.Audio_file}]);
                 disp('Reading audio...');
                 fid             = [pth strip(strip(data{i,match.Audio_file},'left','.'),'left',filesep)];
-                [y,Fs]          = audioread(fid);
+                [y,fs]          = audioread(fid);
                 disp('Generating spectrogram...');
                 win = hann(1024);
                 [~,f,t,psd]     = spectrogram(y,win,[],[],fs,'yaxis');
                 psd             = 10*log10(abs(double(psd)+eps));
                 disp('Saving spectrogram for future use...');
                 fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
-                save(fid,'-v7.3','f','t','psd','Fs');
+                save(fid,'-v7.3','f','t','psd','fs');
                 disp('Done!');
                 strtemp.audio.f   = f;
                 strtemp.audio.t   = t;
                 strtemp.audio.psd = psd;
-                strtemp.audio.fs  = Fs;
+                strtemp.audio.fs  = fs;
             end
             strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
             strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
