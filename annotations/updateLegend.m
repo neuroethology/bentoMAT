@@ -53,7 +53,7 @@ function updateLegend(gui,showHidden)
             end
     end
     bump = bump + 0.05;
-    ylim(gui.legend.axes,[-(1-bump)/2 1-(1-bump)/2]);
+    ylim(gui.legend.axes,[-max(1-bump,0)/2 max(1-(1-bump)/2,bump)]);
 end
 
 function updateAnnot(~,~,h0,str)

@@ -136,7 +136,7 @@ end
 % clean out the annotations
 resetAnnotText(gui);
 % update the legend
-updateLegend(gui);
+updateLegend(gui,1);
 
 % % add the ID of the stimulus
 % if(gui.enabled.movie(1))
