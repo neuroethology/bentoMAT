@@ -23,7 +23,7 @@ end
 
 %determine whether our display is one column or two
 leftOn  = gui.enabled.movie(2);
-rightOn = gui.enabled.traces(2) || gui.enabled.features(2) || ...
+rightOn = gui.enabled.traces(2) || gui.enabled.features(2) || gui.enabled.scatter(2) ||...
             (~gui.enabled.movie(2) && (gui.enabled.audio(2) || gui.enabled.fineAnnot(2)));
 if(leftOn && rightOn)
     leftWidth = config.midline;
@@ -89,12 +89,14 @@ if(rightOn)
             bump = bump+.25;
         end
         
-        if(gui.enabled.traces(2)) %then divide remaining space between features + traces
+        if(gui.enabled.scatter(2) || gui.enabled.traces(2)) %then divide remaining space between features + traces
+            if(gui.enabled.scatter(2)), use = 'scatter'; %don't allow both traces and scatterplot to be on, for now
+            else, use = 'traces'; end
             if(gui.enabled.features(2))
                 gui.features.panel.Position = [lBump bump 1-lBump (1-bump)/2];
-                gui.traces.panel.Position   = [lBump bump+(1-bump)/2 1-lBump (1-bump)/2];
+                gui.(use).panel.Position   = [lBump bump+(1-bump)/2 1-lBump (1-bump)/2];
             else
-                gui.traces.panel.Position   = [lBump bump 1-lBump 1-bump];
+                gui.(use).panel.Position   = [lBump bump 1-lBump 1-bump];
             end
         else
             gui.features.panel.Position     = [lBump bump 1-lBump 1-bump];
@@ -102,12 +104,14 @@ if(rightOn)
         
     else % don't have to worry about ctrl/audio/fineAnnot placement (because they're in the left column)
         
-        if(gui.enabled.traces(2))
+        if(gui.enabled.scatter(2) || gui.enabled.traces(2))
+            if(gui.enabled.scatter(2)), use = 'scatter';
+            else, use = 'traces'; end
             if(gui.enabled.features(2))
-                gui.traces.panel.Position = [rightStart .5 rightWidth .5];
+                gui.(use).panel.Position = [rightStart .5 rightWidth .5];
                 gui.features.panel.Position = [rightStart 0 rightWidth .5];
             else
-                gui.traces.panel.Position = [rightStart 0 rightWidth 1];
+                gui.(use).panel.Position = [rightStart 0 rightWidth 1];
             end
         else
             gui.features.panel.Position = [rightStart 0 rightWidth 1];

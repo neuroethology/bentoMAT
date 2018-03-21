@@ -41,7 +41,9 @@ enabled.traces    = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[
 enabled.tracker   = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.features  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.audio     = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
-enabled.tsne      = any(~cellfun(@isempty,data(:,match.tSNE)))*[1 0];
+
+enabled.tsne      = [0 0];
+enabled.scatter   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 0];
 enabled.fineAnnot = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 0];
 
 %load the data:
@@ -101,9 +103,15 @@ for i=1:size(data,1)
         if(hasOffset)
             strtemp.CaTime  = strtemp.CaTime + offset;
         end
+        
+        % for 2d plots:
+        strtemp.proj.d1 = [];
+        strtemp.proj.d2 = [];
     else
         strtemp.CaTime=[];
         strtemp.rast=[];
+        strtemp.proj.d1=[];
+        strtemp.proj.d2=[];
     end
     
     % adds cross-day alignments if available. assumes for now that my data

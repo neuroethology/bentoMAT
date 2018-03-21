@@ -59,6 +59,11 @@ data.info.mouse     = m;
 data.info.session   = sess;
 data.info.trial     = tr;
 
+%preserve axes of projection (if any)
+if(isfield(gui,'data'))
+    data.proj           = gui.data.proj;
+end
+
 % now! load the movie
 if(gui.enabled.movie(1))
     if(newMovie)

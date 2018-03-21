@@ -11,6 +11,7 @@ annot.bhv           = struct();
 annot.show          = struct();
 annot.cmap          = struct();
 annot.hotkeys       = struct();
+annot.highlightStart=[];
 [annot.cmapDef, annot.hotkeysDef] = loadPreferredCmap(); %default colors/hotkeys to use
 
 % adds patches to show annotation edits on the trace/tracker axes

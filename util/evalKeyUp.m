@@ -92,7 +92,7 @@ switch eventdata.Key
                     gui2 = toggleAnnot(gui,'switch',eventdata.Key,lastKey);
                 end
             end
-            if(strcmpi(eventdata.Key,'return') && ~isempty(lastKey))
+            if(strcmpi(eventdata.Key,'return') && ~isempty(lastKey) && ~isempty(gui.annot.highlightStart))
                 gui2 = toggleAnnot(gui,'end',eventdata.Key,lastKey);
             end
             

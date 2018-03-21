@@ -23,6 +23,8 @@ gui.enabled.audio     = [0 0];
 gui.enabled.features  = [0 0];
 gui.enabled.fineAnnot = [0 0];
 gui.enabled.legend    = [0 0];
+gui.enabled.tsne      = [0 0];
+gui.enabled.scatter   = [0 0];
 gui.enabled.welcome   = [1 1];
 
 gui.config  = loadConfig();
@@ -36,6 +38,7 @@ gui     = drawfineAnnot(gui);
 gui     = drawAnnot(gui);
 gui     = drawCtrl(gui);
 gui     = drawLegend(gui);
+gui     = drawScatter(gui);
 gui     = drawWelcome(gui);
 
 gui = redrawPanels(gui);

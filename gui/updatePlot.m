@@ -152,6 +152,17 @@ if(all(gui.enabled.traces))
     end
 end
 
+if(all(gui.enabled.scatter))
+    inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time));
+    inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
+    [~,ind] = min(abs(gui.data.CaTime - time));
+    p1  = gui.data.proj.d1*gui.data.rast;
+    p2  = gui.data.proj.d2*gui.data.rast;
+    set(gui.scatter.data,'xdata',p1,'ydata',p2);
+    set(gui.scatter.currentFrame,'xdata',p1(ind),'ydata',p2(ind));
+    set(gui.scatter.tail,'xdata',p1(inds),'ydata',p2(inds));
+end
+
 
 % update annotations
 if(gui.enabled.annot(1))
@@ -170,19 +181,24 @@ if(gui.enabled.annot(1))
     end
     
     
-    % add background images to traces/audio
-    if(all(gui.enabled.traces) || all(gui.enabled.audio) || all(gui.enabled.features))
-        img     = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
-        img     = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
+    % add background images to traces/audio or set color for scatter marker
+    if(all(gui.enabled.scatter) || all(gui.enabled.traces) || all(gui.enabled.audio) || all(gui.enabled.features))
+        
+        img      = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
+        imgSmall = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
         if(~gui.enabled.annot(2))
             img = [];
         end
+        if(all(gui.enabled.scatter))
+            [~,i] = min(abs(win));
+            set(gui.scatter.currentFrame,'markerfacecolor',squeeze(img(1,i,:)));
+        end
         if(all(gui.enabled.traces))
-            set(gui.traces.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[0 10]);
+            set(gui.traces.bg,'cdata',imgSmall,'XData',win/gui.data.annoFR,'YData',[0 10]);
         end
         if(all(gui.enabled.features))
             for i=1:length(gui.features.feat)
-                set(gui.features.feat(i).bg,'cdata',img*2/3+1/3,...
+                set(gui.features.feat(i).bg,'cdata',imgSmall*2/3+1/3,...
                     'XData',win/gui.data.annoFR,...
                     'YData',gui.features.feat(i).axes.YLim+[-1 1]);
             end
