@@ -152,10 +152,11 @@ if(all(gui.enabled.traces))
     end
 end
 
+% update scatterplot
 if(all(gui.enabled.scatter))
-    inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time));
+    inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=time);
     inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    [~,ind] = min(abs(gui.data.CaTime - time));
+    [~,ind] = find(gui.data.CaTime>=time,1,'first');
     p1  = gui.data.proj.d1*gui.data.rast;
     p2  = gui.data.proj.d2*gui.data.rast;
     set(gui.scatter.data,'xdata',p1,'ydata',p2);

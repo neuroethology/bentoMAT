@@ -17,7 +17,11 @@ raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 pth = raw{1,1};
 if(pth(end)~=filesep)
-    pth = [pth filesep];
+    if(isstr(pth))
+        pth = [pth filesep];
+    else
+        pth = [];
+    end
 end
 
 fieldset = raw(2,:);
@@ -143,17 +147,6 @@ for i=1:size(data,1)
         strtemp.rast_matched = [];
         strtemp.units = [];
     end
-    
-    % link tSNE/scatter data-----------------------------------------------
-%     if(enabled.tsne(1) && ~isempty(data{i,match.tSNE}))
-%         temp = load([pth data{i,match.tSNE}]);
-%         f = fieldnames(temp);
-%         temp=temp.(f{:});
-%         if(size(temp,1)==2)
-%             temp=temp';
-%         end
-%         strtemp.tsne = temp;
-%     end
     
     % link movies----------------------------------------------------------
     if(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))

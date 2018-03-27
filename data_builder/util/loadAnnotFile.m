@@ -14,7 +14,7 @@ end
 M = textscan(fid,'%s','delimiter','\n'); M=M{1};
 fclose(fid);
 
-if(strcmpi(M(1),'Caltech Behavior Annotator - Annotation File'))
+if(strcmpi(strtrim(M(1)),'Caltech Behavior Annotator - Annotation File'))
     [annot,maxTime] = loadAnnotFileCaltech(M,tmin,tmax);
 else
     [annot,maxTime]  = loadAnnotFileEthovision(M);

@@ -4,8 +4,12 @@ bhvList = fieldnames(bhv);
 
 img = ones(1,tmax,3);
 for i = 1:length(bhvList)
-    if(showAnnot.(bhvList{i}) && ~isempty(bhv.(bhvList{i})) && ~strcmpi(bhvList{i},'other'))
-        hits                = bhv.(bhvList{i});
+    if((isempty(showAnnot) || showAnnot.(bhvList{i})) && ~isempty(bhv.(bhvList{i})) && ~strcmpi(bhvList{i},'other'))
+        if(min(size(bhv.(bhvList{i})))==2 || length(bhv.(bhvList{i}))==2)
+            hits = convertToRast(bhv.(bhvList{i}),tmax);
+        else
+            hits                = bhv.(bhvList{i});
+        end
         img(1,hits~=0,:)    = ones(sum(hits),1)*cmap.(bhvList{i});
     end
 end
