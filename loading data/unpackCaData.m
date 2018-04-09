@@ -20,14 +20,14 @@ switch ext
     case '.mat'
         temp = load(pth);
         f    = fieldnames(temp);
-        if(length(f)==1)
+        if(isfield(temp,'neuron'))    %also CNMFE data data
+            rast = temp.neuron.C_raw;
+        elseif(length(f)==1)
             if(isstruct(temp.(f{1})) && isfield(temp.(f{1}),'C_raw')) %CNMFE data
                 rast = temp.(f{1}).C_raw;
             else
                 rast = temp.(f{1}); %assume it's a matrix of traces
             end
-        elseif(isfield(temp,'neuron'))    %also CNMFE data data
-            rast = temp.neuron.C_raw;
         else
             disp(['unsure which variable to read in ' fname]);
             rast = [];

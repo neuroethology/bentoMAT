@@ -1,12 +1,6 @@
 function setScatterDims(source,~)
 
-clear h;
 gui   = guidata(source);
-h.gui = gui;
-h.fig = figure('dockcontrols','off','menubar','none',...
-        'Tag','Trace browser','NumberTitle','off','name','Project data onto specified axes');
-set(h.fig,'position',h.fig.Position.*[1 1 1 .3] + [0 h.fig.Position(4)/4 0 0]);
-    
 varlist = evalin('base','who()');
 keep    = zeros(size(varlist));
 for i=1:length(varlist)
@@ -14,6 +8,18 @@ for i=1:length(varlist)
     keep(i) = isnumeric(temp) && any(size(temp)==size(gui.data.rast,1));
 end
 varlist = varlist(keep~=0);
+
+if(isempty(varlist))
+    msgbox('No suitable projection axes found in workspace.');
+    return;
+end
+
+clear h;
+h.gui = gui;
+h.fig = figure('dockcontrols','off','menubar','none',...
+        'Tag','Trace browser','NumberTitle','off','name','Project data onto specified axes');
+set(h.fig,'position',h.fig.Position.*[1 1 1 .3] + [0 h.fig.Position(4)/4 0 0]);
+
 h.dims  = [];
 h.inds  = [];
 for i=1:length(varlist)

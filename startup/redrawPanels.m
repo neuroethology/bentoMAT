@@ -46,12 +46,12 @@ if(leftOn)
     end
     
     if(gui.enabled.audio(2)) %then audio/fineAnnot
-        gui.audio.panel.Position = [0 bump leftWidth .25];
+        gui.audio.panel.Position = [0 bump leftWidth .15];
         gui.fineAnnot.panel.Visible='off'; % merge fineAnnot with audio if both are turned on
-        bump=bump+.25;
+        bump=bump+.15;
     elseif(gui.enabled.fineAnnot(2))
-        gui.fineAnnot.panel.Position = [0 bump leftWidth .25];
-        bump=bump+.25;
+        gui.fineAnnot.panel.Position = [0 bump leftWidth .15];
+        bump=bump+.15;
     end
     
     %remaining vertical space goes to the movie

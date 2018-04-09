@@ -6,6 +6,7 @@ else
     useSource = source.Parent.Parent;
 end
 
+% remember where the last bento file you opened was?
 [FileName,PathName] = uigetfile('*.xls;*.xlsx');
 if(~FileName)
     return;
