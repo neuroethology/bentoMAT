@@ -278,13 +278,14 @@ for i=1:size(data,1)
         for j = 1:length(annoList)
             annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
             [~,str] = fileparts(annoList{j});
+            str = strrep(str,'-','_');
             if(length(str)>30)
                 ind = [strfind(str,'Top') strfind(str,'Front')];
                 if(~isempty(ind))
-                    str = strrep(str(ind:end),'-','_');
+                    str = str(ind:end);
                     if(str(1)=='T') str = str(5:end); else str = str(7:end); end
                 else
-                    str = strrep(str(end-30:end),'-','_');
+                    str = str(end-30:end);
                 end
             end
             suff = ['_file' num2str(j,'%02d') '_' str];
