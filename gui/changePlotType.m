@@ -22,11 +22,16 @@ switch(source.String{source.Value})
         end
     case 'PCs'
         gui.traces.toPlot = 'PCA';
-        getPCAxes(gui,source);
+        getPCAxes(gui,source,'PCA');
+    case 'NMF'
+        gui.traces.toPlot = 'PCA';
+        getPCAxes(gui,source,'NMF');
     case 'clusters'
         gui.traces.toPlot = 'ctrs';
         gui.traces.show = true(10,1);
 end
 
-guidata(source,gui);
-updatePlot(source,[]);
+if(~any(strcmpi(source.String{source.Value},{'PCs','NMF'})))
+    guidata(source,gui);
+    updatePlot(source,[]);
+end
