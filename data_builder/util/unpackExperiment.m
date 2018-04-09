@@ -281,9 +281,10 @@ for i=1:size(data,1)
             if(length(str)>30)
                 ind = [strfind(str,'Top') strfind(str,'Front')];
                 if(~isempty(ind))
-                    str = str(ind:end); if(str(1)=='T') str = str(5:end); else str = str(7:end); end
+                    str = strrep(str(ind:end),'-','_');
+                    if(str(1)=='T') str = str(5:end); else str = str(7:end); end
                 else
-                    str = str(end-30:end);
+                    str = strrep(str(end-30:end),'-','_');
                 end
             end
             suff = ['_file' num2str(j,'%02d') '_' str];
