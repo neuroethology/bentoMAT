@@ -128,6 +128,9 @@ if ~(isfield(gui,'data') && strcmpi(sess,sessOld) && m==mOld) %inherit show sett
     gui.traces.order  = 1:N;
 end
 data.rast = [nan(N,1) data.rast nan(N,1)]; % pad with nans for display
+if(isfield(gui,'data') && isfield(gui.data,'PCA') & size(gui.data.rast,1)==N)
+    data.PCA = gui.data.PCA;
+end
 
 gui.data = data;
 % add the behavior annotations to the gui
