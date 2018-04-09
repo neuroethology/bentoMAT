@@ -27,7 +27,7 @@ for i=1:length(varlist)
     if(~isempty(setdiff(d,size(gui.data.rast,1))))
         [h.dims(i), h.ind(i)] = setdiff(d,size(gui.data.rast,1));
     else
-        h.dims(i) = 135;
+        h.dims(i) = size(gui.data.rast,1);
         h.ind(i)  = 0;
     end
 end
@@ -60,6 +60,8 @@ h.go = uicontrol('parent',h.fig,'Style','pushbutton','String','Go',...
                 'units','normalized','Position',[.75 .15 .2 .7],...
                 'fontsize',11,'backgroundcolor',[.62 1 .62],'callback',@applyProjections);
 guidata(h.fig,h);
+setIndexRange(h.d1.var,[]);
+setIndexRange(h.d2.var,[]);
 end
 
 function setIndexRange(source,~)
