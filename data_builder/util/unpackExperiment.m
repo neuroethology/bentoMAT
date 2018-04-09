@@ -277,7 +277,8 @@ for i=1:size(data,1)
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
             annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
-            if(j>1), suff = ['_file' num2str(j,'%02d')]; else suff=''; end
+            [~,str] = fileparts(annoList{j});
+            suff = ['_file' num2str(j,'%02d') '_' str];
             if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
                 strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
                 if(raw{1,9})
