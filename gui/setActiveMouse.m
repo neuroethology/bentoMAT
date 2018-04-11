@@ -66,11 +66,8 @@ end
 
 % now! load the movie
 if(gui.enabled.movie(1)) 
-    if(newMovie)
+    if(newMovie || size(data.io.movie.fid)~=size(gui.data.io.movie.reader))
         [gui,data]  = loadMovie(gui,data); 
-    elseif(size(data.io.movie.fid)~=size(gui.data.io.movie.reader))
-    %fix this
-        [gui,data]   = loadMovie(gui,data);
     else
         data.io.movie.reader     = gui.data.io.movie.reader;
         gui = applySliderUpdates(gui,'movie',data.io.movie);
