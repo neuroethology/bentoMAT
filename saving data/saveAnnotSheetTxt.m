@@ -20,7 +20,7 @@ fid = fopen(fid,'w');
 % write metadata-----------------------------------------------------------
 fprintf(fid,'%s\n','Tracergui annotation file');
 if(~isempty(movieNames))
-    nmov = length(movieNames);
+    nmov = length({movieNames{:}});
     fstr = '%s ';
     for m = 1:nmov
         fstr = [fstr '%s '];

@@ -65,11 +65,14 @@ if(isfield(gui,'data'))
 end
 
 % now! load the movie
-if(gui.enabled.movie(1))
+if(gui.enabled.movie(1)) 
     if(newMovie)
-        [gui,data]  = loadMovie(gui,data);
+        [gui,data]  = loadMovie(gui,data); 
+    elseif(size(data.io.movie.fid)~=size(gui.data.io.movie.reader))
+    %fix this
+        [gui,data]   = loadMovie(gui,data);
     else
-        data.io.movie.reader = gui.data.io.movie.reader;
+        data.io.movie.reader     = gui.data.io.movie.reader;
         gui = applySliderUpdates(gui,'movie',data.io.movie);
     end
 elseif(gui.enabled.traces(1))

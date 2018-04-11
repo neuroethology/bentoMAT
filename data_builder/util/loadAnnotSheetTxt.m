@@ -71,7 +71,9 @@ for c = 1:length(chInds)-1
             L=L+3;          % skip the next two lines (behavior name + start/stop/duration headers)
         else
             vals = str2num(M{L});
-            annot.(ch).(beh)(end+1,:) = vals(1:2);
+            if(vals(2)>=tmin && vals(1)<=tmax)
+                annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-tmin+1,0),tmax-tmin+1);
+            end
             L=L+1; % go to the next line
         end
     end

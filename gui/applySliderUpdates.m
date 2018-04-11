@@ -5,12 +5,12 @@ set(gui.ctrl.slider.bg,'CData',[]);
 
 switch type
     case 'movie'
-        if(strcmpi(info.readertype,'seq'))
-            Fr = info.FR;
-            tMax = info.reader(1).numFrames/Fr;
+        if(strcmpi(info.readertype{1,1},'seq'))
+            Fr = info.FR; % use the experimenter-set value
+            tMax = info.reader{1,1}.numFrames/Fr;
         else
-            Fr = info.reader(1).FrameRate; % use the experimenter-set values for now
-            tMax = info.reader(1).Duration;
+            Fr = info.reader{1,1}.FrameRate;
+            tMax = info.reader{1,1}.Duration;
         end
         maxVal = min(tMax,info.tmax/Fr);
         minVal = max(1/Fr,info.tmin/Fr);

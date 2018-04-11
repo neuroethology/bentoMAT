@@ -1,32 +1,27 @@
 function [gui,data] = loadMovie(gui,data)
 
-reader = struct();
-switch(data.io.movie.readertype)
-    case 'seq'
-        for i = 1:length(data.io.movie.fid)
-            temp         	= seqIo(data.io.movie.fid{i},'reader');
-            rtemp           = temp.getinfo();
-            rtemp.reader    = temp;
-            if(i==1)
-                reader    = rtemp;
-            else
-                reader(i) = rtemp;
-            end
-            Fr              = data.annoFR;  % the fps values in seq files are sometimes
-                                            % inaccurate! trust the experimenter instead.
-            tMax            = reader(i).numFrames/Fr;
+reader = {};
+for col = 1:size(data.io.movie.fid,1)
+    for i = 1:size(data.io.movie.fid,2)
+        if(isempty(data.io.movie.fid{col,i}))
+            continue;
         end
-    otherwise
-        for i = 1:length(data.io.movie.fid)
-            if(i==1)
-                reader      = VideoReader([data.io.movie.fid{i}]);
-            else
-                reader(i)   = VideoReader([data.io.movie.fid{i}]);
-            end
-            reader(i).CurrentTime = 0;
-            Fr              = reader(i).FrameRate;
-            tMax            = reader(i).Duration;
+        switch(data.io.movie.readertype{col,i})
+            case 'seq'
+                temp         	= seqIo(data.io.movie.fid{col,i},'reader');
+                rtemp           = temp.getinfo();
+                rtemp.reader    = temp;
+                reader{col,i}   = rtemp;
+                Fr              = data.annoFR;  % the fps values in seq files are sometimes
+                                                % inaccurate! trust the experimenter instead.
+                tMax            = reader{col,i}.numFrames/Fr;
+            otherwise
+                reader{col,i}       = VideoReader([data.io.movie.fid{i}]);
+                reader{col,i}.CurrentTime = 0;
+                Fr              = reader{col,i}.FrameRate;
+                tMax            = reader{col,i}.Duration;
         end
+    end
 end
 
 % add the reader to the gui struct

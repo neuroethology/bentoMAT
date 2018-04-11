@@ -150,18 +150,25 @@ for i=1:size(data,1)
     
     % link movies----------------------------------------------------------
     if(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))
-        movieList = strsplit(data{i,match.Behavior_movie},';');
-        for j = 1:length(movieList)
-            strtemp.io.movie.fid{j} = strtrim([pth strip(strip(strtrim(movieList{j}),'left','.'),'left',filesep)]);
+        colList   = strsplit(data{i,match.Behavior_movie},';;');
+        
+        for col = 1:length(colList)
+            movieList = strsplit(colList{col},';');
+            for j = 1:length(movieList)
+                strtemp.io.movie.fid{col,j} = ...
+                    strtrim([pth strip(strip(strtrim(movieList{j}),'left','.'),'left',filesep)]);
+                
+                switch(strtemp.io.movie.fid{col,j}(end-2:end))
+                case 'seq'
+                    strtemp.io.movie.readertype{col,j} = 'seq';
+                otherwise
+                    strtemp.io.movie.readertype{col,j} = 'vid';
+                end
+                
+            end
         end
         
-        strtemp.io.movie.FR  = data{i,match.FR_Anno};
-        switch(strtemp.io.movie.fid{1}(end-2:end))
-            case 'seq'
-                strtemp.io.movie.readertype = 'seq';
-            otherwise
-                strtemp.io.movie.readertype = 'vid';
-        end
+        strtemp.io.movie.FR  = data{i,match.FR_Anno}; %should change this to allow multiple FR's in the future
         if(raw{1,9})
             strtemp.io.movie.tmin = data{i,match.Start_Anno};
             strtemp.io.movie.tmax = data{i,match.Stop_Anno};
