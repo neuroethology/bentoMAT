@@ -13,7 +13,7 @@ Want to get a quick visual sense of what's going on in your data? Bento lets you
 ### Additional Resources
 * [Piotr's Matlab Toolbox](https://pdollar.github.io/toolbox/) if behavior videos are in *.seq format
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if using calcium traces extracted with CNMF_E
-* [JSONLab](https://github.com/fangq/jsonlab) if using *.json files (eg for tracker output)
+* [JSONLab](https://github.com/fangq/jsonlab) for some tracker files- if your MATLAB doesn't have native *.json support (pre-2017?)
 
 ## Installation
 The easiest way to keep your local version up to date is to clone this git repository; GitHub's software then lets you update to the latest version of the code at the press of a button.
@@ -27,7 +27,23 @@ Bento assumes all of your data can be found within a common parent directory (po
 
 You can link any combination of imaging data, behavior annotations, behavior movies, audio recordings, and tracking data (some of these are better supported than others at the moment.) A variety of data formats are supported for each field- see more below.
 
-### (insert documentation on supported data formats here)
+### Supported Data Formats
+#### Calcium imaging data
+* [CNMF-E output](https://github.com/zhoupc/CNMF_E)
+* Any mat file containing a single matrix (any variable name)-- Bento will assume that matrix is arranged as neurons x time
+
+#### Movies
+* .seq format (used by [Piotr's Toolbox](https://pdollar.github.io/toolbox/))
+* Any video type supported by Matlab's VideoReader (mp4, wav, avi...)
+Multiple movies can be displayed simultaneously: list files in the appropriate cell of the experiment excel sheet, with filenames separated by semicolons (;). Movies will be stacked vertically; use a double-semicolon (;;) to display side-by-side.
+
+#### Behavior annotations
+* Caltech behavior annotator (I think part of [Piotr's Toolbox](https://pdollar.github.io/toolbox/)) 
+* Bento .annot files
+Multiple annotations can be loaded simultaneously: list files in the appropriate cell of the experiment excel sheet, with filenames separated by semicolons (;).
+
+#### Audio data
+* Linked .wav files will be converted to spectrograms (this sometimes takes a while) and displayed. The generated spectrograms will be saved to a .mat file and re-loaded automatically on future use.
 
 ## Using the GUI
 Coming soon.
