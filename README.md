@@ -35,11 +35,13 @@ You can link any combination of imaging data, behavior annotations, behavior mov
 #### Movies
 * .seq format (used by [Piotr's Toolbox](https://pdollar.github.io/toolbox/))
 * Any video type supported by Matlab's VideoReader (mp4, wav, avi...)
+
 Multiple movies can be displayed simultaneously: list files in the appropriate cell of the experiment excel sheet, with filenames separated by semicolons (;). Movies will be stacked vertically; use a double-semicolon (;;) to display side-by-side.
 
 #### Behavior annotations
 * Caltech behavior annotator (I think part of [Piotr's Toolbox](https://pdollar.github.io/toolbox/)) 
 * Bento .annot files
+
 Multiple annotations can be loaded simultaneously: list files in the appropriate cell of the experiment excel sheet, with filenames separated by semicolons (;).
 
 #### Audio data
