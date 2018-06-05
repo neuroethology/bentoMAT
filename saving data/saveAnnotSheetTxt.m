@@ -1,6 +1,6 @@
 function saveAnnotSheetTxt(movieNames,trial,suggestedName)
 
-fid     = trial.io.annot.fid{:};
+fid     = trial.io.annot.fidSave{:};
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
 

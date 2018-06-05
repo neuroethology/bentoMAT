@@ -1,12 +1,14 @@
-function [annot,maxTime] = loadAnnotFileCaltech(M,tmin,tmax)
+function [annot,maxTime,hotkeys] = loadAnnotFileCaltech(M,tmin,tmax)
 
 % get full list of labels
 listend = find(strcmp(M,''));
 listend = listend(2);
 labelList = M(4:listend-1);
+hotkeys = struct();
 for i = 1:length(labelList)
     labelList{i} = strtrim(labelList{i});
     
+    hotkeys.(labelList{i}(1:end-2)) = labelList{i}(end);
     labelList{i} = labelList{i}(1:end-2);
     labelList{i} = strrep(labelList{i},'-','_');
     if(~isstrprop(labelList{i}(1),'alpha'))

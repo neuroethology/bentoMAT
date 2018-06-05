@@ -41,18 +41,18 @@ end
 %update session list for the new mouse
 use = gui.allPopulated(:,1)==m;
 if(~any(gui.allPopulated(use,2)==str2double(strrep(sess,'session',''))))
-    sess = ['session' num2str(gui.allPopulated(use(1),2))];
+    sess = ['session' num2str(gui.allPopulated(find(use,1,'first'),2))];
     set(gui.ctrl.expt.session,'Value',1);
 end
 set(gui.ctrl.expt.session,'String',strtrim(cellstr(num2str(unique(gui.allPopulated(use,2))))));
 
 %update trial list for the new session
-use = use & (gui.allPopulated(:,2)==str2double(strrep(sess,'session','')));
+use2 = use & (gui.allPopulated(:,2)==str2double(strrep(sess,'session','')));
 if(m~=mOld|~strcmpi(sess,sessOld))
-    tr = gui.allPopulated(find(use,1,'first'),3);
+    tr = gui.allPopulated(find(use2,1,'first'),3);
     set(gui.ctrl.expt.trial,'Value',1);
 end
-set(gui.ctrl.expt.trial,'String',strtrim(cellstr(num2str(gui.allPopulated(use,3)))));
+set(gui.ctrl.expt.trial,'String',strtrim(cellstr(num2str(gui.allPopulated(use2,3)))));
 
 data                = gui.allData(m).(sess)(tr);
 data.info.mouse     = m;
@@ -66,7 +66,7 @@ end
 
 % now! load the movie
 if(gui.enabled.movie(1)) 
-    if(newMovie || size(data.io.movie.fid)~=size(gui.data.io.movie.reader))
+    if(newMovie || (isfield(gui,'data') && any(size(data.io.movie.fid)~=size(gui.data.io.movie.reader))))
         [gui,data]  = loadMovie(gui,data); 
     else
         data.io.movie.reader     = gui.data.io.movie.reader;
@@ -93,7 +93,7 @@ if(gui.enabled.tracker(1))
     if(isfield(data.tracking.args,'features'))
         gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.args.features,1))')));
         gui.features.menu.String        = data.tracking.args.features;
-        gui.enabled.features = [1 1];
+        gui.enabled.features = [1 0];
         if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
             data.tracking.features = eval([data.tracking.fun '_features(data.tracking.args)']);
         elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support
@@ -128,7 +128,7 @@ if ~(isfield(gui,'data') && strcmpi(sess,sessOld) && m==mOld) %inherit show sett
     gui.traces.order  = 1:N;
 end
 data.rast = [nan(N,1) data.rast nan(N,1)]; % pad with nans for display
-if(isfield(gui,'data') && isfield(gui.data,'PCA') & size(gui.data.rast,1)==N)
+if(isfield(gui,'data') && isfield(gui.data,'PCA') && size(gui.data.rast,1)==N)
     data.PCA = gui.data.PCA;
 end
 

@@ -9,7 +9,7 @@ switch ext
     case '.csv'
         temp = csvread(pth);
         time = temp(:,1)';
-        rast = temp(:,2)';
+        rast = temp(:,5)';
         % get rid of artifacts
         rast((1:500))    = nan;
         rast(end-119:end) = nan;

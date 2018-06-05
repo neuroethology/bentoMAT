@@ -1,6 +1,6 @@
 function saveAnnotSheet(gui,trial,mouse,session,tr)
 
-fid     = trial.io.annot.fid;
+fid     = trial.io.annot.fidSave;
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
 

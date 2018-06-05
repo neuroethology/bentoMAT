@@ -8,8 +8,9 @@ if(iscell(data))
 else
     [~,~,raw]   = xlsread(data,'Sheet1');
 end
-[mouse,enabled,pth] = unpackExperiment(raw);
+[mouse,enabled,pth,hotkeys] = unpackExperiment(raw);
 gui.pth = pth;
+gui.annot = mergeHotkeys(gui.annot,hotkeys);
 
 % toggle window visiblity
 gui.enabled         = enabled;
@@ -23,6 +24,7 @@ gui.allData         = mouse;                %stores all mice!
 gui.allPopulated    = cell2mat(raw(3:end,1:3)); %keeps a list of which mouse/sess/trials are populated
 mouseList           = unique(gui.allPopulated(:,1));
 use                 = gui.allPopulated(:,1) == mouseList(1);
+guidata(gui.h0,gui); % just in case it crashes after this
 
 % set the active mouse/session/trial
 sessList    = cellstr(num2str(unique(gui.allPopulated(use,2))));

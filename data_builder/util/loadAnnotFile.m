@@ -1,4 +1,4 @@
-function [annot,maxTime] = loadAnnotFile(fname,tmin,tmax)
+function [annot,maxTime,hotkeys] = loadAnnotFile(fname,tmin,tmax)
 if(nargin<2)
     tmin = 1;
     tmax = inf;
@@ -14,8 +14,9 @@ end
 M = textscan(fid,'%s','delimiter','\n'); M=M{1};
 fclose(fid);
 
+hotkeys=struct();
 if(strcmpi(strtrim(M(1)),'Caltech Behavior Annotator - Annotation File'))
-    [annot,maxTime] = loadAnnotFileCaltech(M,tmin,tmax);
+    [annot,maxTime,hotkeys] = loadAnnotFileCaltech(M,tmin,tmax);
 else
     [annot,maxTime]  = loadAnnotFileEthovision(M);
 end

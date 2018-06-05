@@ -1,4 +1,4 @@
-function [mouse,enabled,pth] = unpackExperiment(raw)
+function [mouse,enabled,pth,hotkeys] = unpackExperiment(raw)
 % parses the metadata in the excel sheet, then loads all of the listed
 % files and formats their data.
 for i = 3:size(raw,1)
@@ -29,6 +29,7 @@ fieldset = fieldset(cellfun(@ischar,fieldset));
 fieldset = strrep(fieldset,' ','_');
 fieldset = strrep(fieldset,'_#','');
 [data,match] = reconcileSheetFormats([],raw,fieldset);
+hotkeys = struct();
 
 if(isnumeric(raw{1,3})&&~isnan(raw{1,3})) %if there's a common Ca framerate
     data(:,match.FR_Ca) = raw(1,3);
@@ -43,12 +44,15 @@ enabled.annot     = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
 enabled.legend    = enabled.annot;
 enabled.traces    = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
 enabled.tracker   = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
-enabled.features  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
+enabled.features  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 0];
 enabled.audio     = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
 
 enabled.tsne      = [0 0];
 enabled.scatter   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 0];
 enabled.fineAnnot = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 0];
+if(~enabled.movie(1))
+    enabled.fineAnnot(2) = enabled.fineAnnot(1);
+end
 
 %load the data:
 mouse = struct();
@@ -70,7 +74,7 @@ for i=1:size(data,1)
     hasOffset       = ~isempty(offset)&&~any(isnan(offset));
     
     % load traces----------------------------------------------------------
-    if(enabled.traces(1) && ~isempty(data{i,match.Calcium_imaging_file}))
+    if(~isempty(data{i,match.Calcium_imaging_file}))
         fid     = [pth strip(strip(data{i,match.Calcium_imaging_file},'left','.'),'left',filesep)];
         tstart  = data{i,match.Start_Ca};
         tstop   = data{i,match.Stop_Ca};
@@ -149,7 +153,7 @@ for i=1:size(data,1)
     end
     
     % link movies----------------------------------------------------------
-    if(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))
+    if(~isempty(data{i,match.Behavior_movie}))
         colList   = strsplit(data{i,match.Behavior_movie},';;');
         
         for col = 1:length(colList)
@@ -211,9 +215,10 @@ for i=1:size(data,1)
                     temp=temp.(f{:});
                 end
                 strtemp.tracking.args = temp;
-                strtemp.io.feat.fid = fid;
+                strtemp.io.feat.fid = {fid};
             elseif(strcmpi(ext,'.json'))
                 if(exist('jsondecode','builtin'))
+                    disp('loading tracking data');
                     strtemp.tracking.args = jsondecode(fileread(fid));
                 elseif(exist('loadjson','file'))
                     disp('Using loadjson.')
@@ -234,15 +239,43 @@ for i=1:size(data,1)
     if(enabled.audio(1))
         if(~isempty(data{i,match.Audio_file}))
             [~,~,ext] = fileparts(data{i,match.Audio_file});
-            if(strcmpi(ext,'.mat'))
-                fid             = [pth strip(strip(data{i,match.Audio_file},'left','.'),'left',filesep)];
-                disp('Loading spectrogram...');
-                strtemp.audio   = load(fid);
-                disp('Done!');
+            strClass  = strip(strip(strrep(data{i,match.Audio_file},ext,'_classification.mat'),'left','.'),'left',filesep);
+            strSpect  = strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep);
+            
+            fid             = [pth strip(strip(data{i,match.Audio_file},'left','.'),'left',filesep)];
+            [loadClass,loadSpect] = deal(0);
+            if(~isempty(strfind(fid,'classification.mat')))
+                loadClass   = 1;
+            elseif(~isempty(ls([pth strClass])))
+                loadClass   = 1;
+                fid         = [pth strClass];
+            elseif(~isempty(strfind(fid,'spectrogram.mat')))
+                loadSpect   = 1;
+            elseif(~isempty(ls([pth strSpect])))
+                loadSpect   = 1;
+                fid         = [pth strSpect];
+            end
+            
+            if(loadClass)
+                disp('Loading spectrogram + classification...');
+                strtemp.audio       = load(fid);
+                y_final             = strtemp.audio.y_final;
+                strtemp.audio       = rmfield(strtemp.audio,'y_final');
+
+                strtemp.audio.f     = (60:200)*1000/2;
+                strtemp.audio.t     = strtemp.audio.ot;
+                strtemp.audio       = rmfield(strtemp.audio,'ot');
+                strtemp.audio.fs    = 400000; %replace missing field
+
+                dt      = ([-1 y_final(2:end) -1] - [-1 y_final(1:end-1) -1])/2;
+                start   = find(dt==1);
+                stop    = find(dt==-1);
+                strtemp.audio.annot = [start' stop'];
+                enabled.annot       = [1 1];
+                enabled.fineAnnot   = [1 0];
                 
-            elseif(~isempty(ls([pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)])))
+            elseif(loadSpect)
                 disp('Loading spectrogram...');
-                fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
                 strtemp.audio   = load(fid);
                 
             else
@@ -257,16 +290,20 @@ for i=1:size(data,1)
                 disp('Saving spectrogram for future use...');
                 fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
                 save(fid,'-v7.3','f','t','psd','fs');
-                disp('Done!');
                 strtemp.audio.f   = f;
                 strtemp.audio.t   = t;
                 strtemp.audio.psd = psd;
                 strtemp.audio.fs  = fs;
+                
             end
-            strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
-            strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
-            strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
-            strtemp.audio.t   = strtemp.audio.t(2:2:end);
+            disp('Done!');
+            
+            if(~loadClass)
+                strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
+                strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
+                strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
+                strtemp.audio.t   = strtemp.audio.t(2:2:end);
+            end
             strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
             
 %             if(hasOffset)
@@ -280,7 +317,7 @@ for i=1:size(data,1)
     end
     
     % load annotations-----------------------------------------------------
-    if(enabled.annot(1) && ~isempty(data{i,match.Annotation_file}))
+    if(~isempty(data{i,match.Annotation_file}))
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
         for j = 1:length(annoList)
             annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
@@ -297,7 +334,8 @@ for i=1:size(data,1)
             end
             suff = ['_file' num2str(j,'%02d') '_' str];
             if(~isempty(strfind(annoList{j}(end-4:end),'xls'))) %old .annot format
-                strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
+                strtemp.io.annot.fid{j}     = [pth annoList{j}];
+                strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],'.xlsx','.annot'); %force conversion to .annot upon next save
                 if(raw{1,9})
                     [atemp,~] = loadAnnotSheet([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                     tmin(j) = data{i,match.Start_Anno};
@@ -327,24 +365,26 @@ for i=1:size(data,1)
                 tmin(j) = 1;
                 tmax(j) = length(strtemp.audio.t);
             else %load data in the old format, OR ETHOVISION, prepare to convert to sheet format when saved
+                strtemp.io.annot.fid{j} = [pth annoList{j}];
                 if(raw{1,9})
                     frame_suffix            = ['_' num2str(data{i,match.Start_Anno}) '-' num2str(data{i,match.Stop_Anno}) '.annot'];
-                    strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.txt',frame_suffix);
-                    [atemp,~]               = loadAnnotFile([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                    strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],'.txt',frame_suffix);
+                    [atemp,~,hotkeys]       = loadAnnotFile([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
                     tmin(j) = data{i,match.Start_Anno};
                     tmax(j) = data{i,match.Stop_Anno};
                 else
-                    strtemp.io.annot.fid{j} = strrep([pth annoList{j}],'.txt','.annot');
-                    [atemp,tmax(j)] = loadAnnotFile([pth annoList{j}]);
+                    strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],'.txt','.annot');
+                    [atemp,tmax(j),hotkeys] = loadAnnotFile([pth annoList{j}]);
                     tmin(j) = 1;
                 end
             end
-%             atemp  = rmBlankChannels(atemp);
+            atemp  = rmBlankChannels(atemp);
             fields = fieldnames(atemp);
             if(j==1)
                 strtemp.annot = struct();
             end
             for f = 1:length(fields)
+%                 strtemp.annot.([fields{f}]) = atemp.(fields{f});
                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
@@ -359,8 +399,9 @@ for i=1:size(data,1)
         strtemp.io.annot.tmin = tmin;
         strtemp.io.annot.tmax = tmax;
         strtemp.annoTime = (1:(tmax-tmin))/strtemp.annoFR;
+
         
-    elseif(enabled.movie(1) && ~isempty(data{i,match.Behavior_movie}))
+    elseif(~isempty(data{i,match.Behavior_movie}))
         strtemp.io.annot = struct();
         strtemp.io.annot.fid   = [];
         strtemp.io.annot.tmin = strtemp.io.movie.tmin;
@@ -369,15 +410,15 @@ for i=1:size(data,1)
         strtemp.annot = struct();
         strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
         
-    elseif(enabled.audio(1) && ~isempty(data{i,match.Audio_file}))
+    elseif(~isempty(data{i,match.Audio_file}))
         strtemp.io.annot = struct();
-        strtemp.io.annot.fid   = [];
-        strtemp.io.annot.tmin = strtemp.audio.tmin;
-        strtemp.io.annot.tmax = strtemp.audio.tmax;
-        strtemp.annoFR   = 1/(strtemp.audio.t(2) - strtemp.audio.t(1));
-        strtemp.annot = struct();
-        strtemp.annoTime = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
-    
+        strtemp.io.annot.fid    = [];
+        strtemp.io.annot.tmin   = strtemp.audio.tmin;
+        strtemp.io.annot.tmax   = strtemp.audio.tmax;
+        strtemp.annoFR          = strtemp.audio.FR;
+        strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
+        strtemp.annot           = struct();
+   
     else
         strtemp.annot = struct();
         strtemp.annoTime = strtemp.CaTime;
