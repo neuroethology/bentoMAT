@@ -67,7 +67,7 @@ end
 bump = 0;
 if(rightOn)
     % if left column wasn't displayed, need to place ctrl/audio/fineAnnot
-    if(~leftOn && (gui.enabled.ctrl(2)||gui.enabled.audio(2)||gui.enabled.fineAnnot(2)))
+    if(~leftOn && (gui.enabled.ctrl(2)||gui.enabled.features(2)||gui.enabled.audio(2)||gui.enabled.fineAnnot(2)))
         
         if(gui.enabled.ctrl(2)) %control panel first
             gui.ctrl.panel.Position = [0 0 1 ctrlSize];
@@ -81,20 +81,24 @@ if(rightOn)
         end
         
         if(gui.enabled.audio(2)) %then audio/fineAnnot if applicable
-            gui.audio.panel.Position = [lBump bump 1-lBump bump+.2];
+            gui.audio.panel.Position = [lBump bump 1-lBump .3];
             gui.fineAnnot.panel.Visible='off';
             bump = bump+.2;
         elseif(gui.enabled.fineAnnot(2))
-            gui.fineAnnot.panel.Position = [lBump bump 1-lBump bump+.1];
-            bump = bump+.25;
+            gui.fineAnnot.panel.Position = [lBump bump 1-lBump .3];
+            bump = bump+.3;
         end
         
-        if(gui.enabled.scatter(2) || gui.enabled.traces(2)) %then divide remaining space between features + traces
+        if(gui.enabled.scatter(2) || gui.enabled.features(2) || gui.enabled.traces(2)) %then divide remaining space between features + traces
             if(gui.enabled.scatter(2)), use = 'scatter'; %don't allow both traces and scatterplot to be on, for now
-            else, use = 'traces'; end
+            elseif(gui.enabled.traces(2)), use = 'traces';
+            else use = [];
+            end
             if(gui.enabled.features(2))
-                gui.features.panel.Position = [lBump bump 1-lBump (1-bump)/2];
-                gui.(use).panel.Position   = [lBump bump+(1-bump)/2 1-lBump (1-bump)/2];
+                gui.features.panel.Position = [lBump bump 1-lBump (1-bump)/(1+~isempty(use))];
+                if(~isempty(use))
+                    gui.(use).panel.Position   = [lBump bump+(1-bump)/2 1-lBump (1-bump)/2];
+                end
             else
                 gui.(use).panel.Position   = [lBump bump 1-lBump 1-bump];
             end

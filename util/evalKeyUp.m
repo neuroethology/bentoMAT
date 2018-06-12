@@ -2,6 +2,15 @@ function evalKeyUp(source,eventdata)
 
 gui=guidata(source);
 switch eventdata.Key
+    case 'escape'
+        if(gui.enabled.annot(2) && ~isempty(gui.annot.activeCh))
+            gui2 = toggleAnnot(gui,'cancel',eventdata.Key);
+            gui.annot = gui2.annot;
+            updateSliderAnnot(gui);
+            guidata(gui.h0,gui);
+            updatePlot(gui.h0,[]);
+        end
+        clearAction(source);
     case 'space'
         if(~gui.Action)
             gui.Action = [gui.ctrl.slider.SliderStep(1) 0];
@@ -91,8 +100,7 @@ switch eventdata.Key
                 else
                     gui2 = toggleAnnot(gui,'switch',eventdata.Key,lastKey);
                 end
-            end
-            if(strcmpi(eventdata.Key,'return') && ~isempty(lastKey) && ~isempty(gui.annot.highlightStart))
+            elseif(strcmpi(eventdata.Key,'return') && ~isempty(lastKey) && ~isempty(gui.annot.highlightStart))
                 gui2 = toggleAnnot(gui,'end',eventdata.Key,lastKey);
             end
             

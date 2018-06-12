@@ -32,6 +32,9 @@ gui.annot.cmapDef.(newStr)  = newColor;
 % set the new hotkey:
 if(any(strcmpi(fieldnames(gui.annot.hotkeysDef),newStr)))
     hotkey = gui.annot.hotkeysDef.(newStr);
+    if(strcmpi(newStr,'unsaved_feature'))
+        hotkey='z';
+    end
     gui.annot.hotkeys.(hotkey) = newStr;
 
 elseif(~strcmpi(newStr,'unsaved_feature'))

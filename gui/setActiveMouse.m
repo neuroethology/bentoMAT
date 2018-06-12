@@ -93,7 +93,6 @@ if(gui.enabled.tracker(1))
     if(isfield(data.tracking.args,'features'))
         gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.args.features,1))')));
         gui.features.menu.String        = data.tracking.args.features;
-        gui.enabled.features = [1 0];
         if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
             data.tracking.features = eval([data.tracking.fun '_features(data.tracking.args)']);
         elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support

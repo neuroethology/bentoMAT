@@ -9,6 +9,7 @@ end
 h           = guidata(source);
 doTrain     = strcmpi(source.Tag,'train');
 doTest      = strcmpi(source.Tag,'test') | h.evalTrain.Value;
+doPrecRec   = 0;
 
 if(doTrain)
     set(h.h1Train,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
@@ -19,7 +20,7 @@ if(doTrain)
     behavior    = py.list({bhvr});
     
     model_dir   = 'Bento_temp';
-    model_type  = 'xgb500';
+    model_type  = 'mlp';
     trials = h.trialsTrain.String(h.trialsTrain.Value);
     for i=1:length(trials)
         vals(i,:)    = sscanf(trials{i},'mouse %d, session %d, trial %d');
@@ -31,13 +32,18 @@ if(doTrain)
     toc
     
     set(h.h1Train,'String','Train MARS');
+    bhvr = strrep(bhvr,'_','-');
     if(any(strcmpi(h.bhvrsTest.String,[bhvr '_' model_type '*'])))
-        h.bhvrsTest.String = [{[bhvr '-' model_type '*']}; setdiff(h.bhvrsTest.String,[bhvr '-' model_type '*'])];
+        newBhvStrs = [{[bhvr '_' model_type '*']}; setdiff(h.bhvrsTest.String,[bhvr '_' model_type '*'])];
+        newBhvStrs(cellfun(@isempty,newBhvStrs)) = [];
+        h.bhvrsTest.String = newBhvStrs;
     elseif(isempty(h.bhvrsTest.String))
-        h.bhvrsTest.String = {[bhvr '-' model_type '*']};
+        h.bhvrsTest.String = {[bhvr '_' model_type '*']};
         h.bhvrsTest.Max = 1;
     else
-        set(h.bhvrsTest,'String',[{[bhvr '-' model_type '*']};h.bhvrsTest.String]);
+        newBhvStrs = [{[bhvr '_' model_type '*']};h.bhvrsTest.String];
+        newBhvStrs(cellfun(@isempty,newBhvStrs)) = [];
+        set(h.bhvrsTest,'String',newBhvStrs);
         h.bhvrsTest.Max = h.bhvrsTest.Max+1;
     end
     drawnow;
@@ -50,12 +56,16 @@ if(doTest)
         trials = h.trialsTrain.String(h.trialsTrain.Value);
         groups          = 1;
         modelTypes{1}   = [model_type '*'];
-        bhvrs{1}        = bhvr;
+        bhvrs{1}        = strrep(bhvr,'-','_');
+        doPredRec = 1;
+        GT = 'Ch1';
     else
         models      = h.bhvrsTest.String(h.bhvrsTest.Value);
         bhvrs       = cellfun(@(x) x(1:(find(x=='_',1,'first')-1)),models,'uniformoutput',false);
         [modelTypes,~,groups] = unique(cellfun(@(x) x((find(x=='_',1,'first')+1):end),models,'uniformoutput',false));
         trials = h.trialsTest.String(h.trialsTest.Value);
+        doPrecRec = ~strcmpi(h.GT.String{h.GT.Value},'--none--');
+        GT = h.GT.String{h.GT.Value};
     end
         
     f = waitbar(0,'Classifying movies...');
@@ -75,18 +85,12 @@ if(doTest)
                 model_dir = 'Bento';
             end
             py.mars_cmd_test.test_classifier(behavior,feat,movie,...
-                pyargs('front_pose_files',front,'model_str',[path_to_MARS model_dir],'output_suffix',model_type) );
+                pyargs('front_pose_files',front,'model_str',[path_to_MARS model_dir],...
+                'output_suffix',model_type,'save_probabilities', 1) );
         end
 
         % import the new annotations back into Bento~:
-        data    = gui.allData(vals(1)).(['session' num2str(vals(2))])(vals(3));
-        pth     = fileparts(data.io.feat.fid{1});
-        [~,mID] = fileparts(pth);
-        fid     = [pth '\' mID '_actions_pred_' model_type '.txt'];
-        data.annot.MARS_output       = getOnlineMARSOutput(fid);
-        data.io.annot.fid{end+1}     = fid;
-        data.io.annot.fidSave{end+1} = strrep(fid,'.txt','.annot');
-        gui.allData(vals(1)).(['session' num2str(vals(2))])(vals(3)) = data;
+        gui = updateWithMARSOutputs(gui,vals,model_type);
     end
     waitbar(1,f,'Done!');
 
@@ -99,6 +103,10 @@ if(doTest)
     updatePlot(gui.h0,[]);
     close(f);
     figure(gui.h0);
+    
+    if(doPrecRec)
+        MARSPrecRecReport(bhvrs,gui,trials,GT);
+    end
 end
 
 

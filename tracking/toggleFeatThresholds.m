@@ -25,8 +25,9 @@ end
 if(flag) % when switching into threshold mode, also change annotation channels
     if(~any(strcmpi(gui.annot.channels,'thresholded_features')))
         gui = addChannel(gui, 'thresholded_features');
-        for f = fieldnames(gui.annot.bhv)'
+        for f = fieldnames(gui.annot.bhv)' %remove the other behaviors from this channel
             gui.annot.bhv = rmfield(gui.annot.bhv,f{:});
+            gui.data.annot.thresholded_features = rmfield(gui.data.annot.thresholded_features,f{:});
         end
         gui.ctrl.annot.annot.Value = 1;
     else

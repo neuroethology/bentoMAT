@@ -7,6 +7,11 @@ function gui = toggleAnnot(gui,toggle,key,lastKey)
             gui.annot.highlightStart = max(round(...
                 (gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR)-1,1);
 
+        case 'cancel'
+            toggleAnnotBoxes(gui,'off');
+            gui.annot.highlightStart = [];
+            gui.annot.highlighting = 0;
+            
         case 'switch'
             toggleAnnotBoxes(gui,'on',key);
             inds    = getAnnotInds(gui);
