@@ -65,21 +65,5 @@ end
 gui.rowVis(isnan(gui.rowVis)) = 0;
 gui.incAudio.Value = gui.rowVis(matchInds.Audio_file);
 
-res  = get(useSource,'position');
-pP   = [.025 .792 .02 .02*res(3)/res(4)];
-pM   = [.05 .792 .02 .02*res(3)/res(4)];
-for i = 1:size(get(gui.t,'data'),1)
-    if(pP(2)>.18)
-        pP = pP - [0 23 0 0]/res(4);
-        pM = pM - [0 23 0 0]/res(4);
-        set(gui.bP,'position',pP);
-        set(gui.bM,'position',pM);
-    end
-end
-
-p = get(gui.f,'position');
-set(gui.bP,'Position',[.025 .792-23*size(get(gui.t,'data'),1)/p(4) .02 .02*p(3)/p(4)]);
-set(gui.bM,'Position',[.05 .792-23*size(get(gui.t,'data'),1)/p(4) .02 .02*p(3)/p(4)]);
-
 guidata(useSource,gui);
 redrawBuilder(useSource,[]);
