@@ -30,7 +30,7 @@ gui.annot.cmapDef.(newStr)  = newColor;
 
 
 % set the new hotkey:
-if(any(strcmpi(fieldnames(gui.annot.hotkeysDef),newStr)))
+if(any(strcmpi(fieldnames(gui.annot.hotkeysDef),newStr)) && ~strcmpi(gui.annot.hotkeysDef.(newStr),'_'))
     hotkey = gui.annot.hotkeysDef.(newStr);
     if(strcmpi(newStr,'unsaved_feature'))
         hotkey='z';
@@ -41,9 +41,14 @@ elseif(~strcmpi(newStr,'unsaved_feature'))
     hotkey = inputdlg(['Assign hotkey for ' strrep(newStr,'_',' ') '?']);
     if(~isempty(hotkey))
         hotkey = regexprep(hotkey{:},'[^a-zA-z]','');
-        if(~isfield(gui.annot.hotkeys,hotkey) && (length(hotkey)==1))
+        if(length(hotkey)==1)
             gui.annot.hotkeys.(hotkey)    = newStr; % add the hotkey to the list
             gui.annot.hotkeysDef.(newStr) = hotkey;
+            for f = fieldnames(gui.annot.hotkeysDef)' %unassign that hotkey from other behaviors
+                if(gui.annot.hotkeysDef.(f{:}) == hotkey)
+                    gui.annot.hotkeysDef.(f{:}) = '_';
+                end
+            end
         end
     end
 end

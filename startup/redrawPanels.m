@@ -34,7 +34,7 @@ else
 end
 rightStart = leftWidth;
 rightWidth = 1-leftWidth;
-
+legendSize = .125;
 
 %time for the world's shittiest panel layout code!
 bump = 0;
@@ -56,8 +56,9 @@ if(leftOn)
     
     %remaining vertical space goes to the movie
     if(gui.enabled.legend(2)) %show a legend of annotations
-        gui.legend.panel.Position = [0 bump leftWidth/4 1-bump];
-        gui.movie.panel.Position  = [leftWidth/4 bump leftWidth*3/4 1-bump];
+        
+        gui.legend.panel.Position = [0 bump legendSize 1-bump];
+        gui.movie.panel.Position  = [legendSize bump leftWidth-legendSize 1-bump];
     else % just show movie
         gui.movie.panel.Position  = [0 bump leftWidth 1-bump];
     end

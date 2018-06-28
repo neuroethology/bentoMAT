@@ -5,7 +5,7 @@ if(~nargout)
     hfig = figure(6759);clf;
     set(hfig,'dockcontrols','off','menubar','none',...
             'NumberTitle','off','Position', hfig.Position.*[.75 .75 1.45 1.25],...
-            'units','normalized');
+            'units','normalized');  
 end
 
 for i = 1:length(bhvr)

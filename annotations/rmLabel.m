@@ -8,7 +8,11 @@ end
 gui.annot.bhv = rmfield(gui.annot.bhv,toDelete);
 
 % remove label from gui.data:
-gui.data.annot.(gui.annot.activeCh) = rmfield(gui.data.annot.(gui.annot.activeCh),toDelete);
+for i=1:length(toDelete)
+    if(isfield(gui.data.annot.(gui.annot.activeCh),toDelete{i}))
+        gui.data.annot.(gui.annot.activeCh) = rmfield(gui.data.annot.(gui.annot.activeCh),toDelete{i});
+    end
+end
 
 % remove label from gui.allData (all mice/sessions/trials):
 sessionList = fieldnames(gui.allData);
@@ -21,8 +25,12 @@ mice = find(mask); %find all the mice that contain data
 for m = mice
     for s = sessionList'
         for tr = 1:length(gui.allData(m).(s{:}))
-            gui.allData(m).(s{:})(tr).annot.(gui.annot.activeCh) = ...
-                rmfield(gui.allData(m).(s{:})(tr).annot.(gui.annot.activeCh),toDelete);
+            for i=1:length(toDelete)
+                if(isfield(gui.allData(m).(s{:})(tr).annot.(gui.annot.activeCh),toDelete{i}))
+                    gui.allData(m).(s{:})(tr).annot.(gui.annot.activeCh) = ...
+                        rmfield(gui.allData(m).(s{:})(tr).annot.(gui.annot.activeCh),toDelete{i});
+                end
+            end
         end
     end
 end
