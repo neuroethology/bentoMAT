@@ -196,7 +196,11 @@ if(gui.enabled.annot(1))
             set(gui.scatter.currentFrame,'markerfacecolor',squeeze(img(1,i,:)));
             if(~isempty(p1))
                 tailImg = squeeze((img(1,1:i,:)-1/3)*3/2);
-                tailImg(sum(tailImg,2)==3,:) = 0;
+                if(gui.scatter.hideOther.Value)
+                    tailImg(sum(tailImg,2)==3,:) = nan;
+                else
+                    tailImg(sum(tailImg,2)==3,:) = 0;
+                end
                 tailImg = repmat(permute(imresize(tailImg,[length(p1) 3]),[3 1 2]),[2 1 1]);
 
                 set(gui.scatter.tail,'XData',[p1;p1],'YData',[p2;p2],'ZData',zeros(2,length(p1)),'CData',tailImg);
