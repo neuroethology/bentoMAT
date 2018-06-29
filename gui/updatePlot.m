@@ -159,7 +159,6 @@ if(all(gui.enabled.scatter))
     [~,ind] = find(gui.data.CaTime(inds)>=time,1,'first');
     p1  = gui.data.proj.d1*gui.data.rast(:,inds);
     p2  = gui.data.proj.d2*gui.data.rast(:,inds);
-%     set(gui.scatter.data,'xdata',p1,'ydata',p2);
     set(gui.scatter.currentFrame,'xdata',p1(ind),'ydata',p2(ind));
 end
 

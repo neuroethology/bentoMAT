@@ -144,6 +144,12 @@ end
 resetAnnotText(gui);
 % update the legend
 updateLegend(gui,1);
+% update the scatterplot if applicable
+if(all(gui.enabled.scatter))
+    p1  = gui.data.proj.d1*gui.data.rast;
+    p2  = gui.data.proj.d2*gui.data.rast;
+    set(gui.scatter.data,'xdata',p1,'ydata',p2);
+end
 
 % % add the ID of the stimulus
 % if(gui.enabled.movie(1))
