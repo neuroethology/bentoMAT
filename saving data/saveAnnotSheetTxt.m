@@ -6,10 +6,12 @@ tmax    = trial.io.annot.tmax;
 
 %always prompt the save path?
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
-    if(isempty(suggestedName))
-        suggestedName = 'annotations';
+    if(~isempty(fid))
+        suggestedName = strrep(fid,'.txt','.annot');
+    elseif(isempty(suggestedName))
+        suggestedName = [pwd filesep 'annotations'];
     end
-    [fname,pth] = uiputfile([pth filesep suggestedName]);
+    [fname,pth] = uiputfile(suggestedName);
     fid = [pth fname];
 else
     [fname,pth] = uiputfile(fid);

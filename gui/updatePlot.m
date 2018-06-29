@@ -161,7 +161,8 @@ if(all(gui.enabled.scatter))
     p2  = gui.data.proj.d2*gui.data.rast;
     set(gui.scatter.data,'xdata',p1,'ydata',p2);
     set(gui.scatter.currentFrame,'xdata',p1(ind),'ydata',p2(ind));
-    set(gui.scatter.tail,'xdata',p1(inds),'ydata',p2(inds));
+    p1 = p1(inds);
+    p2 = p2(inds);
 end
 
 
@@ -193,6 +194,15 @@ if(gui.enabled.annot(1))
         if(all(gui.enabled.scatter))
             [~,i] = min(abs(win));
             set(gui.scatter.currentFrame,'markerfacecolor',squeeze(img(1,i,:)));
+            if(~isempty(p1))
+                tailImg = squeeze((img(1,1:i,:)-1/3)*3/2);
+                tailImg(sum(tailImg,2)==3,:) = 0;
+                tailImg = repmat(permute(imresize(tailImg,[length(p1) 3]),[3 1 2]),[2 1 1]);
+
+                set(gui.scatter.tail,'XData',[p1;p1],'YData',[p2;p2],'ZData',zeros(2,length(p1)),'CData',tailImg);
+            else
+                set(gui.scatter.tail,'XData',[0;0],'YData',[0;0],'ZData',[0;0],'CData',zeros(2,1,3));
+            end
         end
         if(all(gui.enabled.traces))
             set(gui.traces.bg,'cdata',imgSmall,'XData',win/gui.data.annoFR,'YData',[0 10]);

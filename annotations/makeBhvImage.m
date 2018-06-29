@@ -2,7 +2,7 @@ function img = makeBhvImage(bhv,cmap,inds,tmax,showAnnot)
 
 bhvList = fieldnames(bhv);
 
-img = ones(1,tmax,3)*.95;
+img = ones(1,tmax,3);
 for i = 1:length(bhvList)
     if((isempty(showAnnot) || showAnnot.(bhvList{i})) && ~isempty(bhv.(bhvList{i})) && ~strcmpi(bhvList{i},'other'))
         if(min(size(bhv.(bhvList{i})))==2 || length(bhv.(bhvList{i}))==2)

@@ -209,10 +209,10 @@ for i=1:size(data,1)
             fid = [pth strip(strip(data{i,match.Tracking},'left','.'),'left',filesep)];
             [~,~,ext] = fileparts(fid);
             if(strcmpi(ext,'.mat'))
-                temp = load(fid);
+                temp = matfile(fid); %virtual load should be faster/more memory friendly
                 f = fieldnames(temp);
-                if(length(f)==1)
-                    temp=temp.(f{:});
+                if(length(f)==2)
+                    temp=temp.(f{2});
                 end
                 strtemp.tracking.args = temp;
                 strtemp.io.feat.fid = {fid};
