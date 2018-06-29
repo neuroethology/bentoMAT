@@ -156,13 +156,11 @@ end
 if(all(gui.enabled.scatter))
     inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=time);
     inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    [~,ind] = find(gui.data.CaTime>=time,1,'first');
-    p1  = gui.data.proj.d1*gui.data.rast;
-    p2  = gui.data.proj.d2*gui.data.rast;
-    set(gui.scatter.data,'xdata',p1,'ydata',p2);
+    [~,ind] = find(gui.data.CaTime(inds)>=time,1,'first');
+    p1  = gui.data.proj.d1*gui.data.rast(:,inds);
+    p2  = gui.data.proj.d2*gui.data.rast(:,inds);
+%     set(gui.scatter.data,'xdata',p1,'ydata',p2);
     set(gui.scatter.currentFrame,'xdata',p1(ind),'ydata',p2(ind));
-    p1 = p1(inds);
-    p2 = p2(inds);
 end
 
 
