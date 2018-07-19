@@ -13,3 +13,7 @@ loading data/piotr_toolbox/*
 #############
 gui_test/*
 annotations/color_profiles.txt
+
+# MARS stuff #
+##############
+*.pyc
