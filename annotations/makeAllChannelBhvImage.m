@@ -2,7 +2,15 @@ function img = makeAllChannelBhvImage(gui,data,cmap,inds,tmax,showAnnot)
 
 chList = fieldnames(data);
 
-img = ones(length(chList),tmax,3);
+if(~isempty(inds))
+    L = length(inds);
+    mask            = (inds<1)|(inds>tmax);
+    inds(inds<1)    = 1;
+    inds(inds>tmax) = tmax;
+else
+    L = tmax;
+end
+img = ones(length(chList),L,3);
 for ch = 1:length(chList)
     
     bhvList = fieldnames(data.(chList{ch}));
@@ -12,16 +20,17 @@ for ch = 1:length(chList)
         if(show && ~strcmpi(bhvList{i},'other'))
             
             if(strcmpi(chList{ch},gui.annot.activeCh))
-                hits = gui.annot.bhv.(bhvList{i});
+                hits = gui.annot.bhv.(bhvList{i})(inds);
                 img(ch,hits~=0,:)   = ones(sum(hits),1)*cmap.(bhvList{i});
             elseif(~isempty(data.(chList{ch}).(bhvList{i})))
                 use = data.(chList{ch}).(bhvList{i});
                 if(~isempty(inds))
                     use(use(:,2)<inds(1),:) = [];
                     use(use(:,1)>inds(end),:) = [];
+                    use = use - inds(1);
                 end
                 if(~isempty(use))
-                    hits                = convertToRast(use,tmax);
+                    hits                = convertToRast(use,L);
                     img(ch,hits~=0,:)   = ones(sum(hits),1)*cmap.(bhvList{i});
                 end
             end
@@ -30,10 +39,7 @@ for ch = 1:length(chList)
     
 end
 
-mask                    = (inds<1)|(inds>length(img));
-inds(inds<1)            = 1;
-inds(inds>length(img))  = length(img);
-
-img             = img(:,inds,:);
-img(:,mask,:)   = permute(ones(sum(mask),3),[3 1 2]);
-img = flip(img,1);
+if(~isempty(inds))
+    img(:,mask,:)   = permute(ones(sum(mask),3),[3 1 2]);
+    img = flip(img,1);
+end

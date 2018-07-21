@@ -181,7 +181,7 @@ if(gui.enabled.annot(1))
     
     
     % add background images to traces/audio or set color for scatter marker
-    if(all(gui.enabled.scatter) || all(gui.enabled.traces) || all(gui.enabled.audio) || all(gui.enabled.features))
+    if(all(gui.enabled.scatter) || all(gui.enabled.traces) || all(gui.enabled.features))
         
         img      = makeBhvImage(gui.annot.bhv,gui.annot.cmapDef,inds,tmax,gui.annot.show)*2/3+1/3;
         imgSmall = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
@@ -215,18 +215,18 @@ if(gui.enabled.annot(1))
                     'YData',gui.features.feat(i).axes.YLim+[-1 1]);
             end
         end
-        if(all(gui.enabled.audio))
-            if(gui.enabled.annot(2)) %this if/else shouldn't be necessary
-                set(gui.audio.bg,'Visible','on');
-            else
-                set(gui.audio.bg,'Visible','off');
-            end
-            if(gui.enabled.fineAnnot)
-                img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmap,inds,tmax,gui.annot.show);
-                img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
-            end
-            set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end,1)/1000/5 0]);
+    end
+    if(all(gui.enabled.audio))
+        if(gui.enabled.annot(2)) %this if/else shouldn't be necessary
+            set(gui.audio.bg,'Visible','on');
+        else
+            set(gui.audio.bg,'Visible','off');
         end
+        if(gui.enabled.fineAnnot)
+            img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmap,inds,tmax,gui.annot.show);
+            img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
+        end
+        set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',[-gui.data.audio.f(end,1)/1000/5 0]);
     end
         
     % update behavior-annotating box if it's active
