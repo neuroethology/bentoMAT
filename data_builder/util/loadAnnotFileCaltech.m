@@ -8,6 +8,9 @@ hotkeys = struct();
 for i = 1:length(labelList)
     labelList{i} = strtrim(labelList{i});
     
+    if(~isstrprop(labelList{i}(1),'alpha'))
+        labelList{i}=['w' labelList{i}];
+    end
     hotkeys.(labelList{i}(1:end-2)) = labelList{i}(end);
     labelList{i} = labelList{i}(1:end-2);
     labelList{i} = strrep(labelList{i},'-','_');

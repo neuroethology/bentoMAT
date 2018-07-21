@@ -1,16 +1,19 @@
-function patchify(img,xran,yran,colors)
+function patchify(annot,yran,dt,cmap)
 
-dt = (xran(2)-xran(1))/length(img);
-for iq = 1:max(double(img))
-    sig = (img==iq);
+bhvrs = fieldnames(annot);
+correctedLabels = findEquivalentLabels(bhvrs);
+for f = 1:length(bhvrs)
+    if(isempty(annot.(bhvrs{f}))|strcmpi(bhvrs{f},'other'))
+        continue;
+    end
+    
+    t_begin = annot.(bhvrs{f})(:,1);
+    t_end = annot.(bhvrs{f})(:,2);
 
-    t_begin = find(diff([0 sig])==1);
-    t_end = find(diff([sig 0])==-1);
-
-    for k = 1:length(t_begin),
-        tb = t_begin(k)-1;
+    for k = 1:length(t_begin)
+        tb = t_begin(k);
         te = t_end(k);
-        patch([tb te te tb]*dt+xran(1),[yran(1) yran(1) yran(2) yran(2)],...
-            colors(iq,:),'EdgeColor','none');
-    end;
+        patch([tb te te tb]*dt,[yran(1) yran(1) yran(2) yran(2)],...
+            cmap.(correctedLabels{f}),'EdgeColor','none');
+    end
 end
