@@ -1,6 +1,7 @@
 function save_summary_rasters(pth,filter,includeMARSOutput,overridePrompt)
 
 cmapDef = loadPreferredCmap();
+doPDF = exist('export_fig.m','file');
 
 % find files
 disp(['Locating annotation files [' pth '**' filesep filter ']...'])
@@ -41,7 +42,9 @@ for f = 1:length(files)
         make_behavior_raster_summary(annot,cmapDef,maxTime,h,strrep(fname,pth,''));
         im = getframe(h);
         img = cat(1,img,im.cdata);
-        export_fig([pth 'all_mice_summary.pdf'],'-pdf','-append','-painters');
+        if(doPDF)
+            export_fig([pth 'all_mice_summary.pdf'],'-pdf','-append','-painters');
+        end
     end
 end
 imwrite(img,[pth 'all_mice_summary.png']);
