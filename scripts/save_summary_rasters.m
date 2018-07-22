@@ -29,6 +29,7 @@ if(ls([pth 'annotations_summary.pdf']))
     delete([pth 'annotations_summary.pdf']);
 end
 
+disp('Please do not resize/close figure while summary images are being generated!')
 % make/save plots!
 img = [];
 h   = figure(2);clf;
