@@ -15,7 +15,7 @@ switch ext
     end
     
     case '.annot' %new .annot format
-    fid = strtrim([pth strtrim(filename)]);
+    fid = filename;
     if(loadRange)
         [annotations,~] = loadAnnotSheetTxt(filename,tmin,tmax);
     else

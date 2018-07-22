@@ -11,7 +11,7 @@ for i = 1:length(labelList)
     if(~isstrprop(labelList{i}(1),'alpha'))
         labelList{i}=['w' labelList{i}];
     end
-    hotkeys.(labelList{i}(1:end-2)) = labelList{i}(end);
+    hotkeys.(strrep(labelList{i}(1:end-2),'-','_')) = labelList{i}(end);
     labelList{i} = labelList{i}(1:end-2);
     labelList{i} = strrep(labelList{i},'-','_');
     if(~isstrprop(labelList{i}(1),'alpha'))
@@ -53,6 +53,9 @@ for i = 1:2
 %             continue;
 %         end
         times = [Mtemp{j,2} Mtemp{j,3}];
+        if(~isstrprop(Mtemp{j,1}(1),'alpha'))
+            Mtemp{j,1} = ['x'  Mtemp{j,1}];
+        end
         annot.(str).(Mtemp{j,1})   = [annot.(str).(Mtemp{j,1}); times];
     end
 end
