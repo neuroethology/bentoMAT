@@ -1,11 +1,16 @@
-function save_summary_rasters(pth,filter,suffix,includeMARSOutput,overridePrompt)
+function save_summary_rasters(pth,filter,suffix,FR,includeMARSOutput,overridePrompt)
 
 cmapDef = loadPreferredCmap();
 doPDF = exist('export_fig.m','file');
 if(~exist('suffix','var')|isempty(suffix))
-    suffix=='';
+    suffix='';
 elseif(suffix(1)~='_')
     suffix = ['_' suffix];
+end
+
+% set a default framerate if none specified
+if(~exist('FR','var'))
+    FR = 30;
 end
 
 % find files matching any of the provided filters
@@ -55,7 +60,7 @@ for f = 1:length(files)
     [annot,maxTime] = loadAnyAnnot(fname);
 
     if(~isempty(annot))
-        make_behavior_raster_summary(annot,cmapDef,maxTime,h,strrep(fname,pth,''));
+        make_behavior_raster_summary(annot,cmapDef,maxTime,FR,h,strrep(fname,pth,''));
         im = getframe(h);
         img = cat(1,img,im.cdata);
         if(doPDF)

@@ -12,5 +12,7 @@ for b = 1:length(bhvrs)
             bhvrs{b} = 'grooming';
         case {'closeinvestigate','closeinvestigation','investigate','investigation','close_investigate','close_investigation'}
             bhvrs{b} = 'closeinvestigation';
+        case{'singing','song'}
+            bhvrs{b} = 'singing';
     end    
 end

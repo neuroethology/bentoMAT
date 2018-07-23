@@ -1,10 +1,12 @@
-function make_behavior_raster_summary(annot,cmapDef,maxTime,h,tstr)
+function make_behavior_raster_summary(annot,cmapDef,maxTime,FR,h,tstr)
 
-FR = 390.625;
 annot  = rmBlankChannels(annot);
 
 if(~exist('tstr','var'))
     tstr = '';
+end
+if(~exist('FR','var'))
+    FR = 30;
 end
 
 if(exist('h','var'))
