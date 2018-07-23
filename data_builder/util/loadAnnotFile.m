@@ -15,8 +15,12 @@ M = textscan(fid,'%s','delimiter','\n'); M=M{1};
 fclose(fid);
 
 hotkeys=struct();
-if(strcmpi(strtrim(M(1)),'Caltech Behavior Annotator - Annotation File'))
+if(isempty(strtrim(M)))
+    annot=[];maxTime=[];hotkeys=struct();
+elseif(strcmpi(strtrim(M(1)),'Caltech Behavior Annotator - Annotation File'))
     [annot,maxTime,hotkeys] = loadAnnotFileCaltech(M,tmin,tmax);
-else
+elseif(strcmpi(strtrim(M(1)),'scorevideo LOG'))
     [annot,maxTime]  = loadAnnotFileEthovision(M);
+else
+    annot=[];maxTime=[];hotkeys=struct();
 end

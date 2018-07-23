@@ -1,6 +1,6 @@
 function save_summary_rasters(pth,filter,suffix,FR,includeMARSOutput,overridePrompt)
 
-cmapDef = loadPreferredCmap();
+[cmapDef,hotkeys] = loadPreferredCmap();
 doPDF = exist('export_fig.m','file');
 if(~exist('suffix','var')|isempty(suffix))
     suffix='';
@@ -50,8 +50,8 @@ else
 end
 
 % remove previously generated pdfs
-if(ls([pth 'annotations_summary' suffix '.pdf']))
-    delete([pth 'annotations_summary' suffix '.pdf']);
+if(ls([pth 'all_mice_summary' suffix '.pdf']))
+    delete([pth 'all_mice_summary' suffix '.pdf']);
 end
 
 disp('Please do not resize/close figure while summary images are being generated!')
@@ -65,7 +65,7 @@ for f = 1:length(files)
     [annot,maxTime] = loadAnyAnnot(fname);
 
     if(~isempty(annot))
-        make_behavior_raster_summary(annot,cmapDef,maxTime,FR,h,strrep(fname,pth,''));
+        make_behavior_raster_summary(annot,cmapDef,hotkeys,maxTime,FR,h,strrep(fname,pth,''));
         im = getframe(h);
         img = cat(1,img,im.cdata);
         if(doPDF)

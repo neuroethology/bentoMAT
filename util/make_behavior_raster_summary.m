@@ -1,4 +1,4 @@
-function make_behavior_raster_summary(annot,cmapDef,maxTime,FR,h,tstr)
+function make_behavior_raster_summary(annot,cmapDef,hotkeys,maxTime,FR,h,tstr)
 
 annot  = rmBlankChannels(annot);
 
@@ -20,12 +20,26 @@ hold on;
 
 channels = fieldnames(annot);
 bhvrs = {};
+usedColors = [1 1 1;0 0 0];flag=0;
+for f = fieldnames(cmapDef)'
+    usedColors = [usedColors; cmapDef.(f{:})];
+end
 for c = 1:length(channels)
     for f = fieldnames(annot.(channels{c}))'
         if(~isempty(annot.(channels{c}).(f{:})) & ~strcmpi(f{:},'other'))
             bhvrs(end+1) = f;
+            
+            if(~isfield(cmapDef,f))
+                cmapDef.(f{:})    = distinguishable_colors(1,usedColors);
+                usedColors = [usedColors; cmapDef.(f{:})];
+                hotkeys.(f{:}) = '_';
+                flag = 1;
+            end
         end
     end
+end
+if(flag)
+    updatePreferredCmap(cmapDef,hotkeys);
 end
 correctedLabels = findEquivalentLabels(bhvrs);
 B = length(bhvrs);

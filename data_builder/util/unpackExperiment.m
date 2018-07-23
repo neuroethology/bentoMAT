@@ -350,8 +350,8 @@ for i=1:size(data,1)
                 strtemp.annot = struct();
             end
             for f = 1:length(fields)
-                strtemp.annot.([fields{f}]) = atemp.(fields{f});
-%                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
+%                 strtemp.annot.([fields{f}]) = atemp.(fields{f});
+                strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
         strtemp.annot   = orderfields(strtemp.annot);
