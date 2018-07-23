@@ -2,7 +2,7 @@ function [annotations,tmax,tmin,fid,hotkeys] = loadAnyAnnot(filename,tmin,tmax)
 
 [~,~,ext] = fileparts(filename);
 loadRange = exist('tmin','var');
-hotkeys = [];
+hotkeys = struct();
 
 switch ext
     case '.xls' %old .annot format

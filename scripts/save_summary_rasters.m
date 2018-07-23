@@ -11,11 +11,16 @@ end
 % set a default framerate if none specified
 if(~exist('FR','var'))
     FR = 30;
+elseif(isempty(FR))
+    FR = 30;
 end
 
 % find files matching any of the provided filters
 if(~iscell(filter))
     filter = {filter};
+end
+if(pth(end)~=filesep)
+    pth = [pth filesep];
 end
 disp(['Locating annotation files [' pth '**' filesep strjoin(filter,';') ']...'])
 files = rdir([pth '**' filesep filter{1}]);

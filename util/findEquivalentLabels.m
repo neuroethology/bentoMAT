@@ -4,7 +4,7 @@ for b = 1:length(bhvrs)
     switch bhvrs{b}
         case {'sniff_genital','sniff_genitals','sniffurogenital','sniffgenital','sniffgenitals'}
             bhvrs{b} = 'sniff_genital';
-        case {'sniff_face','sniffface','facesniffing'}
+        case {'sniff_face','sniffface','facesniffing','snifface'}
             bhvrs{b} = 'sniff_face';
         case {'sniff_body','sniffbody','bodysniffing'}
             bhvrs{b} = 'sniff_body';

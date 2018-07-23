@@ -31,7 +31,7 @@ correctedLabels = findEquivalentLabels(bhvrs);
 B = length(bhvrs);
 
 for i=1:length(channels)
-    patchify(annot.(channels{i}),[0 1]+i,1/FR/60,cmapDef);
+    patchify(annot.(channels{i}),[0 1]-i,1/FR/60,cmapDef);
 end
 axis tight;
 xlim([0 maxTime/FR/60]);

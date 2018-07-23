@@ -335,14 +335,14 @@ for i=1:size(data,1)
             suff = ['_file' num2str(j,'%02d') '_' str];
             
             [atemp,tmax(j),tmin(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
-            [~,~,ext] = fileparts(filename);
+            [~,~,ext] = fileparts(annoList{j});
             if(raw{1,9})
                 frame_suffix = ['_' num2str(tmax) '-' num2str(tmax) '.annot'];
-                strtemp.io.annot.fidSave{j} = strrep([pth filename],ext,frame_suffix);
+                strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],ext,frame_suffix);
             else
-                strtemp.io.annot.fidSave{j} = strrep([pth filename],ext,'.annot');
+                strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],ext,'.annot');
             end
-            strtemp.io.annot.fidSave{j} = strrep([pth filename],'.txt',frame_suffix);
+            strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],'.txt','.annot');
             
             atemp  = rmBlankChannels(atemp);
             fields = fieldnames(atemp);
