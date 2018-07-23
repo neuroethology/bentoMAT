@@ -20,6 +20,7 @@ end
 [~,i] = sort({files.name});
 files = files(i);
 
+% remove raw MARS output files (if not overridden)
 if(~exist('includeMARSOutput','var') || ~includeMARSOutput)
     drop = ~cellfun(@isempty,strfind({files.folder},'output_v1_')) ...
             & ~cellfun(@isempty,strfind({files.name},'actions_pred')) ...
