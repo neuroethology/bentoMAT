@@ -35,6 +35,5 @@ for i = 1:length(bhvList)
 end
 
 if(~isempty(inds)) %crop image for traces/tracker browsers
-    img             = img(1,inds,:);
     img(1,mask,:)   = permute(ones(sum(mask),3),[3 1 2]);
 end
