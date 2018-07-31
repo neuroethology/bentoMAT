@@ -1,5 +1,5 @@
-function MARSoptions(gui)%(source,~)
-%     gui     = guidata(source);
+function MARSoptions(source,~)
+    gui     = guidata(source);
     
     [flag,path_to_MARS] = BentoPyConfig(gui); %initialize python
     if(flag)

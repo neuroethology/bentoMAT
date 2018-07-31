@@ -3,7 +3,7 @@ function annotButtonHandler(source,~)
 
     switch source.Tag
         case 'add channel'
-            newStr   = addNewFieldPopup('Name of new channel:','');
+            newStr   = addNewFieldPopup('Name of new channel:',{''});
             gui      = addChannel(gui, newStr);
 
         case 'add behavior'
@@ -12,7 +12,7 @@ function annotButtonHandler(source,~)
                 gui     = addChannel(gui,newStr);
             end
             % now add the behavior itself
-            newStr   = addNewFieldPopup('Name of new annotation:','');
+            newStr   = addNewFieldPopup('Name of new annotation:',{''});
             gui      = addLabel(gui,newStr);
 
         case 'remove channel'
