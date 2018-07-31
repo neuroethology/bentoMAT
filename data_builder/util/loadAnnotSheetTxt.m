@@ -1,4 +1,4 @@
-function [annot,tmin,tmax] = loadAnnotSheetTxt(fname,tmin,tmax)
+function [annot,tmin,tmax,FR] = loadAnnotSheetTxt(fname,tmin,tmax)
 
 % in case a Bento user doesn't want to load all frames of the annotations,
 % we let Bento pass tmin/tmax values:
@@ -27,6 +27,12 @@ if(isnan(tmin))
     tmin = str2num(M{L}(25:end));
     L = find(~cellfun(@isempty,strfind(M,'Annotation stop frame:')));
     tmax = str2num(M{L}(24:end));
+    L = find(~cellfun(@isempty,strfind(M,'Annotation framerate:')));
+    if(~isempty(L))
+        FR = str2num(strtrim(M{L}(22:end)));
+    else
+        FR = nan;
+    end
 end
 
 % get the channel list/annotation list (starts at "list of channels"/

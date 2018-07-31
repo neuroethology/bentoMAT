@@ -8,6 +8,7 @@ if(~nargout)
             'units','normalized');  
 end
 
+bhvr = strrep(bhvr,'-','_');
 for i = 1:length(bhvr)
     clear prec rec;
     

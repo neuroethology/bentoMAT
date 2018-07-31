@@ -209,7 +209,7 @@ for i=1:size(data,1)
             fid = [pth strip(strip(data{i,match.Tracking},'left','.'),'left',filesep)];
             [~,~,ext] = fileparts(fid);
             if(strcmpi(ext,'.mat'))
-                temp = matfile(fid); %virtual load should be faster/more memory friendly
+                temp = load(fid); %virtual load should be faster/more memory friendly?
                 f = fieldnames(temp);
                 if(length(f)==2)
                     temp=temp.(f{2});
@@ -239,45 +239,20 @@ for i=1:size(data,1)
     if(enabled.audio(1))
         if(~isempty(data{i,match.Audio_file}))
             [~,~,ext] = fileparts(data{i,match.Audio_file});
-            strClass  = strip(strip(strrep(data{i,match.Audio_file},ext,'_classification.mat'),'left','.'),'left',filesep);
             strSpect  = strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep);
             
             fid             = [pth strip(strip(data{i,match.Audio_file},'left','.'),'left',filesep)];
-            [loadClass,loadSpect] = deal(0);
-            if(~isempty(strfind(fid,'classification.mat')))
-                loadClass   = 1;
-            elseif(~isempty(ls([pth strClass])))
-                loadClass   = 1;
-                fid         = [pth strClass];
-            elseif(~isempty(strfind(fid,'spectrogram.mat')))
+            loadSpect = 0;
+            if(~isempty(strfind(fid,'spectrogram.mat')))
                 loadSpect   = 1;
             elseif(~isempty(ls([pth strSpect])))
                 loadSpect   = 1;
                 fid         = [pth strSpect];
             end
             
-            if(loadClass)
-                disp('Loading spectrogram + classification...');
-                strtemp.audio       = load(fid);
-                y_final             = strtemp.audio.y_final;
-                strtemp.audio       = rmfield(strtemp.audio,'y_final');
-
-                strtemp.audio.f     = (60:200)*1000/2;
-                strtemp.audio.t     = strtemp.audio.ot;
-                strtemp.audio       = rmfield(strtemp.audio,'ot');
-                strtemp.audio.fs    = 400000; %replace missing field
-
-                dt      = ([-1 y_final(2:end) -1] - [-1 y_final(1:end-1) -1])/2;
-                start   = find(dt==1);
-                stop    = find(dt==-1);
-                strtemp.audio.annot = [start' stop'];
-                enabled.annot       = [1 1];
-                enabled.fineAnnot   = [1 0];
-                
-            elseif(loadSpect)
+            if(loadSpect)
                 disp('Loading spectrogram...');
                 strtemp.audio   = load(fid);
-                
             else
                 disp(['Processing file ' data{i,match.Audio_file}]);
                 disp('Reading audio...');
@@ -294,16 +269,13 @@ for i=1:size(data,1)
                 strtemp.audio.t   = t;
                 strtemp.audio.psd = psd;
                 strtemp.audio.fs  = fs;
-                
             end
             disp('Done!');
             
-            if(~loadClass)
-                strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
-                strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
-                strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
-                strtemp.audio.t   = strtemp.audio.t(2:2:end);
-            end
+            strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
+            strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
+            strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
+            strtemp.audio.t   = strtemp.audio.t(2:2:end);
             strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
             
 %             if(hasOffset)
@@ -334,7 +306,7 @@ for i=1:size(data,1)
             end
             suff = ['_file' num2str(j,'%02d') '_' str];
             
-            [atemp,tmax(j),tmin(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
+            [atemp,tmax(j),tmin(j),FR(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
             [~,~,ext] = fileparts(annoList{j});
             if(raw{1,9})
                 frame_suffix = ['_' num2str(tmax) '-' num2str(tmax) '.annot'];
@@ -350,20 +322,27 @@ for i=1:size(data,1)
                 strtemp.annot = struct();
             end
             for f = 1:length(fields)
-%                 strtemp.annot.([fields{f}]) = atemp.(fields{f});
-                strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
+                strtemp.annot.([fields{f}]) = atemp.(fields{f});
+%                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
         strtemp.annot   = orderfields(strtemp.annot);
         tmin = min(tmin);
         tmax = max(tmax);
+        FR   = FR(1);
         
         if(isnan(tmax))
             tmin = strtemp.io.movie.tmin;
             tmax = strtemp.io.movie.tmax;
         end
+        if(isnan(FR))
+            FR   = strtemp.annoFR;
+        else
+            strtemp.annoFR = FR; %if annotation file provided a framerate, trust that over the user
+        end
         strtemp.io.annot.tmin = tmin;
         strtemp.io.annot.tmax = tmax;
+        strtemp.io.annot.FR   = strtemp.annoFR;
         strtemp.annoTime = (1:(tmax-tmin))/strtemp.annoFR;
 
         

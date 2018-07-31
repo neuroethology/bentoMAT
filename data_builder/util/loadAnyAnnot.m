@@ -1,4 +1,4 @@
-function [annotations,tmax,tmin,fid,hotkeys] = loadAnyAnnot(filename,tmin,tmax)
+function [annotations,tmax,tmin,FR,fid,hotkeys] = loadAnyAnnot(filename,tmin,tmax)
 
 [~,~,ext] = fileparts(filename);
 loadRange = exist('tmin','var');
@@ -13,14 +13,15 @@ switch ext
         [annotations,tmax] = loadAnnotSheet(filename);
         tmin = 1;
     end
+    FR = nan; %framerate not specified in file- trust user input to gui
     
     case '.annot' %new .annot format
     fid = filename;
     if(loadRange)
-        [annotations,~] = loadAnnotSheetTxt(filename,tmin,tmax);
+        [annotations,~,~,FR] = loadAnnotSheetTxt(filename,tmin,tmax);
     else
         try
-        [annotations,tmin,tmax] = loadAnnotSheetTxt(filename);
+        [annotations,tmin,tmax,FR] = loadAnnotSheetTxt(filename);
         catch
             keyboard
         end
@@ -42,6 +43,7 @@ switch ext
         [annotations,tmax,hotkeys] = loadAnnotFile(filename);
         tmin = 1;
     end
+    FR = nan; %framerate not specified in file- trust user input to gui
     otherwise
         [annotations,tmax,tmin,fid,hotkeys] = deal([]);
 end

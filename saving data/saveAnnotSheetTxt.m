@@ -1,8 +1,9 @@
-function saveAnnotSheetTxt(movieNames,trial,suggestedName)
+function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName)
 
 fid     = trial.io.annot.fid{:};
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
+FR      = trial.io.annot.FR;
 
 %always prompt the save path?
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
@@ -12,13 +13,12 @@ if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'
         suggestedName = [pwd filesep 'annotations'];
     end
     [fname,pth] = uiputfile(suggestedName);
-    fid = [pth fname];
 else
     [fname,pth] = uiputfile(fid);
-    fid = [pth fname];
 end
+filename = [pth fname];
 
-fid = fopen(fid,'w');
+fid = fopen(filename,'w');
 % write metadata-----------------------------------------------------------
 fprintf(fid,'%s\n','Tracergui annotation file');
 if(~isempty(movieNames))
@@ -34,6 +34,7 @@ fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',trial.stim);
 fprintf(fid,'%s %d\n','Annotation start frame:',tmin);
 fprintf(fid,'%s %d\n','Annotation stop frame:',tmax);
+fprintf(fid,'%s %d\n','Annotation framerate:',FR);
 
 fprintf(fid,'\n%s\n','List of channels:');
 channels = fieldnames(trial.annot);

@@ -9,10 +9,13 @@ end
 h           = guidata(source);
 doTrain     = strcmpi(source.Tag,'train');
 doTest      = strcmpi(source.Tag,'test') | h.evalTrain.Value;
+doSubs      = h.doSubs.Value;
 doPrecRec   = 0;
+frame_start = 0;
+frame_stop  = 0;
 
 if(doTrain)
-    set(h.h1Train,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
+    set(h.doTrain,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
                     '\spinner.gif" width=40 height=40><br>Training classifier...</div></html>']);
     drawnow;
     
@@ -25,13 +28,32 @@ if(doTrain)
     for i=1:length(trials)
         vals(i,:)    = sscanf(trials{i},'mouse %d, session %d, trial %d');
     end
-    tic
-    [movies,feat,annot,front] = makePythonStructs(gui,vals,1);
-    py.mars_cmd_train.train_classifier(behavior,feat,annot,movies,false,[],false,[],...                          
-        pyargs('front_pose_files',front,'model_str',[path_to_MARS model_dir],'model_type',model_type) );
-    toc
     
-    set(h.h1Train,'String','Train MARS');
+    if(doSubs)
+        mask.Ch = h.maskChannel.String{h.maskChannel.Value};
+        mask.beh = h.maskLabel.String{h.maskLabel.Value};
+    else
+        mask = [];
+    end
+    
+    % this part actually does the training!--------------------------------
+    tic
+    try
+    [movies,feat,annot,front,frame_start,frame_stop] = makePythonStructs(gui,vals,1,mask);
+    py.mars_cmd_train.train_classifier(behavior,feat,annot,movies,false,[],false,[],...                          
+        pyargs('front_pose_files',front,'model_str',[path_to_MARS model_dir],...
+               'model_type',model_type,'frame_start',frame_start,'frame_stop',frame_stop,...
+               'useChannel',h.chsTrain.String{h.chsTrain.Value}));
+    catch
+        set(h.doTrain,'String','Train MARS');
+        msgbox('Training failed to converge- more examples needed.');
+        return;
+    end
+    toc
+    % ---------------------------------------------------------------------
+    
+    
+    set(h.doTrain,'String','Train MARS');
     bhvr = strrep(bhvr,'_','-');
     if(any(strcmpi(h.bhvrsTest.String,[bhvr '_' model_type '*'])))
         newBhvStrs = [{[bhvr '_' model_type '*']}; setdiff(h.bhvrsTest.String,[bhvr '_' model_type '*'])];
@@ -74,7 +96,7 @@ if(doTest)
                 ['Classifying movie ' num2str(i) '/' num2str(length(trials)) '...']);
 
         vals = sscanf(trials{i},'mouse %d, session %d, trial %d')';
-        [movie,feat,front] = makePythonStructs(gui,vals,0);
+        [movie,feat,front] = makePythonStructs(gui,vals,0,[]);
 
         for g = unique(groups)
             behavior    = py.list(strrep(bhvrs(groups==g),'_','-')');

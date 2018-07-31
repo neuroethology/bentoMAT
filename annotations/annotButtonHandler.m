@@ -3,7 +3,7 @@ function annotButtonHandler(source,~)
 
     switch source.Tag
         case 'add channel'
-            newStr   = addNewFieldPopup('Name of new channel:');
+            newStr   = addNewFieldPopup('Name of new channel:','');
             gui      = addChannel(gui, newStr);
 
         case 'add behavior'
@@ -12,16 +12,23 @@ function annotButtonHandler(source,~)
                 gui     = addChannel(gui,newStr);
             end
             % now add the behavior itself
-            newStr   = addNewFieldPopup('Name of new annotation:');
+            newStr   = addNewFieldPopup('Name of new annotation:','');
             gui      = addLabel(gui,newStr);
 
         case 'remove channel'
-            toDelete = removeFieldPopup(gui,'channel');
+            toDelete = removeFieldPopup(gui,'channel','delete');
             gui      = rmChannel(gui,toDelete);
             
         case 'remove behavior'
-            toDelete = removeFieldPopup(gui,'behavior');
+            toDelete = removeFieldPopup(gui,'behavior','delete');
             gui      = rmLabel(gui,toDelete);
+            
+        case 'copy channel'
+            toCopy = removeFieldPopup(gui,'channel','copy');
+            for i=1:length(toCopy)
+                newStr = addNewFieldPopup(['New name for ' toCopy{i} ':'],{[toCopy{i} '_2']});
+                gui     = copyChannel(gui,toCopy{i},newStr);
+            end
             
     end
 
@@ -37,8 +44,8 @@ function annotButtonHandler(source,~)
     updatePlot(gui.h0,[]);
 end
 
-function newStr = addNewFieldPopup(prompt)
-    newStr  = inputdlg(prompt);
+function newStr = addNewFieldPopup(prompt,default)
+    newStr  = inputdlg(prompt,'',1,default);
     if(isempty(newStr))
         return;
     end
@@ -52,7 +59,7 @@ function newStr = addNewFieldPopup(prompt)
     end
 end
 
-function toDelete = removeFieldPopup(gui,fieldname)
+function toDelete = removeFieldPopup(gui,fieldname,action)
     switch fieldname
         case 'channel'
             labels  = gui.annot.channels;
@@ -60,7 +67,7 @@ function toDelete = removeFieldPopup(gui,fieldname)
             labels  = fieldnames(gui.annot.bhv);
     end
 
-    prompt = [fieldname ' to delete:'];
+    prompt = [fieldname ' to ' action ':'];
     toDelete = listdlg('PromptString',prompt,'ListString',labels);
     toDelete = labels(toDelete);
 end

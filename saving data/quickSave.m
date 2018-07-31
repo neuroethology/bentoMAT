@@ -10,12 +10,14 @@ gui.allData(m).(sess)(tr).annot = gui.data.annot;
 trial = gui.allData(m).(sess)(tr);
 
 suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(tr,'%03d') '.annot'];
-if(isfield(trial.io.movie,'fid'))
-    saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName); %save the file too
+if(isfield(trial.io.movie,'fid')) %save the file too
+    fname = saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName);
 else
-    saveAnnotSheetTxt([],gui.data,suggestedName);
+    fname = saveAnnotSheetTxt([],gui.data,suggestedName);
 end
     
 gui.annot.modified = 0;
+gui.allData(m).(sess)(tr).io.annot.fid = {fname}; %update the metadata
+gui.data.io.annot.fid = {fname};
 
 guidata(source,gui);
