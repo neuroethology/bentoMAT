@@ -18,6 +18,7 @@ function annotButtonHandler(source,~)
         case 'remove channel'
             toDelete = removeFieldPopup(gui,'channel','delete');
             gui      = rmChannel(gui,toDelete);
+            gui.ctrl.annot.ch.Value = 1;
             
         case 'remove behavior'
             toDelete = removeFieldPopup(gui,'behavior','delete');
