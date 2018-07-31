@@ -1,4 +1,13 @@
-function [M,matches] = reconcileSheetFormats(gui,raw,fset)
+function [M,matches,fields] = reconcileSheetFormats(gui,raw)
+
+fieldset = raw(2,:); % list of data fields in the excel sheet
+fields = struct();
+for i=1:length(fieldset)
+    str = strrep(fieldset{i},' ','_');
+    str = strrep(str,'_#','');
+    fields.(str) = i;
+end
+fset = fieldnames(fields);
 
 if(~isempty(gui))
     matchset = get(gui.t,'columnname');

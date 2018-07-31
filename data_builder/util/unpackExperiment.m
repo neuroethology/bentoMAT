@@ -12,7 +12,7 @@ for i = 3:size(raw,1)
     raw(i,inds(find(mask))) = {[]};
 end
 
-%OS compatibility:
+%OS compatibility for file paths:
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 pth = raw{1,1};
@@ -24,11 +24,7 @@ if(pth(end)~=filesep)
     end
 end
 
-fieldset = raw(2,:);
-fieldset = fieldset(cellfun(@ischar,fieldset));
-fieldset = strrep(fieldset,' ','_');
-fieldset = strrep(fieldset,'_#','');
-[data,match] = reconcileSheetFormats([],raw,fieldset);
+[data,match,~] = reconcileSheetFormats([],raw);
 hotkeys = struct();
 
 if(isnumeric(raw{1,3})&&~isnan(raw{1,3})) %if there's a common Ca framerate

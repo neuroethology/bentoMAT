@@ -5,25 +5,22 @@ else
     useSource = source.Parent;
 end
 
-[~,~,raw] = xlsread(pth,'Sheet1');
+[~,~,raw] = xlsread(pth,'Sheet1'); %load the excel sheet
+
+% fix nans/filename formatting issues
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 raw(cell2mat(cellfun(@(x) all(isnan(x)),raw,'uniformoutput',false))) = {''};
 
-set(gui.root,'String',raw{1,1}); %parent directory
+set(gui.root,'String',raw{1,1}); %get the parent directory
 parent.pth = raw{1,1}; guidata(parent.h0,parent); %save parent directory in main bento gui also
 
-fieldset = raw(2,:); % list of data fields in the excel sheet
-fields = struct();
-for i=1:length(fieldset)
-    str = strrep(fieldset{i},' ','_');
-    str = strrep(str,'_#','');
-    fields.(str) = i;
-end
-[M,matchInds] = reconcileSheetFormats(gui,raw,fieldnames(fields));
+[M,matchInds,fields] = reconcileSheetFormats(gui,raw); %populate the table
 gui.t.Data = M;
-raw{1,20}='';
 
+raw{1,20}=''; %pad raw in case we're loading from an old sheet that doesn't have as many columns
+
+% set the values of various checkboxes/toggles
 if(any(~cellfun(@isempty,M(:,matchInds.FR_Ca))))
     set(gui.CaFRtog,'Value',1);
     set(gui.CaFR,'Enable','off');
