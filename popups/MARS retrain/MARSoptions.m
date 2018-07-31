@@ -1,5 +1,5 @@
-function MARSoptions(source,~)
-    gui     = guidata(source);
+function MARSoptions(gui)%(source,~)
+%     gui     = guidata(source);
     
     [flag,path_to_MARS] = BentoPyConfig(gui); %initialize python
     if(flag)
@@ -23,12 +23,8 @@ function MARSoptions(source,~)
                        { ', trial '}, num2str(gui.allPopulated(:,3)));
     trialList = strcat(trialList,stims');
     
-    classifier_list         = ls([path_to_MARS 'Bento_temp/']);
-    classifier_list(1:2,:)  = [];
-    classifier_list = strrep(cellstr(classifier_list),'.dill','*');
-    temp        = ls([path_to_MARS 'Bento/']);
-    temp(1:2,:) = [];
-    classifier_list = [classifier_list; strrep(cellstr(temp),'.dill','')];
+    h.pth = path_to_MARS;
+    classifier_list = getClfList(path_to_MARS);
 
     close(figure(9876));
     hfig = figure(9876);clf;
@@ -95,6 +91,14 @@ function MARSoptions(source,~)
         'position',[.725 .575 .225 .3],'backgroundcolor',[1 .75 .85],...
         'string','Run MARS','tag','test','callback',{@callMARS,gui});
     
+    uicontrol('parent',h.Test,'style','pushbutton',style{:},...
+        'position',[.75 .325 .175 .2],'backgroundcolor',[.9 .9 .9],...
+        'string','Save classifier','tag','test','callback',@saveClf);
+    
+    uicontrol('parent',h.Test,'style','pushbutton',style{:},...
+        'position',[.75 .1 .175 .2],'backgroundcolor',[.9 .9 .9],...
+        'string','Delete classifier','tag','test','callback',@deleteClf);
+    
     h.h2Test = uipanel('parent',h.Test,style{:},'position',[.025 .055 .7 .95],...
             'bordertype','none','title','New Testing data',...
             'fontangle','italic','foregroundcolor',[.5 .5 .5]);
@@ -148,3 +152,81 @@ function updateMaskBehaviorOptions(source,~,gui)
     h.maskLabel.Value = 1;
     h.maskLabel.String = fieldnames(gui.data.annot.(ch));
 end
+
+function classifier_list = getClfList(path_to_MARS)
+    classifier_list         = ls([path_to_MARS 'Bento_temp/']);
+    classifier_list(1:2,:)  = [];
+    classifier_list = strrep(cellstr(classifier_list),'.dill','*');
+    temp        = ls([path_to_MARS 'Bento/']);
+    temp(1:2,:) = [];
+    classifier_list = [classifier_list; strrep(cellstr(temp),'.dill','')];
+end
+
+function saveClf(source,~)
+    h = guidata(source);
+
+    oldName = h.bhvrsTest.String{h.bhvrsTest.Value};
+    if(~isempty(strfind(oldName,'*')))
+        clfPth = [h.pth 'Bento_temp/' strrep(oldName,'*','.dill')];
+    else
+        clfPth = [h.pth 'Bento/' oldName '.dill'];
+    end
+    [~,clfName] = fileparts(clfPth);
+    
+    newName = inputdlg('Name saved classifier:','',1,{clfName});
+    newName = newName{1};
+    newName(ismember(newName,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
+    if(isempty(newName))
+        return;
+    end
+    if(exist([h.pth 'Bento/' newName]))
+        str = questdlg(['Okay to overwrite existing classifier ' newName '?'],'','Yes','No','Yes');
+        if(strcmpi(str,'No'))
+            return;
+        end
+    end
+    
+    copyfile(clfPth,[h.pth 'Bento/' newName '.dill']);
+    h.bhvrsTest.String = getClfList(h.pth);
+end
+
+function deleteClf(source,~)
+    h = guidata(source);
+    if(length(h.bhvrsTest.Value)==1)
+        rawName = h.bhvrsTest.String{h.bhvrsTest.Value};
+        delStr = ['Okay to delete ' rawName '?'];
+    else
+        delStr = ['Okay to delete these ' num2str(length(h.bhvrsTest.Value)) ' classifiers?'];
+    end
+    
+    for i=1:length(h.bhvrsTest.Value)
+        
+        rawName = h.bhvrsTest.String{h.bhvrsTest.Value(i)};
+        
+        if(~isempty(strfind(rawName,'*')))
+            clfPth = [h.pth 'Bento_temp/' strrep(rawName,'*','.dill')];
+        else
+            clfPth = [h.pth 'Bento/' rawName '.dill'];
+        end
+        [~,clfName] = fileparts(clfPth);
+
+        if(i==1)
+            str = questdlg(delStr,'','Yes','No','Yes');
+            if(strcmpi(str,'No'))
+                return;
+            end
+        end
+
+        delete(clfPth);
+    end
+    h.bhvrsTest.String = getClfList(h.pth);
+    h.bhvrsTest.Value = 1;
+end
+
+
+
+
+
+
+
+
