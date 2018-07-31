@@ -302,7 +302,11 @@ for i=1:size(data,1)
             end
             suff = ['_file' num2str(j,'%02d') '_' str];
             
-            [atemp,tmax(j),tmin(j),FR(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
+            if(raw{1,9})
+                [atemp,tmax(j),tmin(j),FR(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+            else
+                [atemp,tmax(j),tmin(j),FR(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
+            end
             [~,~,ext] = fileparts(annoList{j});
             if(raw{1,9})
                 frame_suffix = ['_' num2str(tmax) '-' num2str(tmax) '.annot'];

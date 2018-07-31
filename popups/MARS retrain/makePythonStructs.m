@@ -1,10 +1,10 @@
-function [movies,feat,annot,front,frame_start,frame_stop] = makePythonStructs(gui,vals,doAnnot,mask)
+function [movies,feat,annot,front,frame_start,frame_stop] = makePythonStructs(allData,vals,doAnnot,mask)
 
 for i=1:size(vals,1)
-    data    = gui.allData(vals(i,1)).(['session' num2str(vals(i,2))])(vals(i,3));
+    data    = allData(vals(i,1)).(['session' num2str(vals(i,2))])(vals(i,3));
 
     % get movie filename
-    if(gui.enabled.movie(1))
+    if(~isempty(data.io.movie))
         ind         = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Top')),1);
         ind2        = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Front')),1);
         movies{1,i}  = data.io.movie.fid(ind);

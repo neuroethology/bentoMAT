@@ -1,4 +1,4 @@
-function [flag,path_to_MARS] = BentoPyConfig(gui)
+function [flag,path_to_MARS,config] = BentoPyConfig(config)
 
 flag=0;
 [~, ~, isloaded] = pyversion; %get python up and running if it's not already
@@ -12,16 +12,15 @@ py.multiprocessing.set_executable(exe); % protect against multiprocessing madnes
 
 
 % add an option to set the MARS path in the future
-if(isempty(gui.config.path_to_MARS))
+if(isempty(config.path_to_MARS))
     path_to_MARS = uigetdir('Please provide path to the MARS_train_infer directory');
     if(~path_to_MARS)
         flag=1;
         return;
     end
-    gui.config.path_to_MARS = path_to_MARS;
-    guidata(gui.h0,gui);
+    config.path_to_MARS = path_to_MARS;
 else
-    path_to_MARS = gui.config.path_to_MARS;
+    path_to_MARS = config.path_to_MARS;
 end
 
 if(count(py.sys.path,path_to_MARS)==0)

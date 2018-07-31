@@ -1,10 +1,11 @@
 function callMARS(source,~,gui)
 
-[flag,path_to_MARS] = BentoPyConfig(gui); %initialize python
+[flag,path_to_MARS,config] = BentoPyConfig(gui); %initialize python
 if(flag)
     msgbox('Unable to set up MARS.');
     return;
 end
+gui.config = config; guidata(gui.h0,gui);
 
 h           = guidata(source);
 doTrain     = strcmpi(source.Tag,'train');
@@ -39,7 +40,7 @@ if(doTrain)
     % this part actually does the training!--------------------------------
     tic
     try
-    [movies,feat,annot,front,frame_start,frame_stop] = makePythonStructs(gui,vals,1,mask);
+    [movies,feat,annot,front,frame_start,frame_stop] = makePythonStructs(gui.allData,vals,1,mask);
     py.mars_cmd_train.train_classifier(behavior,feat,annot,movies,false,[],false,[],...                          
         pyargs('front_pose_files',front,'model_str',[path_to_MARS model_dir],...
                'model_type',model_type,'frame_start',frame_start,'frame_stop',frame_stop,...
@@ -96,7 +97,7 @@ if(doTest)
                 ['Classifying movie ' num2str(i) '/' num2str(length(trials)) '...']);
 
         vals = sscanf(trials{i},'mouse %d, session %d, trial %d')';
-        [movie,feat,front] = makePythonStructs(gui,vals,0,[]);
+        [movie,feat,front] = makePythonStructs(gui.allData,vals,0,[]);
 
         for g = unique(groups)
             behavior    = py.list(strrep(bhvrs(groups==g),'_','-')');

@@ -1,4 +1,4 @@
-function data = getFileListFromSheet(pth)
+function [data,populated] = getAllFilesFromSheet(pth)
 
 [~,~,raw] = xlsread(pth,'Sheet1'); %load the excel sheet
 
@@ -16,15 +16,18 @@ end
 [dataTable,matches,~] = reconcileSheetFormats([],raw);
 
 for i=1:size(dataTable,1)
-    dat = dataTable(i,:);
-    m       = dat{1};
-    sess    = ['session' num2str(dat{2})];
-    tr      = dat{3};
+    dat  = dataTable(i,:);
+    populated(i,:) = [dat{1:3}];
+    
+    m    = dat{1};
+    sess = ['session' num2str(dat{2})];
+    tr   = dat{3};
+    
     temp = struct();
     
-    temp.annots = strcat(pth,strsplit(dat{matches.Annotation_file},';'));
-    temp.movies = strcat(pth,strsplit(dat{matches.Behavior_movie},';'));
-    temp.feats  = strcat(pth,strsplit(dat{matches.Tracking},';'));
+    temp.io.annot.fid = strcat(pth,strsplit(dat{matches.Annotation_file},';'));
+    temp.io.movie.fid = strcat(pth,strsplit(dat{matches.Behavior_movie},';'));
+    temp.io.feat.fid  = strcat(pth,strsplit(dat{matches.Tracking},';'));
     
     data(m).(sess)(tr) = temp;
 end

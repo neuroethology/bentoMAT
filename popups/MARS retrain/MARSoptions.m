@@ -1,11 +1,12 @@
 function MARSoptions(source,~)
     gui     = guidata(source);
     
-    [flag,path_to_MARS] = BentoPyConfig(gui); %initialize python
+    [flag,path_to_MARS,config] = BentoPyConfig(gui); %initialize python
     if(flag)
         msgbox('Unable to configure MARS successfully.');
         return;
     end
+    gui.config = config; guidata(gui.h0,gui);
 
     stims   = {};
     for i=1:size(gui.allPopulated,1)
@@ -80,7 +81,7 @@ function MARSoptions(source,~)
             'bordertype','none','foregroundcolor',[.5 .5 .5],'visible','off');
     uicontrol('parent',h.h5Train,style{:},'style','text','position',[0 .7 1 .3],...
             'string','Initialize from classifier:','horizontalalign','left');
-    h.maskChannel = uicontrol('parent',h.h5Train,style{:},'style','popupmenu','position',[0.05 .3625 .95 .3],...
+    h.warmStart = uicontrol('parent',h.h5Train,style{:},'style','popupmenu','position',[0.05 .3625 .95 .3],...
             'string',classifier_list);
         
         
