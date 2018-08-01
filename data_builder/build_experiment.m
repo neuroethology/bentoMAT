@@ -8,11 +8,15 @@ function exptGui = build_experiment(source,~)
 %   - Audio data, audio log file/timestamp, framerate
 %   - Tracking data, tracking data format
 
-gui = guidata(source);
-if(isfield(gui,'pth'))
-    pth = gui.pth;
+if(exist('source','var'))
+    gui = guidata(source);
+    if(isfield(gui,'pth'))
+        pth = gui.pth;
+    else
+        pth = pwd;
+    end
 else
-    pth = pwd;
+    pth = pwd;gui=[];
 end
 
 fillin = {'units','normalized','fontsize',11};
