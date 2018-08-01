@@ -15,7 +15,7 @@ for i=1:size(vals,1)
     end
 
     % get features filename
-    feat{1,i}       = data.io.feat.fid{ind};
+    feat{1,i}       = data.io.feat.fid{1};
 
     % get annotations filename
     if(doAnnot)
@@ -25,8 +25,8 @@ for i=1:size(vals,1)
     end
 
     % get front-features filename
-    if(length(data.io.feat.fid)>=ind2)
-        front{1,i}  = data.io.feat.fid{ind2};
+    if(length(data.io.feat.fid)>1)
+        front{1,i}  = data.io.feat.fid{1};
     else
         front{1,i}  = '';
     end
