@@ -24,20 +24,10 @@ if(~exist('clfName','var'))
     clfName = [clfPath clfName];
 end
 
-[movie,feat,front] = makePythonStructs(data,populated,0,[]);
-
-for g = unique(groups)
-    behavior    = py.list(strrep(bhvrs(groups==g),'_','-')');
-    model_type  = strrep(modelTypes{g},'*','');
-    if(strfind(modelTypes{g},'*'))
-        model_dir = 'Bento_temp';
-    else
-        model_dir = 'Bento';
-    end
-    py.mars_cmd_test.test_classifier(behavior,feat,movie,...
-        pyargs('front_pose_files',front,'model_str',[path_to_MARS model_dir],...
-        'output_suffix',model_type,'save_probabilities', 1) );
-end
+[movie,feat] = makePythonStructs(data,populated,0,[]);
+disp('running classifier(s)...');
+py.mars_cmd_test.run_classifier(py.list({clfName}),feat,movie);
+disp('done!');
 
 
 

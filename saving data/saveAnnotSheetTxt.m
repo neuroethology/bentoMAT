@@ -20,7 +20,7 @@ filename = [pth fname];
 
 fid = fopen(filename,'w');
 % write metadata-----------------------------------------------------------
-fprintf(fid,'%s\n','Tracergui annotation file');
+fprintf(fid,'%s\n','Bento annotation file');
 if(~isempty(movieNames))
     nmov = length({movieNames{:}});
     fstr = '%s ';
