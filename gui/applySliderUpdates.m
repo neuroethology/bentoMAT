@@ -22,7 +22,9 @@ switch type
         minVal  = 0;
         maxVal  = info.audio.t(1,end);
         Fr      = 1/(info.audio.t(1,2)-info.audio.t(1,1));
-    otherwise
+    otherwise % annotations really shouldn't be the last choice- it should 
+              % override all other fields for setting the slider bounds,
+              % since annotations are what's displayed on the slider.
         Fr      = info.annoFR;
         minVal  = 0;
         maxVal  = info.annoTime(end) - info.annoTime(1);

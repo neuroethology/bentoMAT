@@ -12,8 +12,6 @@ doTrain     = strcmpi(source.Tag,'train');
 doTest      = strcmpi(source.Tag,'test') | h.evalTrain.Value;
 doSubs      = h.doSubs.Value;
 doPrecRec   = 0;
-frame_start = 0;
-frame_stop  = 0;
 
 if(doTrain)
     set(h.doTrain,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...

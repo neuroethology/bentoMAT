@@ -25,6 +25,7 @@ info        = gui.data.info;
 gui.allData(info.mouse).(info.session)(info.trial) = ...
     changeAnnoFR(gui.allData(info.mouse).(info.session)(info.trial),newFR);
 
+guidata(gui.h0,gui);
 if(gui.enabled.annot(1)) %i should hope it is
     gui = transferAnnot(gui,gui.data);
 end
@@ -44,11 +45,11 @@ function data = changeAnnoFR(data,newFR)
     % scale start/stop time of all behavior bouts
     for ch = fieldnames(data.annot)'
         for bhv = fieldnames(data.annot.(ch{:}))'
-
             data.annot.(ch{:}).(bhv{:}) = round(data.annot.(ch{:}).(bhv{:})*sc);
-
         end
     end
     % update the annot file FR
     data.io.annot.FR = newFR;
+    data.io.annot.tmax = round(data.io.annot.tmax*sc);
+    data.annoFR = newFR;
 end

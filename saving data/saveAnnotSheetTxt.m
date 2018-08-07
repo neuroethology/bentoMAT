@@ -34,7 +34,7 @@ fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',trial.stim);
 fprintf(fid,'%s %d\n','Annotation start frame:',tmin);
 fprintf(fid,'%s %d\n','Annotation stop frame:',tmax);
-fprintf(fid,'%s %d\n','Annotation framerate:',FR);
+fprintf(fid,'%s %f\n','Annotation framerate:',FR);
 
 fprintf(fid,'\n%s\n','List of channels:');
 channels = fieldnames(trial.annot);

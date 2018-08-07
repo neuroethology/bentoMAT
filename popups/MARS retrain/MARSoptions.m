@@ -1,7 +1,7 @@
 function MARSoptions(source,~)
     gui     = guidata(source);
     
-    [flag,path_to_MARS,config] = BentoPyConfig(gui); %initialize python
+    [flag,path_to_MARS,config] = BentoPyConfig(gui.config); %initialize python
     if(flag)
         msgbox('Unable to configure MARS successfully.');
         return;
