@@ -29,5 +29,17 @@ for i=1:size(dataTable,1)
     temp.io.movie.fid = strcat(pth,strsplit(dat{matches.Behavior_movie},';'));
     temp.io.feat.fid  = strcat(pth,strsplit(dat{matches.Tracking},';'));
     
+    for fid = 1:length(temp.io.annot.fid)
+        atemp = loadAnyAnnot(temp.io.annot.fid{fid});
+        fields = fieldnames(atemp);
+        if(fid==1)
+            temp.annot = atemp;
+        else
+            for f = 1:length(fields)
+                temp.annot.([fields{f} '_file' num2str(f)]) = atemp.(fields{f});
+            end
+        end
+    end
+    
     data(m).(sess)(tr) = temp;
 end

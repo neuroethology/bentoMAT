@@ -9,4 +9,4 @@ config.ctrl = {'slider','track','annot','expt'};
 config.ctrlSc.spectrogram = 3; % lets you allocate extra space for a control bar
 
 
-config.path_to_MARS = 'C:/users/ann/desktop/research/SFARI_MARS/MARS_train_infer/';
+config.path_to_MARS = 'C:\Users\Ann\Documents\GitHub\MARS-train-infer\';

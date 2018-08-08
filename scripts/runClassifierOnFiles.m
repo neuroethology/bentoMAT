@@ -8,7 +8,7 @@ if(flag)
 end
 
 if(~exist('loader','var') || isempty(strfind(loader,'xls')))
-    [loader, pth] = uigetfile({'*.xls';'*.xlsx'},'Pick a Bento loader');
+    [loader, pth] = uigetfile({'*.xls';'*.xlsx'},'Pick a Bento spreadsheet');
     if(~loader)
         return;
     end
@@ -17,7 +17,7 @@ end
 [data,populated] = getAllFilesFromSheet(loader);
 
 if(~exist('clfName','var'))
-    [clfName,clfPath] = uigetfile([path_to_MARS 'Bento\*.dill'],'multiSelect','on');
+    [clfName,clfPath] = uigetfile([path_to_MARS 'Bento\*.dill'],'Pick one or more classifiers','multiSelect','on');
     if(~clfName)
         return;
     end

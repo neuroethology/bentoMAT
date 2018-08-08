@@ -26,15 +26,29 @@ for i=1:size(vals,1)
 
     % get front-features filename
     if(length(data.io.feat.fid)>1)
-        front{1,i}  = data.io.feat.fid{1};
+        front{1,i}  = data.io.feat.fid{2};
     else
         front{1,i}  = '';
     end
     
-    % get start/stop frames if channel exists
-    if(~isempty(mask))
-        frame_start{i} = py.list(mat2cell(int32(data.annot.(mask.Ch).(mask.beh)(:,1)),ones(length(data.annot.(mask.Ch).(mask.beh)(:,1)),1))');
-        frame_stop{i}  = py.list(mat2cell(int32(data.annot.(mask.Ch).(mask.beh)(:,2)),ones(length(data.annot.(mask.Ch).(mask.beh)(:,2)),1))');
+    % get start/stop frames if mask behaviors/channels were passed
+    if(~isempty(mask) && ~isempty(mask.Ch))
+        if(ischar(mask.Ch))
+            start = data.annot.(mask.Ch).(mask.beh)(:,1);
+            stop  = data.annot.(mask.Ch).(mask.beh)(:,2);
+        else
+            bouts=[];
+            for ch=1:length(mask.Ch)
+                for b = 1:length(mask.beh)
+                    if(~isfield(data.annot.(mask.Ch{ch}),mask.beh{b})), continue; end
+                    bouts = [bouts; data.annot.(mask.Ch{ch}).(mask.beh{b})];
+                end
+            end
+            bouts = convertToBouts(convertToRast(bouts,bouts(end,2)+1));
+            start = bouts(:,1); stop = bouts(:,2);
+        end
+        frame_start{i} = py.list(mat2cell(int32(start),ones(length(start),1))');
+        frame_stop{i} = py.list(mat2cell(int32(stop),ones(length(stop),1))');
     else
         frame_start{i} = 0;
         frame_stop{i}  = 0;
