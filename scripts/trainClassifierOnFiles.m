@@ -1,6 +1,7 @@
 function trainClassifierOnFiles(loader,behaviorMap)
     config  = loadConfig();
     [flag,path_to_MARS] = BentoPyConfig(config); %initialize python
+    py.sys.setdlopenflags(int32(10));
     if(flag)
         msgbox('Unable to set up MARS.');
         return;
@@ -40,7 +41,7 @@ function trainClassifierOnFiles(loader,behaviorMap)
                    'model_type','mlp','frame_start',frame_start,'frame_stop',frame_stop,...
                    'useChannel',chList,'behavior_dict',behaviorMap));
     disp('done! Your trained classifier(s) can be found under:');
-    disp(['    ' path_to_MARS 'Bento/' suggestedName{1} '*.dill']);
+    disp(['    ' path_to_MARS 'Bento/' suggestedName '*.dill']);
 end
 
 function [behaviorList,chList] = makePythonDict(behaviorList)

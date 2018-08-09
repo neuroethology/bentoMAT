@@ -1,6 +1,7 @@
 function [data,populated] = getAllFilesFromSheet(pth)
 
-[~,~,raw] = xlsread(pth,'Sheet1'); %load the excel sheet
+[~,sheets] = xlsfinfo(pth);
+[~,~,raw] = xlsread(pth,sheets{1}); %load the excel sheet
 
 % fix nans/filename formatting issues
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);

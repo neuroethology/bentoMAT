@@ -248,7 +248,7 @@ for i=1:size(data,1)
             
             if(loadSpect)
                 disp('Loading spectrogram...');
-                strtemp.audio   = load(fid);
+                strtemp.audio   = matfile(fid,'Writable',true);
             else
                 disp(['Processing file ' data{i,match.Audio_file}]);
                 disp('Reading audio...');
@@ -268,11 +268,11 @@ for i=1:size(data,1)
             end
             disp('Done!');
             
-            strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
-            strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
-            strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
-            strtemp.audio.t   = strtemp.audio.t(2:2:end);
-            strtemp.audio.FR  = 1/(strtemp.audio.t(2)-strtemp.audio.t(1));
+%             strtemp.audio.psd = imresize(strtemp.audio.psd,0.5);
+%             strtemp.audio.psd = strtemp.audio.psd(2:end-1,:);
+%             strtemp.audio.f   = strtemp.audio.f(3:2:end-1);
+%             strtemp.audio.t   = strtemp.audio.t(2:2:end);
+            strtemp.audio.FR  = 1/(strtemp.audio.t(1,2)-strtemp.audio.t(1,1));
             
 %             if(hasOffset)
 %                 strtemp.audio.t  = strtemp.audio.t + offset;

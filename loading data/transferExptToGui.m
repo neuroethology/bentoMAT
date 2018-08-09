@@ -29,7 +29,7 @@ guidata(gui.h0,gui); % just in case it crashes after this
 % set the active mouse/session/trial
 sessList    = cellstr(num2str(unique(gui.allPopulated(use,2))));
 trialList   = strtrim(cellstr(num2str(unique(gui.allPopulated(use,3)))));
-gui         = setActiveMouse(gui,mouseList(1),['session' sessList{1}],1,1);
+gui         = setActiveMouse(gui,mouseList(1),['session' sessList{1}],str2num(trialList{1}),1);
 
 % update the control bar that lets us browse through mice, sesions, and
 % trials:

@@ -49,6 +49,7 @@ function data = changeAnnoFR(data,newFR)
         end
     end
     % update the annot file FR
+    data.io.annot.tmax = ceil(data.io.annot.tmax*sc);
     data.io.annot.FR = newFR;
     data.io.annot.tmax = round(data.io.annot.tmax*sc);
     data.annoFR = newFR;

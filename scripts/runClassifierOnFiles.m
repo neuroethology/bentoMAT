@@ -2,6 +2,7 @@ function runClassifierOnFiles(loader,clfName)
 
 config  = loadConfig();
 [flag,path_to_MARS] = BentoPyConfig(config); %initialize python
+py.sys.setdlopenflags(int32(10));
 if(flag)
     msgbox('Unable to set up MARS.');
     return;
@@ -17,7 +18,7 @@ end
 [data,populated] = getAllFilesFromSheet(loader);
 
 if(~exist('clfName','var'))
-    [clfName,clfPath] = uigetfile([path_to_MARS 'Bento\*.dill'],'Pick one or more classifiers','multiSelect','on');
+    [clfName,clfPath] = uigetfile([path_to_MARS 'Bento' filesep '*.dill'],'Pick one or more classifiers','multiSelect','on');
     if(~clfName)
         return;
     end
@@ -30,10 +31,10 @@ py.mars_cmd_test.run_classifier(py.list({clfName}),feats,movies);
 disp('done!');
 
 disp('creating new bento file with classifier outputs...');
-[~,~,raw] = xlsread(loader,'Sheet1');
+[~,~,raw] = xlsread(loader);
 [~,matches,~] = reconcileSheetFormats([],raw);
 for i=1:size(populated,1)
-    ind = strfind(raw{2+i,matches.Tracking})-1;
+    ind = strfind(raw{2+i,matches.Tracking},'raw_feat')-1;
     if(isempty(raw{2+i,matches.Annotation_file}))
         raw{2+i,matches.Annotation_file} = [raw{2+i,matches.Tracking}(1:ind) 'actions_pred.annot'];
     else
