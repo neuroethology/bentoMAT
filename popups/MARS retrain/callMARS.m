@@ -14,13 +14,8 @@ doSubs      = h.doSubs.Value;
 doPrecRec   = 0;
 
 if(doTrain)
-<<<<<<< Updated upstream
-    set(h.doTrain,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
-                    '\spinner.gif" width=40 height=40><br>Training classifier...</div></html>']);
-=======
     set(h.h1Train,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
                     filesep 'spinner.gif" width=40 height=40><br>Training classifier...</div></html>']);
->>>>>>> Stashed changes
     drawnow;
     
     bhvr        = h.bhvrsTrain.String{h.bhvrsTrain.Value};
@@ -60,13 +55,7 @@ if(doTrain)
     set(h.doTrain,'String','Train MARS');
     bhvr = strrep(bhvr,'_','-');
     if(any(strcmpi(h.bhvrsTest.String,[bhvr '_' model_type '*'])))
-<<<<<<< Updated upstream
-        newBhvStrs = [{[bhvr '_' model_type '*']}; setdiff(h.bhvrsTest.String,[bhvr '_' model_type '*'])];
-        newBhvStrs(cellfun(@isempty,newBhvStrs)) = [];
-        h.bhvrsTest.String = newBhvStrs;
-=======
         h.bhvrsTest.String = [{[bhvr '_' model_type '*']}; setdiff(h.bhvrsTest.String,[bhvr '_' model_type '*'])];
->>>>>>> Stashed changes
     elseif(isempty(h.bhvrsTest.String))
         h.bhvrsTest.String = {[bhvr '_' model_type '*']};
         h.bhvrsTest.Max = 1;
@@ -87,11 +76,6 @@ if(doTest)
         groups          = 1;
         modelTypes{1}   = [model_type '*'];
         bhvrs{1}        = strrep(bhvr,'-','_');
-<<<<<<< Updated upstream
-        doPredRec = 1;
-        GT = 'Ch1';
-=======
->>>>>>> Stashed changes
     else
         models      = h.bhvrsTest.String(h.bhvrsTest.Value);
         bhvrs       = cellfun(@(x) x(1:(find(x=='_',1,'first')-1)),models,'uniformoutput',false);
@@ -123,18 +107,7 @@ if(doTest)
         end
 
         % import the new annotations back into Bento~:
-<<<<<<< Updated upstream
         gui = updateWithMARSOutputs(gui,vals,model_type);
-=======
-        data    = gui.allData(vals(1)).(['session' num2str(vals(2))])(vals(3));
-        pth     = fileparts(data.io.feat.fid{1});
-        [~,mID] = fileparts(pth);
-        fid     = [pth filesep mID '_actions_pred_' model_type '.txt'];
-        data.annot.MARS_output       = getOnlineMARSOutput(fid);
-        data.io.annot.fid{end+1}     = fid;
-        data.io.annot.fidSave{end+1} = strrep(fid,'.txt','.annot');
-        gui.allData(vals(1)).(['session' num2str(vals(2))])(vals(3)) = data;
->>>>>>> Stashed changes
     end
     waitbar(1,f,'Done!');
 

@@ -104,18 +104,6 @@ function MARSoptions(source,~)
             'bordertype','none','title','New Testing data',...
             'fontangle','italic','foregroundcolor',[.5 .5 .5]);
     
-<<<<<<< Updated upstream
-=======
-    classifier_list         = dir([path_to_MARS 'Bento_temp/']);
-    classifier_list(~cellfun(@isempty,strfind({classifier_list.name},'.'))) = [];
-    classifier_list         = strrep({classifier_list.name},'.dill','*');
-    temp                    = dir([path_to_MARS 'Bento/']);
-    temp(~cellfun(@isempty,strfind({temp.name},'.'))) = [];
-    if(~isempty(temp))
-        classifier_list = [classifier_list; strrep({temp.name},'.dill','')];
-    end
-    
->>>>>>> Stashed changes
     uicontrol('parent',h.h2Test,style{:},'style','text','position',[0 .825 .4 .1],...
             'string','Use classifiers:','horizontalalign','left');
     h.bhvrsTest = uicontrol('parent',h.h2Test,style{:},'style','listbox','position',[0 .2 .375 .65],...
