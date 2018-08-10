@@ -227,8 +227,12 @@ if(gui.enabled.annot(1))
             img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*.75,0);
         end
         ybox = [gui.audio.freqLo-.2*(gui.audio.freqHi-gui.audio.freqLo) 0];
-        set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',...
-            ybox + [1/(size(img,1)*2) -1/(size(img,1)*2)]*range(ybox));
+        if(size(img,1)>1)
+            set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',...
+                ybox + [1/(size(img,1)*2) -1/(size(img,1)*2)]*range(ybox));
+        else
+            set(gui.audio.bg,'cdata',img,'XData',win/gui.data.annoFR,'YData',ybox);
+        end
     end
         
     % update behavior-annotating box if it's active
