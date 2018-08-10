@@ -42,6 +42,18 @@ for i=1:size(dataTable,1)
         temp.io.feat = [];
     end
     
+    if(~isempty(data{matches.Audio_file})) %if there's a spectrogram, check for a feature file as well
+        temp.io.audio.fid = strcat(pth,strsplit(dat{matches.Audio_file},';'));
+        tryFeats = dir(strrep(temp.io.audio.fid{1},'spectrogram.mat','raw_feat*'));
+        if(~isempty(tryFeats))
+            if(isempty(temp.io.feat))
+                temp.io.feat.fid{1} = [tryFeats(1).folder filesep tryFeats(1).name];
+            else
+                temp.io.feat.fid{end+1} = [tryFeats(1).folder filesep tryFeats(1).name];
+            end
+        end
+    end
+    
     if(~isempty(temp.io.annot))
         for fid = 1:length(temp.io.annot.fid)
             atemp = loadAnyAnnot(temp.io.annot.fid{fid});

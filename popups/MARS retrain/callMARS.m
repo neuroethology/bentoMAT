@@ -14,7 +14,7 @@ doSubs      = h.doSubs.Value;
 doPrecRec   = 0;
 
 if(doTrain)
-    set(h.h1Train,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
+    set(h.doTrain,'String',['<html><div align=center><img src="file:' fileparts(mfilename('fullpath')) ...
                     filesep 'spinner.gif" width=40 height=40><br>Training classifier...</div></html>']);
     drawnow;
     

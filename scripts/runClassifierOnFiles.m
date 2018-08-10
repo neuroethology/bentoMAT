@@ -2,7 +2,7 @@ function runClassifierOnFiles(loader,clfName)
 
 config  = loadConfig();
 [flag,path_to_MARS] = BentoPyConfig(config); %initialize python
-py.sys.setdlopenflags(int32(10));
+% py.sys.setdlopenflags(int32(10));
 if(flag)
     msgbox('Unable to set up MARS.');
     return;
