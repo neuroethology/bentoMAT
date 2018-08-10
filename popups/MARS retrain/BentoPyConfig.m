@@ -6,10 +6,14 @@ if(~isloaded)
     pyversion 2.7; % MARS doesn't work with 3.5
 end
 
-% mod     = py.importlib.import_module('multiprocessing');
-% [~,exe] = pyversion;
-% py.multiprocessing.spawn.set_executable(exe); % protect against multiprocessing madness
-
+% protect against multiprocessing madness
+mod     = py.importlib.import_module('multiprocessing');
+[~,exe] = pyversion;
+if(isunix)
+    py.multiprocessing.spawn.set_executable(exe);
+else
+    py.multiprocessing.set_executable(exe);
+end
 
 % add an option to set the MARS path in the future
 if(isempty(config.path_to_MARS))

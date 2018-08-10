@@ -8,7 +8,7 @@ pth     = fileparts(data.io.feat.fid{1});
 fid     = [pth '\' mID '_actions_pred_' model_type '.txt'];
 
 data.annot.MARS_output       = getOnlineMARSOutput(fid);
-if(~any(strcmpi(gui.allData.session1.io.annot.fid,fid)))
+if(~any(strcmpi(data.io.annot.fid,fid)))
     data.io.annot.fid{end+1}     = fid;
     data.io.annot.fidSave{end+1} = strrep(fid,'.txt','.annot');
 end
