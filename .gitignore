@@ -12,7 +12,6 @@ loading data/piotr_toolbox/*
 # debugging #
 #############
 gui_test/*
-annotations/color_profiles.txt
 
 # MARS stuff #
 ##############
