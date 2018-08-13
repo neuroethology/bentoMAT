@@ -45,10 +45,10 @@ for i=1:size(populated,1)
         ind = strfind(raw{2+i,matches.Audio_file},'spectrogram')-1;
         tstr = raw{2+i,matches.Audio_file}(1:ind);
     end
-    if(isempty(raw{2+i,matches.Annotation_file}))
+    if(~isstr(raw{2+i,matches.Annotation_file}))
         raw{2+i,matches.Annotation_file} = [tstr 'actions_pred.annot'];
     else
-        raw{2+i,matches.Annotation_file} = [tstr ';' ...
+        raw{2+i,matches.Annotation_file} = [raw{2+i,matches.AnnotFile} ';' ...
                                             tstr 'actions_pred.annot'];
     end
 end
