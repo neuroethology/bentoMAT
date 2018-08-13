@@ -44,6 +44,12 @@ for i=1:size(dataTable,1)
     
     if(~isempty(dat{matches.Audio_file})) %if there's a spectrogram, check for a feature file as well
         temp.io.audio.fid = strcat(pth,strsplit(dat{matches.Audio_file},';'));
+        
+        %this code adds a framerate to the feature file (which i forgot to
+        %do in the code to generate feature files...)
+        m = matfile(temp.io.audio.fid{1});
+        FR = 1/(m.t(1,2)-m.t(1,1));
+        
         tryFeats = dir(strrep(temp.io.audio.fid{1},'spectrogram.mat','raw_feat*'));
         if(~isempty(tryFeats))
             if(isempty(temp.io.feat))
@@ -51,6 +57,13 @@ for i=1:size(dataTable,1)
             else
                 temp.io.feat.fid{end+1} = [tryFeats(1).folder filesep tryFeats(1).name];
             end
+            
+            %this is the rest of the code to add the framerate~
+            m = matfile(temp.io.feat.fid{end},'Writable',true);
+            if(~any(strcmpi(fieldnames(m),'FR')))
+                m.FR = FR;
+            end
+            
         end
     end
     
