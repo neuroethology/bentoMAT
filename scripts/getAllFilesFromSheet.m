@@ -47,21 +47,21 @@ for i=1:size(dataTable,1)
         
         %this code adds a framerate to the feature file (which i forgot to
         %do in the code to generate feature files...)
-        m = matfile(temp.io.audio.fid{1});
-        FR = 1/(m.t(1,2)-m.t(1,1));
+        mfile = matfile(temp.io.audio.fid{1});
+        FR = 1/(mfile.t(1,2)-mfile.t(1,1));
         
         tryFeats = dir(strrep(temp.io.audio.fid{1},'spectrogram.mat','raw_feat*'));
         if(~isempty(tryFeats))
             if(isempty(temp.io.feat))
                 temp.io.feat.fid{1} = [tryFeats(1).folder filesep tryFeats(1).name];
-            else
+            elseif(~any(strcmpi(temp.io.feat.fid,[tryFeats(1).folder filesep tryFeats(1).name])))
                 temp.io.feat.fid{end+1} = [tryFeats(1).folder filesep tryFeats(1).name];
             end
             
             %this is the rest of the code to add the framerate~
-            m = matfile(temp.io.feat.fid{end},'Writable',true);
-            if(~any(strcmpi(fieldnames(m),'FR')))
-                m.FR = FR;
+            mfile = matfile(temp.io.feat.fid{end},'Writable',true);
+            if(~any(strcmpi(fieldnames(mfile),'FR')))
+                mfile.FR = FR;
             end
             
         end
