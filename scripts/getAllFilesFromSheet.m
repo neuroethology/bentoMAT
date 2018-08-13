@@ -59,9 +59,11 @@ for i=1:size(dataTable,1)
             end
             
             %this is the rest of the code to add the framerate~
-            mfile = matfile(temp.io.feat.fid{end},'Writable',true);
-            if(~any(strcmpi(fieldnames(mfile),'FR')))
-                mfile.FR = FR;
+            for i=1:length(tryFeats)
+                mfile = matfile([tryFeats(i).folder filesep tryFeats(i).name],'Writable',true);
+                if(~any(strcmpi(fieldnames(mfile),'FR')))
+                    mfile.FR = FR;
+                end
             end
             
         end
