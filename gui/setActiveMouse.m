@@ -74,10 +74,12 @@ if(gui.enabled.movie(1))
     end
 elseif(gui.enabled.traces(1))
     gui = applySliderUpdates(gui,'Ca',data);
-elseif(gui.enabled.audio(1))
-    gui = applySliderUpdates(gui,'audio',data);
 else
     gui = applySliderUpdates(gui,'annot',data);
+end
+
+if(gui.enabled.audio(1)) %audio overrides other fields for setting slider resolution
+    gui = applySliderUpdates(gui,'audio',data);
 end
 
 % get tracking type if needed
