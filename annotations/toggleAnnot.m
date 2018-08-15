@@ -41,6 +41,10 @@ function gui = toggleAnnot(gui,toggle,key,lastKey)
             [inds,bhv] = getFastEditInds(gui); %figure out which bout/bhvr is just starting
             if ~isempty(bhv)
                 gui.annot.bhv.(bhv)(inds) = 0;
+                if(~any(strcmpi(key,{'delete','backspace'})))
+                    str     = gui.annot.hotkeys.(key);
+                    gui.annot.bhv.(str)(inds) = 1;
+                end
                 gui.annot.activeBeh = bhv;
                 
                 dummyEvent.Key = 'pagedown';
@@ -89,14 +93,19 @@ function inds = getAnnotInds(gui)
 end
 
 function [inds,bhv] = getFastEditInds(gui)
-    p1 = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min)*gui.data.annoFR);
-    p2 = p1;
+    t = floor((gui.ctrl.slider.Value - gui.ctrl.slider.Min)*gui.data.annoFR);
+    p1=t;p2=t;
+    dtThresh = -inf;
     bhv = [];
     for b = fieldnames(gui.annot.bhv)'
-        if(gui.annot.bhv.(b{:})(p1) && ~ all(gui.annot.bhv.(b{:})(max(p1-2,1):max(p1,1))))
-            p2 = p1 - 1 + find(gui.annot.bhv.(b{:})(p1:end)==0,1,'first');
-            bhv = b{:};
-            break
+        if(any(gui.annot.bhv.(b{:})(t:t+1)))
+            dt = [1 gui.annot.bhv.(b{:})(2:(t+1))-gui.annot.bhv.(b{:})(1:t)];
+            p1 = find(dt==1,1,'last');
+            if(p1>dtThresh)
+                p2 = t - 1 + find(gui.annot.bhv.(b{:})(t+1:end)==0,1,'first');
+                bhv = b{:};
+                dtThresh = p1;
+            end
         end
     end
     inds = p1:p2;

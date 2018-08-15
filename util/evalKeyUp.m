@@ -44,12 +44,12 @@ switch eventdata.Key
     case {'pagedown','pageup'} % jump to next bout of a behavior
         if(gui.enabled.annot(2) && ~isempty(gui.annot.activeCh))
             str     = gui.annot.activeBeh;
-            start   = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR);
+            start   = floor((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR)+1;
             if(start==1) start=2; end
             if(strcmpi(eventdata.Key,'pageup'))
-                    jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-2) & ~gui.annot.bhv.(s)(1:start-3),1,'last');
+                    jumpFun = @(s) 2 + find(gui.annot.bhv.(s)(2:start-3) & ~gui.annot.bhv.(s)(1:start-4),1,'last');
             else
-                    jumpFun = @(s) start - 1 + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
+                    jumpFun = @(s) start + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
             end
             ind=inf*(2*strcmpi(eventdata.Key,'pagedown')-1);
             if(~gui.Keys.Shift)
@@ -93,7 +93,7 @@ switch eventdata.Key
             if(any(strcmpi(eventdata.Key,{'delete','backspace'})) || isfield(gui.annot.hotkeys,eventdata.Key))
                 
                 if(gui.ctrl.annot.fastEdit.Value) % in fast-edit mode delete kills the current bout
-                    gui2 = toggleAnnot(gui,'fast',[],[]);
+                    gui2 = toggleAnnot(gui,'fast',eventdata.Key,[]);
                 else
                     gui.annot.highlighting = eventdata.Key;
 
