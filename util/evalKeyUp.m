@@ -70,9 +70,11 @@ switch eventdata.Key
                 indNum = find(strcmpi(fieldnames(gui.annot.bhv),str));
             end
             if(~isempty(ind))
-                if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox')) set(gui.ctrl.slider.text,'String',makeTime(ind/gui.data.annoFR));
-                else set(gui.ctrl.slider.text,'String',num2str(ind)); end
-                gui.ctrl.annot.annot.Value = indNum;
+                if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox'))
+                    set(gui.ctrl.slider.text,'String',makeTime(ind/gui.data.annoFR));
+                else
+                    set(gui.ctrl.slider.text,'String',num2str(ind));
+                end
                 dummy = struct();
                 dummy.Source = gui.ctrl.slider.text;
                 updatePlot(gui.h0,dummy);
@@ -89,22 +91,33 @@ switch eventdata.Key
             lastKey = gui.annot.highlighting;
             
             if(any(strcmpi(eventdata.Key,{'delete','backspace'})) || isfield(gui.annot.hotkeys,eventdata.Key))
-                gui.annot.highlighting = eventdata.Key;
-
-                if(all(lastKey==0))
-                    gui2 = toggleAnnot(gui,'start',eventdata.Key);
-
-                elseif(strcmpi(lastKey,eventdata.Key) || any(strcmpi(eventdata.Key,{'delete','backspace'})))
-                    gui2 = toggleAnnot(gui,'end',eventdata.Key,lastKey);
-
+                
+                if(gui.ctrl.annot.fastEdit.Value) % in fast-edit mode delete kills the current bout
+                    gui2 = toggleAnnot(gui,'fast',[],[]);
                 else
-                    gui2 = toggleAnnot(gui,'switch',eventdata.Key,lastKey);
+                    gui.annot.highlighting = eventdata.Key;
+
+                    if(all(lastKey==0))
+                        gui2 = toggleAnnot(gui,'start',eventdata.Key);
+
+                    elseif(strcmpi(lastKey,eventdata.Key) || any(strcmpi(eventdata.Key,{'delete','backspace'})))
+                        gui2 = toggleAnnot(gui,'end',eventdata.Key,lastKey);
+
+                    else
+                        gui2 = toggleAnnot(gui,'switch',eventdata.Key,lastKey);
+                    end
                 end
             elseif(strcmpi(eventdata.Key,'return') && ~isempty(lastKey) && ~isempty(gui.annot.highlightStart))
                 gui2 = toggleAnnot(gui,'end',eventdata.Key,lastKey);
             end
             
             gui.annot = gui2.annot;
+            gui.ctrl  = gui2.ctrl;
+            if(strcmpi(gui.ctrl.slider.text.Tag,'timeBox'))
+                gui.ctrl.slider.Value = getTime(gui.ctrl.slider.text.String)+gui.ctrl.slider.Min;
+            else
+                gui.ctrl.slider.Value = (str2num(gui.ctrl.slider.text.String)-1)/gui.data.annoFR + gui.ctrl.slider.Min;
+            end
             updateSliderAnnot(gui);
             guidata(gui.h0,gui);
             updatePlot(gui.h0,[]);

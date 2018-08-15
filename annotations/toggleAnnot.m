@@ -36,6 +36,17 @@ function gui = toggleAnnot(gui,toggle,key,lastKey)
             gui.annot.modified = 1;
             gui.annot.highlightStart = [];
             gui.annot.highlighting = 0;
+            
+        case 'fast'
+            [inds,bhv] = getFastEditInds(gui); %figure out which bout/bhvr is just starting
+            if ~isempty(bhv)
+                gui.annot.bhv.(bhv)(inds) = 0;
+                gui.annot.activeBeh = bhv;
+                
+                dummyEvent.Key = 'pagedown';
+                evalKeyUp(gui.h0,dummyEvent);
+            end
+            gui.annot.modified = 1;
     end
     
 end
@@ -76,3 +87,24 @@ function inds = getAnnotInds(gui)
         inds = p2:p1;
     end
 end
+
+function [inds,bhv] = getFastEditInds(gui)
+    p1 = round((gui.ctrl.slider.Value - gui.ctrl.slider.Min)*gui.data.annoFR);
+    p2 = p1;
+    bhv = [];
+    for b = fieldnames(gui.annot.bhv)'
+        if(gui.annot.bhv.(b{:})(p1) && ~ all(gui.annot.bhv.(b{:})(max(p1-2,1):max(p1,1))))
+            p2 = p1 - 1 + find(gui.annot.bhv.(b{:})(p1:end)==0,1,'first');
+            bhv = b{:};
+            break
+        end
+    end
+    inds = p1:p2;
+end
+
+
+
+
+
+
+
