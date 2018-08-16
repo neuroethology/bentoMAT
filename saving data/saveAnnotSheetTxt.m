@@ -5,6 +5,9 @@ tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
 FR      = trial.io.annot.FR;
 
+% should prompt channels to save (if it's not quicksave)? also, should save
+% channels to the appropriate source file
+
 %always prompt the save path?
 if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'.annot')) %need to create a new file
     if(~isempty(fid))
@@ -17,6 +20,15 @@ else
     [fname,pth] = uiputfile(fid);
 end
 filename = [pth fname];
+
+%check to see if the framerate was changed for display, and change back if so
+if(FR~=trial.annoFR)
+    for ch = fieldnames(trial.annot)'
+        for beh = fieldnames(trial.annot.(ch{:}))'
+            trial.annot.(ch{:}).(beh{:}) = round(trial.annot.(ch{:}).(beh{:}) * FR/trial.annoFR);
+        end
+    end
+end
 
 fid = fopen(filename,'w');
 % write metadata-----------------------------------------------------------
@@ -38,13 +50,15 @@ fprintf(fid,'%s %f\n','Annotation framerate:',FR);
 
 fprintf(fid,'\n%s\n','List of channels:');
 channels = fieldnames(trial.annot);
+labels = {};
 for i=1:length(channels)
     fprintf(fid,'%s\n',channels{i});
+    labels   = [labels; fieldnames(trial.annot.(channels{i}))];
 end
 fprintf(fid,'\n');
 
 fprintf(fid,'%s\n','List of annotations:');
-labels   = fieldnames(trial.annot.(channels{1}));
+labels = unique(labels);
 for i=1:length(labels)
     fprintf(fid,'%s\n',labels{i});
 end

@@ -287,6 +287,7 @@ for i=1:size(data,1)
     % load annotations-----------------------------------------------------
     if(~isempty(data{i,match.Annotation_file}))
         annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
+        allFR = struct();
         for j = 1:length(annoList)
             annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
             [~,str] = fileparts(annoList{j});
@@ -300,12 +301,13 @@ for i=1:size(data,1)
                     str = str(end-30:end);
                 end
             end
-            suff = ['_file' num2str(j,'%02d') '_' str];
+            suff = ['_file' num2str(j,'%02d')];
+%             suff = ['_file' num2str(j,'%02d') '_' str];
             
             if(raw{1,9})
-                [atemp,tmax(j),tmin(j),FR(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
+                [atemp,tmax(j),tmin(j),FR,strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
             else
-                [atemp,tmax(j),tmin(j),FR(j),strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
+                [atemp,tmax(j),tmin(j),FR,strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
             end
             [~,~,ext] = fileparts(annoList{j});
             if(raw{1,9})
@@ -316,29 +318,30 @@ for i=1:size(data,1)
             end
             strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],'.txt','.annot');
             
+            for f = fieldnames(atemp)'
+                allFR.([f{:} suff]) = FR;
+            end
+            
             atemp  = rmBlankChannels(atemp);
             fields = fieldnames(atemp);
             if(j==1)
                 strtemp.annot = struct();
             end
             for f = 1:length(fields)
-                strtemp.annot.([fields{f}]) = atemp.(fields{f});
-%                 strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
+%                 strtemp.annot.([fields{f}]) = atemp.(fields{f});
+                strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
             end
         end
         strtemp.annot   = orderfields(strtemp.annot);
         tmin = min(tmin);
         tmax = max(tmax);
-        FR   = FR(1);
+        [FR, strtemp.annot] = setGlobalFR(allFR,strtemp.annot,strtemp.annoFR);
+        strtemp.annoFR          = FR;
+        strtemp.annoFR_source   = allFR; %for saving edited annotations back in their original FR
         
         if(isnan(tmax))
             tmin = strtemp.io.movie.tmin;
             tmax = strtemp.io.movie.tmax;
-        end
-        if(isnan(FR))
-            FR   = strtemp.annoFR;
-        else
-            strtemp.annoFR = FR; %if annotation file provided a framerate, trust that over the user
         end
         strtemp.io.annot.tmin = tmin;
         strtemp.io.annot.tmax = tmax;
