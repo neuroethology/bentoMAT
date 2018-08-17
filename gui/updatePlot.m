@@ -64,6 +64,7 @@ time = gui.ctrl.slider.Value;
 if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     if(all(gui.enabled.movie))
         [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+        mov = mov*gui.movie.sc;
     elseif(gui.enabled.movie(1))
         mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;
     else
