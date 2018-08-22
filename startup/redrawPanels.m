@@ -25,6 +25,10 @@ end
 leftOn  = gui.enabled.movie(2);
 rightOn = gui.enabled.traces(2) || gui.enabled.features(2) || gui.enabled.scatter(2) ||...
             (~gui.enabled.movie(2) && (gui.enabled.audio(2) || gui.enabled.fineAnnot(2)));
+numOn   = (gui.enabled.traces(2)||gui.enabled.scatter(2)) + ...
+           gui.enabled.features(2) + ...
+          (gui.enabled.audio(2)||gui.enabled.fineAnnot(2));
+
 if(leftOn && rightOn)
     leftWidth = config.midline;
 elseif(rightOn)
@@ -77,14 +81,14 @@ if(rightOn)
         
         lBump = 0; %squeeze in the legend panel if it hasn't been placed yet
         if(gui.enabled.legend(2))
-            lBump = 1/3;
-            gui.legend.panel.Position = [0 bump 1/3 1-bump];
+            lBump = 1/4;
+            gui.legend.panel.Position = [0 bump 1/4 1-bump];
         end
         
         if(gui.enabled.audio(2)) %then audio/fineAnnot if applicable
-            gui.audio.panel.Position = [lBump bump 1-lBump .3];
+            gui.audio.panel.Position = [lBump bump 1-lBump (.95-bump)/numOn];
             gui.fineAnnot.panel.Visible='off';
-            bump = bump+.2;
+            bump = bump + (.95-bump)/numOn;
         elseif(gui.enabled.fineAnnot(2))
             gui.fineAnnot.panel.Position = [lBump bump 1-lBump .3];
             bump = bump+.3;
