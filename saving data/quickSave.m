@@ -9,7 +9,12 @@ gui.allData(m).(sess)(tr).annot = gui.data.annot;
 
 trial = gui.allData(m).(sess)(tr);
 
-suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(tr,'%03d') '.annot'];
+if(gui.data.io.annot.tmin~=1)
+    suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(tr,'%03d') '_' ...
+                     num2str(gui.data.io.annot.tmin) '-' num2str(gui.data.io.annot.tmax) '.annot'];
+else
+    suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(tr,'%03d') '.annot'];
+end
 if(isfield(trial.io.movie,'fid')) %save the file too
     fname = saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName);
 else

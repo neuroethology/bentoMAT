@@ -1,13 +1,13 @@
-function [annot,tmin,tmax,FR] = loadAnnotSheetTxt(fname,tmin,tmax)
+function [annot,tmin,tmax,FR] = loadAnnotSheetTxt(fname,winStart,winStop)
 
 % in case a Bento user doesn't want to load all frames of the annotations,
 % we let Bento pass tmin/tmax values:
 if(nargin<2)
-    tmin = nan;
-    tmax = nan;
-elseif(isstr(tmin))
-    tmin = str2num(tmin);
-    tmax = str2num(tmax);
+    winStart = 0;
+    winStop = inf;
+elseif(isstr(winStart))
+    winStart = str2num(winStart);
+    winStop  = str2num(winStop);
 end
 
 % read file line-by-line into a cell array
@@ -21,18 +21,16 @@ end
 fclose(fid);
 M{end+1}='';
 
-% if tmin/tmax weren't set by the user, read them out from the file
-if(isnan(tmin))
-    L = find(~cellfun(@isempty,strfind(M,'Annotation start frame:')));
-    tmin = str2num(M{L}(25:end));
-    L = find(~cellfun(@isempty,strfind(M,'Annotation stop frame:')));
-    tmax = str2num(M{L}(24:end));
-    L = find(~cellfun(@isempty,strfind(M,'Annotation framerate:')));
-    if(~isempty(L))
-        FR = str2num(strtrim(M{L}(22:end)));
-    else
-        FR = nan;
-    end
+% read out frames + framerate (if available):
+L = find(~cellfun(@isempty,strfind(M,'Annotation start frame:')));
+tmin = str2num(M{L}(25:end));
+L = find(~cellfun(@isempty,strfind(M,'Annotation stop frame:')));
+tmax = str2num(M{L}(24:end));
+L = find(~cellfun(@isempty,strfind(M,'Annotation framerate:')));
+if(~isempty(L))
+    FR = str2num(strtrim(M{L}(22:end)));
+else
+    FR = nan;
 end
 
 % get the channel list/annotation list (starts at "list of channels"/
@@ -77,8 +75,8 @@ for c = 1:length(chInds)-1
             L=L+3;          % skip the next two lines (behavior name + start/stop/duration headers)
         else
             vals = str2num(M{L});
-            if(vals(2)>=tmin && vals(1)<=tmax)
-                annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-tmin+1,0),tmax-tmin+1);
+            if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop)
+                annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-winStart+1,0),winStop-winStart+1);
             end
             L=L+1; % go to the next line
         end
