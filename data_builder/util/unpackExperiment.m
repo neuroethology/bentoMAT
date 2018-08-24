@@ -86,6 +86,9 @@ for i=1:size(data,1)
 %             [~,ctrs] = kmeans(zscore(rast')',10,'replicates',10);
             ctrs = rast;
             strtemp.ctrs = ctrs;
+        else
+            strtemp.rast = rast;
+            strtemp.ctrs = ctrs;
         end
         cutCa = ~any(isempty(tstart))&&~any(isnan(tstart));
         if(cutCa)
