@@ -28,6 +28,6 @@ if(FileName)
             disp('(replace ''poi-library'' with the full path to your poi library.)');
         end
     else
-        xlswrite([PathName FileName],M,'Sheet1');
+        xlswrite([PathName FileName],M);
     end
 end

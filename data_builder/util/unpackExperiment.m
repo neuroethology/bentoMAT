@@ -1,4 +1,4 @@
-function [mouse,enabled,pth,hotkeys] = unpackExperiment(raw)
+function [mouse,enabled,pth,hotkeys] = unpackExperiment(raw,skipvideos)
 % parses the metadata in the excel sheet, then loads all of the listed
 % files and formats their data.
 for i = 3:size(raw,1)
@@ -10,6 +10,9 @@ for i = 3:size(raw,1)
     inds(inds>size(raw,2))=[];
     mask = cellfun(@sum,cellfun(@isnan,raw(i,inds),'uniformoutput',false));
     raw(i,inds(find(mask))) = {[]};
+end
+if(~exist('skipvideos','var'))
+    skipvideos = 0;
 end
 
 %OS compatibility for file paths:
@@ -152,7 +155,7 @@ for i=1:size(data,1)
     end
     
     % link movies----------------------------------------------------------
-    if(~isempty(data{i,match.Behavior_movie}))
+    if(~isempty(data{i,match.Behavior_movie}) && ~skipvideos)
         colList   = strsplit(data{i,match.Behavior_movie},';;');
         
         for col = 1:length(colList)
