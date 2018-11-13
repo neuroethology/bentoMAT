@@ -30,6 +30,12 @@ for i = 1:size(movie.reader,2)
 end
     % pad each entry in to same width
     dims    = cellfun(@size,movies(col,:),'uniformoutput',false);
+    if(any(cellfun(@length,dims)==3) && ~all(cellfun(@length,dims)==3)) %fix for different color settings
+        for ind = find(cellfun(@length,dims)~=3)
+            movies{col,ind} = repmat(movies{col,ind},[1 1 3]);
+        end
+    end
+    dims    = cellfun(@size,movies(col,:),'uniformoutput',false);
     dims    = cat(1,dims{:});
     [w,ind] = max(dims(:,2));
     for i = setdiff(1:size(dims,1),ind)
