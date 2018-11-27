@@ -142,8 +142,8 @@ if(all(gui.enabled.traces))
                 set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
                                          'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
                 else
-                set(gui.traces.traces(i),'xdata',[-gui.traces.win*1.1 gui.data.CaTime(inds)-time gui.traces.win*1.1],...
-                                         'ydata',([0 tr(i,:) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+                set(gui.traces.traces(i),'xdata',[min(gui.data.CaTime(inds(2:end))-time)*1.1 gui.data.CaTime(inds(2:end))-time max(gui.data.CaTime(inds(2:end))-time)*1.1*[1 1]],...
+                                         'ydata',([0 tr(i,:) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
                 end
             else
                 if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
@@ -151,17 +151,17 @@ if(all(gui.enabled.traces))
                                                      (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
                                                      'color',[.1 .1 .1],'hittest','off');
                 else
-                    gui.traces.traces(i) = patch(gui.traces.axes, [-gui.traces.win*1.1 gui.data.CaTime(inds)-time gui.traces.win*1.1],...
-                                                     ([0 tr(i,:) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
-                                                     lineColors(i,:),'hittest','off');
+                    gui.traces.traces(i) = patch(gui.traces.axes, [min(gui.data.CaTime(inds)-time)*1.1 gui.data.CaTime(inds)-time max(gui.data.CaTime(inds)-time)*1.1*[1 1]],...
+                                                     ([0 tr(i,:) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
+                                                     lineColors(i,:),'hittest','off','FaceAlpha',0.5);
                 end
             end
         end
         if(isempty(i)) i = 0; end
         delete(gui.traces.traces(i+1:end));
         gui.traces.traces(i+1:end) = [];
-        set(gui.traces.axes,'ylim',[bump 10]);
-        set(gui.traces.zeroLine,'ydata',[bump 10]);
+        set(gui.traces.axes,'ylim',10*[(-lims(1)+bump)/(length(show)*bump+lims(2)) 1]);
+        set(gui.traces.zeroLine,'ydata',10*[(-lims(1)+bump)/(length(show)*bump+lims(2)) 1]);
         uistack(gui.traces.traces,'top');
     end
 end
@@ -348,15 +348,14 @@ function [traces,lims] = getFormattedTraces(gui,inds,order)
             end
             mu  = mean(all,2);
             sig = std(all,[],2);
-            traces = (bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)+8)/16;
+            traces = bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)/10;
             
         case 'zscored (by trial)'
-            traces = zscore(traces(:,2:end-1)')';
-            traces = (traces+5)/10;
+            traces = zscore(traces(:,2:end-1)')'/10;
     end
     
     traces  = traces(order,:);
-    lims    = [min(traces(:)) max(traces(:))];
+    lims    = [min(traces(1,:)) max(traces(end,:))];
     traces  = traces(:,inds);
     
 end
