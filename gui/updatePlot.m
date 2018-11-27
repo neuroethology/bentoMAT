@@ -136,19 +136,32 @@ if(all(gui.enabled.traces))
     else
         set(gui.traces.tracesIm,'visible','off');
         for i = 1:length(show)
+            lineColors = jet(length(show));
             if(i<=length(gui.traces.traces))
+                if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
                 set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
                                          'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+                else
+                set(gui.traces.traces(i),'xdata',[-gui.traces.win*1.1 gui.data.CaTime(inds)-time gui.traces.win*1.1],...
+                                         'ydata',([0 tr(i,:) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+                end
             else
-                gui.traces.traces(i) = plot(gui.traces.axes, gui.data.CaTime(inds) - time,...
-                                                 (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10, 'color',[.1 .1 .1],'hittest','off');
+                if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
+                    gui.traces.traces(i) = plot(gui.traces.axes, gui.data.CaTime(inds) - time,...
+                                                     (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
+                                                     'color',[.1 .1 .1],'hittest','off');
+                else
+                    gui.traces.traces(i) = patch(gui.traces.axes, [-gui.traces.win*1.1 gui.data.CaTime(inds)-time gui.traces.win*1.1],...
+                                                     ([0 tr(i,:) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
+                                                     lineColors(i,:),'hittest','off');
+                end
             end
         end
         if(isempty(i)) i = 0; end
         delete(gui.traces.traces(i+1:end));
         gui.traces.traces(i+1:end) = [];
-        set(gui.traces.axes,'ylim',[1 10]);
-        set(gui.traces.zeroLine,'ydata',[1 10]);
+        set(gui.traces.axes,'ylim',[bump 10]);
+        set(gui.traces.zeroLine,'ydata',[bump 10]);
         uistack(gui.traces.traces,'top');
     end
 end
