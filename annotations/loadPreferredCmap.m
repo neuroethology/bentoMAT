@@ -1,7 +1,13 @@
 function [cmap,hotkeys] = loadPreferredCmap()
 
-formatSpec = '%s %s %.3f %.3f %.3f';
-fid     = fopen([fileparts(mfilename('fullpath')) filesep 'color_profiles.txt']);
+formatSpec  = '%s %s %.3f %.3f %.3f';
+pth         = [fileparts(mfilename('fullpath')) filesep 'color_profiles.txt'];
+if(~exist(pth,2))
+    pth0    = [strrep(fileparts(mfilename('fullpath')),'annotations','startup'), filesep 'default_color_profiles.txt'];
+    copyfile(pth0, pth);
+end
+    
+fid     = fopen(pth);
 M       = textscan(fid,formatSpec);
 
 cmap    = struct();

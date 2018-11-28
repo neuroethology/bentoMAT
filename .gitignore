@@ -16,3 +16,7 @@ gui_test/*
 # MARS stuff #
 ##############
 *.pyc
+
+# user-specific settings #
+##########################
+annotations/color_profiles.txt
