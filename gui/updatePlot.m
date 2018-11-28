@@ -100,7 +100,7 @@ if(all(gui.enabled.audio))
     inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
-    img    = scaleAudio(gui,gui.data.audio.psd(:,find(inds)));
+    img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
     fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
     set(gui.audio.img, 'cdata', img(fshow,:)*64);
@@ -160,8 +160,9 @@ if(all(gui.enabled.traces))
         if(isempty(i)) i = 0; end
         delete(gui.traces.traces(i+1:end));
         gui.traces.traces(i+1:end) = [];
-        set(gui.traces.axes,'ylim',10*[(-lims(1)+bump)/(length(show)*bump+lims(2)) 1]);
-        set(gui.traces.zeroLine,'ydata',10*[(-lims(1)+bump)/(length(show)*bump+lims(2)) 1]);
+        sc = (-lims(1)+bump)/(length(show)*bump+lims(2));
+        set(gui.traces.axes,'ylim',10*[sc-0.025*(1-sc) 1+0.025*(1-sc)]);
+        set(gui.traces.zeroLine,'ydata',10*[sc-0.025*(1-sc) 1+0.025*(1-sc)]);
         uistack(gui.traces.traces,'top');
     end
 end
