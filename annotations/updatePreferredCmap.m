@@ -1,7 +1,7 @@
 function updatePreferredCmap(cmap,hotkeys)
 
 fname       = [fileparts(mfilename('fullpath')) '\color_profiles.txt']; %gets the full path to this file
-if(~exist(fname,2))
+if(~exist(fname,'file'))
     pth0    = [strrep(fileparts(mfilename('fullpath')),'annotations','startup'), filesep 'default_color_profiles.txt'];
     copyfile(pth0, fname);
 end
