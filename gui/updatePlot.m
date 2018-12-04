@@ -100,7 +100,7 @@ if(all(gui.enabled.audio))
     inds   = (gui.data.audio.t >= (time-gui.audio.win)) & (gui.data.audio.t <= (time+gui.audio.win));
     inds   = inds | [false inds(1:end-1)] | [inds(2:end) false];
     tsub   = gui.data.audio.t;
-    img    = scaleAudio(gui,gui.data.audio.psd(:,inds));
+    img    = scaleAudio(gui,gui.data.audio.psd(:,find(inds)));
     fshow  = (gui.data.audio.f/1000>=gui.audio.freqLo)&(gui.data.audio.f/1000<=gui.audio.freqHi);
     
     set(gui.audio.img, 'cdata', img(fshow,:)*64);
