@@ -5,8 +5,14 @@ function transferExptToGui(data,gui)
 
 if(iscell(data))
     raw = data;
+    if(isempty(raw{1,1}))
+        raw{1,1} = uigetdir(pwd,'Please provide the path to your data''s parent directory!');
+    end
 else
     [~,~,raw]   = xlsread(data,'Sheet1');
+    if(isempty(raw{1,1}))
+        raw{1,1} = pth; %blank path means read from the directory the sheet is in
+    end
 end
 [mouse,enabled,pth,hotkeys] = unpackExperiment(raw);
 gui.pth = pth;

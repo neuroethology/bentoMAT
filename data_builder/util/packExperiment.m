@@ -10,7 +10,7 @@ pth = get(gui.root,'string');
 %OS protection:
 pth = strrep(pth,'\',filesep);
 pth = strrep(pth,'/',filesep);
-if(~strcmpi(pth(end),filesep))
+if(~isempty(pth) & ~strcmpi(pth(end),filesep))
     pth = [pth filesep];
 end
 M{1,1}  = pth;
