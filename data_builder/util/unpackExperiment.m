@@ -292,56 +292,13 @@ for i=1:size(data,1)
     
     % load annotations-----------------------------------------------------
     if(~isempty(data{i,match.Annotation_file}))
-        annoList = strsplit(data{i,match.Annotation_file},';'); tmin = []; tmax = [];
-        allFR = struct();
-        for j = 1:length(annoList)
-            annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
-            [~,str] = fileparts(annoList{j});
-            str = strrep(str,'-','_');
-            if(length(str)>30)
-                ind = [strfind(str,'Top') strfind(str,'Front')];
-                if(~isempty(ind))
-                    str = str(ind:end);
-                    if(str(1)=='T') str = str(5:end); else str = str(7:end); end
-                else
-                    str = str(end-30:end);
-                end
-            end
-            suff = ['_file' num2str(j,'%02d')];
-%             suff = ['_file' num2str(j,'%02d') '_' str];
-            
-            if(raw{1,9})
-                [atemp,tmax(j),tmin(j),FR,strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}],data{i,match.Start_Anno},data{i,match.Stop_Anno});
-            else
-                [atemp,tmax(j),tmin(j),FR,strtemp.io.annot.fid{j},hotkeys] = loadAnyAnnot([pth annoList{j}]);
-            end
-            [~,~,ext] = fileparts(annoList{j});
-            if(raw{1,9})
-                frame_suffix = ['_' num2str(tmax) '-' num2str(tmax) '.annot'];
-                strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],ext,frame_suffix);
-            else
-                strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],ext,'.annot');
-            end
-            strtemp.io.annot.fidSave{j} = strrep([pth annoList{j}],'.txt','.annot');
-            
-            for f = fieldnames(atemp)'
-                allFR.([f{:} suff]) = FR;
-            end
-            
-            atemp  = rmBlankChannels(atemp);
-            fields = fieldnames(atemp);
-            if(j==1)
-                strtemp.annot = struct();
-            end
-            for f = 1:length(fields)
-%                 strtemp.annot.([fields{f}]) = atemp.(fields{f});
-                strtemp.annot.([fields{f} suff]) = atemp.(fields{f});
-            end
-        end
-        strtemp.annot   = orderfields(strtemp.annot);
-        tmin = min(tmin);
-        tmax = max(tmax);
-        [FR, strtemp.annot] = setGlobalFR(allFR,strtemp.annot,strtemp.annoFR);
+        [annot, tmin, tmax, allFR, strtemp.io.annot.fid, strtemp.io.annot.fidSave] = ...
+            unpackAnnotFromLoader(pth, data{i,match.Annotation_file},data{i,match.Start_Anno},data{i,match.Stop_Anno},raw{1,9});
+        
+        strtemp.annot           = orderfields(annot);
+        tmin                    = min(tmin);
+        tmax                    = max(tmax);
+        [FR, strtemp.annot]     = setGlobalFR(allFR,strtemp.annot,strtemp.annoFR);
         strtemp.annoFR          = FR;
         strtemp.annoFR_source   = allFR; %for saving edited annotations back in their original FR
         
@@ -349,25 +306,24 @@ for i=1:size(data,1)
             tmin = strtemp.io.movie.tmin;
             tmax = strtemp.io.movie.tmax;
         end
-        strtemp.io.annot.tmin = tmin;
-        strtemp.io.annot.tmax = tmax;
-        strtemp.io.annot.FR   = strtemp.annoFR;
-        strtemp.annoTime = (1:(tmax-tmin))/strtemp.annoFR;
-        strtemp.io.movie.tmin = tmin;
-        strtemp.io.movie.tmax = tmax;
-
+        strtemp.io.annot.tmin   = tmin;
+        strtemp.io.annot.tmax   = tmax;
+        strtemp.io.annot.FR     = strtemp.annoFR;
+        strtemp.annoTime        = (1:(tmax-tmin))/strtemp.annoFR;
+        strtemp.io.movie.tmin   = tmin;
+        strtemp.io.movie.tmax   = tmax;
         
     elseif(~isempty(data{i,match.Behavior_movie}))
-        strtemp.io.annot = struct();
-        strtemp.io.annot.fid   = [];
-        strtemp.io.annot.tmin = strtemp.io.movie.tmin;
-        strtemp.io.annot.tmax = strtemp.io.movie.tmax;
-        strtemp.io.annoFR   = strtemp.io.movie.FR;
-        strtemp.annot = struct();
-        strtemp.annoTime = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
+        strtemp.io.annot        = struct();
+        strtemp.io.annot.fid    = [];
+        strtemp.io.annot.tmin   = strtemp.io.movie.tmin;
+        strtemp.io.annot.tmax   = strtemp.io.movie.tmax;
+        strtemp.io.annoFR       = strtemp.io.movie.FR;
+        strtemp.annot           = struct();
+        strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
         
     elseif(~isempty(data{i,match.Audio_file}))
-        strtemp.io.annot = struct();
+        strtemp.io.annot        = struct();
         strtemp.io.annot.fid    = [];
         strtemp.io.annot.tmin   = strtemp.audio.tmin;
         strtemp.io.annot.tmax   = strtemp.audio.tmax;
@@ -376,13 +332,13 @@ for i=1:size(data,1)
         strtemp.annot           = struct();
    
     else
-        strtemp.annot = struct();
-        strtemp.annoTime = strtemp.CaTime;
-        strtemp.io.annot = struct();
-        strtemp.io.annot.fid   = [];
-        strtemp.io.annot.tmin = 1;
-        strtemp.io.annot.tmax = length(strtemp.CaTime);
-        strtemp.annoFR   = strtemp.CaFR;
+        strtemp.annot           = struct();
+        strtemp.annoTime        = strtemp.CaTime;
+        strtemp.io.annot        = struct();
+        strtemp.io.annot.fid    = [];
+        strtemp.io.annot.tmin   = 1;
+        strtemp.io.annot.tmax   = length(strtemp.CaTime);
+        strtemp.annoFR          = strtemp.CaFR;
     end
     
     mouse(data{i,match.Mouse}).(['session' num2str(data{i,match.Sessn})])(data{i,match.Trial}) = strtemp;
