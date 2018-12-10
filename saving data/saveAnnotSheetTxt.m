@@ -1,6 +1,10 @@
 function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName)
 
-fid     = trial.io.annot.fid{:};
+if(~isempty(trial.io.annot.fid))
+    fid     = trial.io.annot.fid{:};
+else
+    fid = [];
+end
 tmin    = trial.io.annot.tmin;
 tmax    = trial.io.annot.tmax;
 FR      = trial.io.annot.FR;
