@@ -320,7 +320,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = strtemp.io.movie.tmax;
         strtemp.io.annot.FR     = strtemp.io.movie.FR;
         strtemp.annot           = struct();
-        strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annoFR;
+        strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annot.FR;
         
     elseif(~isempty(data{i,match.Audio_file}))
         strtemp.io.annot        = struct();

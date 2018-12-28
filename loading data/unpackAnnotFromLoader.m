@@ -14,7 +14,11 @@ annot       = struct();
 
 for j = 1:length(annoList)
     annoList{j} = strtrim(strip(strip(annoList{j},'left','.'),'left',filesep));
-    suff = ['_file' num2str(j,'%02d')];
+    if(length(annoList)==1)
+        suff = '';
+    else
+        suff = ['_file' num2str(j,'%02d')];
+    end
 
     % unpack the annotations
     if(subFrames), [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}],startAnno,stopAnno);
