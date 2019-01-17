@@ -3,6 +3,10 @@ function [data,populated] = getAllFilesFromSheet(pth)
 [~,sheets] = xlsfinfo(pth);
 [~,~,raw] = xlsread(pth,sheets{1}); %load the excel sheet
 
+if(isempty(raw{1,1})|isnan(raw{1,1}))
+    raw{1,1} = [fileparts(pth) filesep];
+end
+
 % fix nans/filename formatting 
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);

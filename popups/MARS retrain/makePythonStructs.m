@@ -4,7 +4,7 @@ for i=1:size(vals,1)
     data    = allData(vals(i,1)).(['session' num2str(vals(i,2))])(vals(i,3));
 
     % get movie filename
-    if(~isempty(data.io.movie))
+    if(~isempty(data.io.movie) & ~isempty(fieldnames(data.io.movie)))
         ind         = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Top')),1);
         ind2        = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Front')),1);
         movies{1,i}  = data.io.movie.fid(ind);

@@ -31,7 +31,14 @@ end
 
 [movies,feats] = makePythonStructs(data,populated,0,[]);
 disp('running classifier(s)...');
-py.mars_cmd_test.run_classifier(py.list({clfName}),feats,movies);
+try
+    py.mars_cmd_test.run_classifier(py.list({clfName}),feats,movies);
+catch e
+    e.message
+    if(isa(e,'matlab.exception.PyException'))
+        e.ExceptionObject
+    end
+end
 disp('done!');
 
 disp('creating new bento file with classifier outputs...');

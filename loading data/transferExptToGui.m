@@ -10,8 +10,9 @@ if(iscell(data))
     end
 else
     [~,~,raw]   = xlsread(data,'Sheet1');
-    if(isempty(raw{1,1}))
-        raw{1,1} = pth; %blank path means read from the directory the sheet is in
+    if(isempty(raw{1,1})|isnan(raw{1,1}))
+        pth = fileparts(data);
+        raw{1,1} = [pth filesep]; %blank path means read from the directory the sheet is in
     end
 end
 [mouse,enabled,pth,hotkeys] = unpackExperiment(raw);

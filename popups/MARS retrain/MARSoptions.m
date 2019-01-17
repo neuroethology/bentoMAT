@@ -156,10 +156,14 @@ end
 
 function classifier_list = getClfList(path_to_MARS)
     classifier_list         = ls([path_to_MARS 'Bento_temp/']);
-    classifier_list(1:2,:)  = [];
+    if(~isunix)
+        classifier_list(1:2,:)  = [];
+    end
     classifier_list = strrep(cellstr(classifier_list),'.dill','*');
     temp        = ls([path_to_MARS 'Bento/']);
-    temp(1:2,:) = [];
+    if(~isunix)
+        temp(1:2,:) = [];
+    end
     classifier_list = [classifier_list; strrep(cellstr(temp),'.dill','')];
 end
 
