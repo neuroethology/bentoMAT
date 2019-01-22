@@ -32,7 +32,7 @@ end
 [movies,feats] = makePythonStructs(data,populated,0,[]);
 disp('running classifier(s)...');
 try
-    py.mars_cmd_test.run_classifier(py.list({clfName}),feats,movies);
+    py.mars_cmd_test.run_classifier(py.list({clfName}),feats,movies,pyargs('disableParallel',~isunix));
 catch e
     e.message
     if(isa(e,'matlab.exception.PyException'))
