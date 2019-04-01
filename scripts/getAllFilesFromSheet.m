@@ -1,4 +1,4 @@
-function [data,populated] = getAllFilesFromSheet(pth)
+00function [data,populated] = getAllFilesFromSheet(pth)
 
 [~,sheets] = xlsfinfo(pth);
 [~,~,raw] = xlsread(pth,sheets{1}); %load the excel sheet

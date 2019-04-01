@@ -309,7 +309,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmin   = tmin;
         strtemp.io.annot.tmax   = tmax;
         strtemp.io.annot.FR     = strtemp.annoFR;
-        strtemp.annoTime        = (1:(tmax-tmin))/strtemp.annoFR;
+        strtemp.annoTime        = (1:(tmax-tmin+1))/strtemp.annoFR;
         strtemp.io.movie.tmin   = tmin;
         strtemp.io.movie.tmax   = tmax;
         
