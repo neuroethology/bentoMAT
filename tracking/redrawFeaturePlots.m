@@ -14,14 +14,32 @@ for i = 1:nfeat
     xlabel(gui.features.feat(i).axes,'');
     set(gui.features.feat(i).axes,'xtick',[]);
     
-    lims = [min(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[])) ...
+    lim = [min(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[])) ...
             max(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[]))];
-    set(gui.features.feat(i).axes,'ylim',lims);
-    set(gui.features.feat(i).zeroLine,'ydata',lims);
+    set(gui.features.feat(i).axes,'ylim',lim);
+    set(gui.features.feat(i).zeroLine,'ydata',lim);
 
-    
+    if(isempty(gui.features.feat(i).threshValU.String))
+        gui.features.feat(i).threshValU.String = num2str(gui.features.feat(i).thresholdU.Value*(lim(2)-lim(1)) + lim(1));
+    end
+    if(isempty(gui.features.feat(i).threshValL.String))
+        gui.features.feat(i).threshValL.String = num2str(gui.features.feat(i).thresholdL.Value*(lim(2)-lim(1)) + lim(1));
+    end
+
     updateThresholdBoxes(gui,i);
 end
+
+if(strcmpi(gui.annot.activeCh,'thresholded_features'))
+    
+    mask = getThresholdedFeatureMask(gui);
+
+    % and display them
+    gui.annot.bhv.unsaved_feature = mask;
+    updateSliderAnnot(gui);
+    guidata(gui.h0,gui);
+    updatePlot(gui.h0,[]);
+end
+
 
 set(gui.features.feat(1).axes, 'XTickMode', 'auto', 'XTickLabelMode', 'auto');
 xlabel(gui.features.feat(1).axes,'time (sec)');
