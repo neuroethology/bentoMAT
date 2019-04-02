@@ -51,7 +51,8 @@ if(~isempty(eventdata))
             
             for i = 1:length(gui.features.feat)
                 set(gui.features.feat(i).axes,'xlim',gui.features.win*[-1 1]);
-                set(gui.features.feat(i).threshLine,'xdata',gui.features.win*[-1 1 1 -1 -1]);
+                set(gui.features.feat(i).threshLineU,'xdata',gui.features.win*[-1 1 1 -1 -1]);
+                set(gui.features.feat(i).threshLineL,'xdata',gui.features.win*[-1 1 1 -1 -1]);
                 gui.features.feat(i).label.Position(1) = -gui.features.win*.975;
                 gui.features.feat(i).label.Position(2) = ...
                     max(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[]))*.975;

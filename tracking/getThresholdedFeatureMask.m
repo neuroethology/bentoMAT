@@ -6,12 +6,11 @@ if(~exist('params','var'))
 
         ch      = gui.features.feat(i).ch;
         featNum = gui.features.feat(i).featNum;
-        lim     = get(gui.features.feat(i).axes,'ylim');
 
         params(i).ch        = ch;
         params(i).featNum   = featNum;
-        params(i).thrBound  = gui.features.feat(i).thrBound;
-        params(i).thr       = gui.features.feat(i).threshold.Value*(lim(2)-lim(1));
+        params(i).limL      = str2num(gui.features.feat(i).threshValL.String);
+        params(i).limU      = str2num(gui.features.feat(i).threshValU.String);
     end
 end
 
@@ -19,10 +18,10 @@ end
 mask = true(1,size(gui.data.tracking.features,2));
 for i=1:length(params)
     vals        = gui.data.tracking.features(params(i).ch,:,params(i).featNum);
-    if(params(i).thrBound==1)
-        mask = mask & (vals<=params(i).thr);
+    if(params(i).limL>params(i).limU)
+        mask = mask & ((vals<=params(i).limL) & (vals>=params(i).limU));
     else
-        mask = mask & (vals>=params(i).thr);
+        mask = mask & ((vals<=params(i).limL) | (vals>=params(i).limU));
     end
 end
     

@@ -17,9 +17,12 @@ gui.features.threshOff.Visible  = str;
 gui.features.threshSave.Visible = str;
 
 for i=1:length(gui.features.feat)
-    gui.features.feat(i).threshold.Visible  = str;
-    gui.features.feat(i).flipThr.Visible    = str;
-    gui.features.feat(i).threshLine.Visible = str;
+    gui.features.feat(i).thresholdU.Visible  = str;
+    gui.features.feat(i).thresholdL.Visible  = str;
+    gui.features.feat(i).threshLineU.Visible = str;
+    gui.features.feat(i).threshLineL.Visible = str;
+    gui.features.feat(i).threshValU.Visible  = str;
+    gui.features.feat(i).threshValL.Visible  = str;
 end
 
 if(flag) % when switching into threshold mode, also change annotation channels
