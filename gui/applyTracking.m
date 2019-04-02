@@ -1,6 +1,7 @@
-function mov = applyTracking(gui,mov,time)
+function mov = applyTracking(gui,mov)
 
-frnum = floor(time*gui.data.annoFR)+1;
+info = gui.data.io.movie.reader{1}.reader.getinfo();
+frnum = info.curFrame;
 if(isempty(gui.data.tracking.active{frnum})&frnum>1)
     gui.data.tracking.active{frnum} = gui.data.tracking.active{frnum-1};
 end

@@ -67,13 +67,13 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
         [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
         mov = mov*gui.movie.sc;
     elseif(gui.enabled.movie(1))
-        mov = ones(gui.data.io.movie.reader.width,gui.data.io.movie.reader.height,'uint8')*255;
+        mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;
     else
         mov = ones(1024,540,'uint8')*255;
     end
 	
     if(all(gui.enabled.tracker)) % add tracking data if included
-        mov = applyTracking(gui,mov,time);
+        mov = applyTracking(gui,mov);
     end
     % apply crop+zoom if turned on
     if(isfield(gui.data,'tracking')&&isfield(gui.data.tracking,'crop')&&~isempty(gui.data.tracking.crop))
@@ -85,7 +85,9 @@ end
 
 % update the plotted features
 if(all(gui.enabled.features) && isfield(gui.features,'feat'))
-    inds  = (gui.data.annoTime >= (time-gui.features.win)) & (gui.data.annoTime <= (time+gui.features.win));
+    info = gui.data.io.movie.reader{1,1}.reader.getinfo();
+    featTime = gui.data.io.movie.reader{1,1}.TS(info.curFrame);
+    inds  = (gui.data.annoTime >= (featTime-gui.features.win)) & (gui.data.annoTime <= (featTime+gui.features.win));
     inds  = inds | [false inds(1:end-1)] | [inds(2:end) false];
     
     for i = 1:length(gui.features.feat)
