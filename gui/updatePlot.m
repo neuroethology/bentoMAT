@@ -64,17 +64,19 @@ time = gui.ctrl.slider.Value;
 % update the movie panel
 if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     if(all(gui.enabled.movie))
-        [mov, gui.data.io.movie.reader] = readBehMovieFrame(gui.data.io.movie,time);
+        [mov, gui.data.io.movie.reader,movieFrame] = readBehMovieFrame(gui.data.io.movie,time);
+        mov = combineBehMovieFrames(gui,mov);
         mov = mov*gui.movie.sc;
     elseif(gui.enabled.movie(1))
         mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;
+        if(all(gui.enabled.tracker)) % add tracking data if included
+            mov = applyTracking(gui,{mov});
+        end
+        mov=mov{1};
     else
         mov = ones(1024,540,'uint8')*255;
     end
 	
-    if(all(gui.enabled.tracker)) % add tracking data if included
-        mov = applyTracking(gui,mov);
-    end
     % apply crop+zoom if turned on
     if(isfield(gui.data,'tracking')&&isfield(gui.data.tracking,'crop')&&~isempty(gui.data.tracking.crop))
         mov = imcrop(mov,gui.data.tracking.crop);
@@ -184,6 +186,10 @@ end
 % update annotations
 if(gui.enabled.annot(1))
     % update behavior pic
+% added this because our annotations in the past have been by movie frame!
+% but we shouldn't need this any more?
+    time = movieFrame/gui.data.annoFR;
+%--------------------------------------------------------------------------
     inds = find((gui.data.annoTime>=(time-gui.traces.win)) & (gui.data.annoTime<=(time+gui.traces.win)));
     win  = (-gui.traces.win*gui.data.annoFR):(gui.traces.win*gui.data.annoFR);
     win((win/gui.data.annoFR + time) > gui.data.annoTime(end))  = [];

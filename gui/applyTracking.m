@@ -1,4 +1,4 @@
-function mov = applyTracking(gui,mov)
+function movies = applyTracking(gui,movies)
 
 info = gui.data.io.movie.reader{1}.reader.getinfo();
 frnum = info.curFrame;
@@ -49,6 +49,17 @@ plotInactive = [];
 % end
 % plotInactive = pts(inds, 2:end);
 
+
+% figure out which movie we're plotting tracking on
+rr=1;cc=1;
+if(length(gui.data.io.movie.fid)>1)
+    if(contains(gui.data.tracking.fun,'top'))
+        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Top')));
+    elseif(contains(gui.data.tracking.fun,'front'))
+        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Fro')));
+    end
+end
+
 if(size(pts,2)<=4)
 %     mov = insertObjectAnnotation(mov,'circle',plotActive,...
 %                                  cellstr(num2str( (1:length(active))' ))',...
@@ -62,8 +73,8 @@ else
         for i = 3:2:size(plotActive,2)
             if(isnumeric(color)), c = color(j,:);
             else, c = color(j); end
-            mov = insertShape(mov,'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',c);
-            mov = insertShape(mov,'FilledCircle',[plotActive(j,i:i+1) 6],'color',c);
+            movies{rr,cc} = insertShape(movies{rr,cc},'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',c);
+            movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotActive(j,i:i+1) 6],'color',c);
         end
 %         mov = insertShape(mov,'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
     end
@@ -71,8 +82,8 @@ else
         if(isnumeric(color)), c = color(j,:);
         else, c = color(j); end
         for i = 3:2:size(plotInactive,2)
-            mov = insertShape(mov,'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color',c);
-            mov = insertShape(mov,'FilledCircle',[plotInactive(j,i:i+1) 6],'color',c);
+            movies{rr,cc} = insertShape(movies{rr,cc},'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color',c);
+            movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotInactive(j,i:i+1) 6],'color',c);
         end
 %         mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
     end
