@@ -1,5 +1,7 @@
 function fixAnnotFromTop(pth)
 
+doubleStepBack=0; %change this to 1 to do a broader search for corresponding movies
+
 if(~exist('pth','var'))
     pth = uigetdir(pwd,'Select directory to convert');
 end
@@ -44,6 +46,9 @@ for f = 1:length(files)
         [~,mov2] = fileparts(mov);
         mov2 = strrep(mov2,'Mouse_','');
         mov2 = dir([fileparts(files(f).folder) filesep '*' mov2 '*.seq']);
+        if(doubleStepBack)
+            mov2 = dir([fileparts(fileparts(files(f).folder)) filesep '**/*' mov2 '*.seq']);
+        end
         if(isempty(mov2))
             disp([mov ' could not be found!']);
             continue;
@@ -65,7 +70,7 @@ for f = 1:length(files)
     for ch = fieldnames(annot)'
         for b = fieldnames(annot.(ch{:}))'
             if(~isempty(annot.(ch{:}).(b{:})))
-                annot.(ch{:}).(b{:}) = TS(annot.(ch{:}).(b{:}));
+                annot.(ch{:}).(b{:}) = TS(min(annot.(ch{:}).(b{:}),length(TS)));
             end
         end
     end
