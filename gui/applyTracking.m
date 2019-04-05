@@ -11,8 +11,8 @@ if(length(gui.data.io.movie.fid)>1)
 end
 
 info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
-frnum = info.curFrame;
-if(frnum<1)
+frnum = info.curFrame+1;
+if(frnum<2)
     return;
 end
     
@@ -79,7 +79,7 @@ else
             movies{rr,cc} = insertShape(movies{rr,cc},'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',c);
             movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotActive(j,i:i+1) 6],'color',c);
         end
-%         mov = insertShape(mov,'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
+%         movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
     end
     for j=1:size(plotInactive,1)
         if(isnumeric(color)), c = color(j,:);
@@ -88,6 +88,6 @@ else
             movies{rr,cc} = insertShape(movies{rr,cc},'Line',plotInactive(j,i-2:i+1),'linewidth',3,'color',c);
             movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotInactive(j,i:i+1) 6],'color',c);
         end
-%         mov = insertShape(mov,'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
+%         movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotInactive(j,1:2) 7],'color','red','opacity',1);
     end
 end

@@ -188,7 +188,7 @@ if(gui.enabled.annot(1))
     % update behavior pic
 % added this because our annotations in the past have been by movie frame!
 % but we shouldn't need this any more?
-    time = movieFrame/gui.data.annoFR;
+%     time = movieFrame/gui.data.annoFR;
 %--------------------------------------------------------------------------
     inds = find((gui.data.annoTime>=(time-gui.traces.win)) & (gui.data.annoTime<=(time+gui.traces.win)));
     win  = (-gui.traces.win*gui.data.annoFR):(gui.traces.win*gui.data.annoFR);
