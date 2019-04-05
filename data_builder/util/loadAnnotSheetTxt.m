@@ -61,6 +61,8 @@ if(chInds(end)~=length(M))
     chInds = [chInds length(M)];
 end
 
+isTime = any(~cellfun(@isempty,strfind(M(chInds(1):end),'.')));
+
 % loop over channels until everything's read.
 % individual behavior annotations are always prefaced by a blank line,
 % which is how I find the start of a new behavior's annotations-
@@ -75,6 +77,13 @@ for c = 1:length(chInds)-1
             L=L+3;          % skip the next two lines (behavior name + start/stop/duration headers)
         else
             vals = str2num(M{L});
+            if(isTime) %need to convert to frames
+                if(~isnan(FR))
+                    vals = round(vals*FR);
+                else
+                    vals = round(vals*30);
+                end
+            end
             if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop)
                 annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-winStart+1,0),winStop-winStart+1);
             end

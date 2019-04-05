@@ -1,4 +1,4 @@
-function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName)
+function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName,promptOverride)
 
 if(~isempty(trial.io.annot.fid))
     fid     = trial.io.annot.fid{:};
@@ -18,10 +18,14 @@ if(isempty(fid)|strcmpi(fid(end-10:end),'blank.annot')|~strcmpi(fid(end-5:end),'
         suggestedName = [pwd filesep 'annotations'];
     end
     [fname,pth] = uiputfile(suggestedName);
-else
+    filename = [pth fname];
+elseif(exist('promptOverride','var') && ~promptOverride)
     [fname,pth] = uiputfile(fid);
+    filename = [pth fname];
+else
+    filename = fid;
 end
-filename = [pth fname];
+
 
 %check to see if the framerate was changed for display, and change back if so
 if(FR~=trial.annoFR)
@@ -70,7 +74,7 @@ fprintf(fid,'\n');
 for c = 1:length(channels)
     Ch = channels{c};
     
-    [M,summaries.(Ch)] = makeBehaviorSummary(trial.annot.(Ch),tmin,tmax);
+    [M,summaries.(Ch)] = makeBehaviorSummary(trial.annot.(Ch),tmin,tmax,FR);
     if(isempty(M))
         M{1,1} = '';
         continue;
@@ -84,7 +88,7 @@ for c = 1:length(channels)
             if(isempty(M{i,beh}))
                 continue;
             end
-            fprintf(fid,'%d\t%d\t%d\n',M{i,beh},M{i,beh+1},M{i,beh+2});
+            fprintf(fid,'%.12g\t%.12g\t%.12g\n',M{i,beh},M{i,beh+1},M{i,beh+2});
         end
         fprintf(fid,'\n');
     end

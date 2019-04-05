@@ -42,7 +42,7 @@ bump = size(info,1)+2;
 for c = 1:length(channels)
     Ch = channels{c};
     
-    [M,summaries.(Ch)] = makeBehaviorSummary(trial.annot.(Ch),tmin,tmax);
+    [M,summaries.(Ch)] = makeBehaviorSummary(trial.annot.(Ch),tmin,tmax,30);
     if(isempty(M))
         M{1,1} = '';
     end

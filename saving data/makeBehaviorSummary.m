@@ -1,4 +1,4 @@
-function [M,channelSummary] = makeBehaviorSummary(channel,tmin,tmax)
+function [M,channelSummary] = makeBehaviorSummary(channel,tmin,tmax,FR)
 
 M = {};
 channelSummary = {};
@@ -12,7 +12,7 @@ for f = 1:length(fields)
         M(2,(count-1)*3+(1:3)) = {'Start','Stop','Duration'};
 
         M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
-        delta = channel.(fields{f})(:,2) - channel.(fields{f})(:,1);
+        delta = channel.(fields{f})(:,2) - channel.(fields{f})(:,1) + 1/FR;
         M(2+(1:size(channel.(fields{f}),1)),count*3) = num2cell(delta);
         
         channelSummary{count,1} = fields{f};
