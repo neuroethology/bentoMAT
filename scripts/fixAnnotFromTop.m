@@ -36,6 +36,10 @@ for f = 1:length(files)
     mov = strsplit(strrep(movieNames,'Movie file(s):  ',''),'.seq');
     mov = [mov{find(~cellfun(@isempty,strfind(mov,'Top')))} '.seq'];
 
+    if(isempty(strrep(mov,'.seq','')))
+        disp(['No movie info for ' fname]);
+        continue;
+    end
     if(~exist(mov,'file'))
         [~,mov2] = fileparts(mov);
         mov2 = strrep(mov2,'Mouse_','');
@@ -44,7 +48,7 @@ for f = 1:length(files)
             disp([mov ' could not be found!']);
             continue;
         else
-            mov = [mov2.folder filesep mov2.name];
+            mov = [mov2(1).folder filesep mov2(1).name];
         end
     end
 
