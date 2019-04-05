@@ -79,6 +79,10 @@ for c = 1:length(channels)
         M{1,1} = '';
         continue;
     end
+    %convert from frames to times, to avoid future tragedies
+    if(~any(~cellfun(@isempty,cellfun(@(x)rem(x,1),{M{:}},'uniformOutput',false))))
+        M(cellfun(@isnumeric,M)) = cellfun(@(x) x*FR,M(cellfun(@isnumeric,M)),'uniformoutput',false);
+    end
     
     fprintf(fid,'%s----------\n',channels{c});
     for beh = 1:3:size(M,2)
