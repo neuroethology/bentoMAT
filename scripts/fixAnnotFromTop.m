@@ -58,6 +58,9 @@ for f = 1:length(files)
 
     disp('   fixing annotations...');
     [annot,tmin,tmax,FR] = loadAnnotSheetTxt(fname);
+    if(isnan(FR))
+        FR=30;
+    end
     TS      = TS - TS(tmin);
     for ch = fieldnames(annot)'
         for b = fieldnames(annot.(ch{:}))'
