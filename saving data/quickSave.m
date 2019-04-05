@@ -16,9 +16,9 @@ else
     suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(tr,'%03d') '.annot'];
 end
 if(isfield(trial.io.movie,'fid')) %save the file too
-    fname = saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName);
+    fname = saveAnnotSheetTxt(trial.io.movie.fid,gui.data,suggestedName,0);
 else
-    fname = saveAnnotSheetTxt([],gui.data,suggestedName);
+    fname = saveAnnotSheetTxt([],gui.data,suggestedName,0);
 end
     
 gui.annot.modified = 0;
