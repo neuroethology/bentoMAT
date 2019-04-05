@@ -81,7 +81,7 @@ for c = 1:length(channels)
     end
     %convert from frames to times, to avoid future tragedies
     if(~any(cellfun(@any,cellfun(@(x)rem(x,1),{M{:}},'uniformOutput',false))))
-        M(cellfun(@isnumeric,M)) = cellfun(@(x) x*FR,M(cellfun(@isnumeric,M)),'uniformoutput',false);
+        M(cellfun(@isnumeric,M)) = cellfun(@(x) x/FR,M(cellfun(@isnumeric,M)),'uniformoutput',false);
     end
     
     fprintf(fid,'%s----------\n',channels{c});
