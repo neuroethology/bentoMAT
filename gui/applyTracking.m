@@ -1,12 +1,19 @@
 function movies = applyTracking(gui,movies)
 
-info = gui.data.io.movie.reader{1}.reader.getinfo();
-frnum = info.curFrame;
-if(isempty(gui.data.tracking.active{frnum})&frnum>1)
-    gui.data.tracking.active{frnum} = gui.data.tracking.active{frnum-1};
+% figure out which movie we're plotting tracking on
+rr=1;cc=1;
+if(length(gui.data.io.movie.fid)>1)
+    if(contains(gui.data.tracking.fun,'top'))
+        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Top')));
+    elseif(contains(gui.data.tracking.fun,'front'))
+        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Fro')));
+    end
 end
-if(isempty(gui.data.tracking.inactive{frnum})&frnum>1)
-    gui.data.tracking.inactive{frnum} = gui.data.tracking.inactive{frnum-1};
+
+info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
+frnum = info.curFrame;
+if(frnum<1)
+    return;
 end
     
 eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args, ' num2str(frnum) ' );']);
@@ -28,6 +35,12 @@ if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
 end
 plotActive = pts(:,2:end);
 plotInactive = [];
+% if(frnum>1 && isempty(gui.data.tracking.active{frnum}))
+%     gui.data.tracking.active{frnum} = gui.data.tracking.active{frnum-1};
+% end
+% if(frnum > 1 && isempty(gui.data.tracking.inactive{frnum}))
+%     gui.data.tracking.inactive{frnum} = gui.data.tracking.inactive{frnum-1};
+% end
 % active       = gui.data.tracking.active{frnum};
 % inactive     = gui.data.tracking.inactive{frnum};
 % 
@@ -49,16 +62,6 @@ plotInactive = [];
 % end
 % plotInactive = pts(inds, 2:end);
 
-
-% figure out which movie we're plotting tracking on
-rr=1;cc=1;
-if(length(gui.data.io.movie.fid)>1)
-    if(contains(gui.data.tracking.fun,'top'))
-        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Top')));
-    elseif(contains(gui.data.tracking.fun,'front'))
-        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Fro')));
-    end
-end
 
 if(size(pts,2)<=4)
 %     mov = insertObjectAnnotation(mov,'circle',plotActive,...
