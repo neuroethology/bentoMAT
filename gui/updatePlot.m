@@ -196,7 +196,7 @@ if(gui.enabled.annot(1))
     win((win/gui.data.annoFR + time) < gui.data.annoTime(1))    = [];
     
     % make the fineAnnot pic if it's enabled
-    tmax    = round(gui.data.annoTime(end)*gui.data.annoFR);
+    tmax    = length(gui.data.annoTime);%round(gui.data.annoTime(end)*gui.data.annoFR);
     if(all(gui.enabled.fineAnnot))
         img = makeAllChannelBhvImage(gui,gui.data.annot,gui.annot.cmapDef,inds,tmax,gui.annot.show);
         img = displayImage(img,gui.traces.panel.Position(3)*gui.h0.Position(3)*2.5,0);
