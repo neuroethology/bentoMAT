@@ -24,4 +24,4 @@ for i=1:length(params)
         mask = mask & ((vals<=params(i).limL) | (vals>=params(i).limU));
     end
 end
-    
+mask = convertToRast(floor(gui.data.trackTime(convertToBouts(mask))*gui.data.annoFR),length(gui.data.annoTime));
