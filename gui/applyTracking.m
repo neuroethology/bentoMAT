@@ -1,14 +1,7 @@
 function movies = applyTracking(gui,movies)
 
-% figure out which movie we're plotting tracking on
-rr=1;cc=1;
-if(length(gui.data.io.movie.fid)>1)
-    if(contains(gui.data.tracking.fun,'top'))
-        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Top')));
-    elseif(contains(gui.data.tracking.fun,'front'))
-        [rr,cc] = find(~cellfun(@isempty,strfind(gui.data.io.movie.fid,'Fro')));
-    end
-end
+% check which movie we're plotting tracking on
+[rr,cc] = identifyTrackedMovie(gui.data);
 
 info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
 frnum = info.curFrame+1;

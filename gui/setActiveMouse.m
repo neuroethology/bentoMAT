@@ -86,10 +86,15 @@ end
 if(gui.enabled.tracker(1))
     if(isfield(gui,'data'))
         data.tracking.fun = gui.data.tracking.fun;
+        [rr,cc] = identifyTrackedMovie(data);
+        data.trackTime = gui.data.io.movie.reader{rr,cc}.TS;
     else
         data.tracking.fun = promptTrackType();
         if(isempty(data.tracking.fun))
             gui.enabled.tracker = [0 0];
+        else
+            [rr,cc] = identifyTrackedMovie(data);
+            data.trackTime = data.io.movie.reader{rr,cc}.TS;
         end
     end
     if(isfield(data.tracking.args,'features'))

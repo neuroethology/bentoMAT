@@ -229,6 +229,7 @@ for i=1:size(data,1)
                     disp('Please download jsonlab (https://github.com/fangq/jsonlab) or upgrade to Matlab 2016b or later.')
                     strtemp.tracking.args = [];
                 end
+                strtemp.io.feat.fid = {fid};
             end
         else
             strtemp.tracking.args = [];

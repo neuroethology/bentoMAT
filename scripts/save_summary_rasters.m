@@ -19,13 +19,17 @@ end
 if(~iscell(filter))
     filter = {filter};
 end
-if(pth(end)~=filesep)
-    pth = [pth filesep];
-end
-disp(['Locating annotation files [' pth '**' filesep strjoin(filter,';') ']...'])
-files = rdir([pth '**' filesep filter{1}]);
-for i=2:length(filter)
-    files = [files; rdir([pth '**' filesep filter{i}])];
+if(ischar(pth))
+    if(pth(end)~=filesep)
+        pth = [pth filesep];
+    end
+    disp(['Locating annotation files [' pth '**' filesep strjoin(filter,';') ']...'])
+    files = rdir([pth '**' filesep filter{1}]);
+    for i=2:length(filter)
+        files = [files; rdir([pth '**' filesep filter{i}])];
+    end
+else
+    files = pth; %secret mode: pass struct containing output of dir instead of just directory name
 end
 [~,i] = sort({files.name});
 files = files(i);

@@ -1,5 +1,6 @@
 function pts = MARS_top(data,fr)
 
+    fr = min(fr,size(data.keypoints,1));
     inds    = [1 2 4 5 7 6 4 3 1];
     if(iscell(data.keypoints)) %support for both jsondecode and loadjson
         v       = data.keypoints{fr};

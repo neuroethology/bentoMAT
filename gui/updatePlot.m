@@ -49,6 +49,7 @@ if(~isempty(eventdata))
             set(gui.fineAnnot.axes,'xlim',gui.fineAnnot.win*[-1 1]);
             gui.features.axes.XLim = gui.features.win*[-1 1];
             
+            % update feature-threshold objects
             for i = 1:length(gui.features.feat)
                 set(gui.features.feat(i).axes,'xlim',gui.features.win*[-1 1]);
                 set(gui.features.feat(i).threshLineU,'xdata',gui.features.win*[-1 1 1 -1 -1]);
@@ -87,15 +88,13 @@ end
 
 % update the plotted features
 if(all(gui.enabled.features) && isfield(gui.features,'feat'))
-    info = gui.data.io.movie.reader{1,1}.reader.getinfo();
-    featTime = gui.data.io.movie.reader{1,1}.TS(info.curFrame);
-    inds  = (gui.data.annoTime >= (featTime-gui.features.win)) & (gui.data.annoTime <= (featTime+gui.features.win));
+    inds  = (gui.data.trackTime >= (time-gui.features.win)) & (gui.data.trackTime <= (time+gui.features.win));
     inds  = inds | [false inds(1:end-1)] | [inds(2:end) false];
     
     for i = 1:length(gui.features.feat)
         channel = regexp(gui.features.feat(i).tag(3:5),'[\d]','match');
         channel = str2num(channel{:});
-        set(gui.features.feat(i).trace,'xdata',gui.data.annoTime(inds) - time,...
+        set(gui.features.feat(i).trace,'xdata',gui.data.trackTime(inds) - time,...
             'ydata',gui.data.tracking.features(channel,inds,gui.features.feat(i).featNum));
     end
 end
