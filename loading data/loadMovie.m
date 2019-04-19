@@ -11,7 +11,10 @@ for col = 1:size(data.io.movie.fid,1)
                 temp         	= seqIo(data.io.movie.fid{col,i},'reader');
                 rtemp           = temp.getinfo();
                 rtemp.reader    = temp;
-                rtemp.TS        = rtemp.reader.getts();
+                disp('getting timestamps...');
+%                rtemp.TS        = (1:length(rtemp.seek))/rtemp.fps;
+                 rtemp.TS        = rtemp.reader.getts();
+                disp('done');
                 reader{col,i}   = rtemp;
                 tMax            = reader{col,i}.TS(end);
                 tMin            = min([reader{col,i}.TS(1) tMin]);
@@ -19,7 +22,7 @@ for col = 1:size(data.io.movie.fid,1)
 %                                                 % inaccurate! trust the experimenter instead.
 %                 tMax            = reader{col,i}.numFrames/Fr;
             otherwise
-                reader{col,i}       = VideoReader([data.io.movie.fid{i}]);
+                reader{col,i}       = VideoReader([data.io.movie.fid{col,i}]);
                 reader{col,i}.CurrentTime = 0;
                 Fr              = reader{col,i}.FrameRate;
                 tMax            = reader{col,i}.Duration;

@@ -1,15 +1,15 @@
 m mount 0.046 0.773 0.205
 i intromission 0.049 0.403 0.227
 a attack 0.973 0.125 0.134
-g sniff_genitals 0.103 0.352 0.510
-f sniff_face 1.000 0.887 0.000
+_ sniff_genitals 0.103 0.352 0.510
+_ sniff_face 1.000 0.887 0.000
 i closeinvestigation 0.340 0.694 0.960
 n intruder_introduction 0.527 0.527 0.527
 w walk 0.220 0.220 0.220
 l alone 0.840 0.840 0.840
 _ groom_genital 0.629 0.170 0.867
 _ agg_investigation 0.997 0.683 0.265
-f cable_fix 0.987 0.677 0.936
+_ cable_fix 0.987 0.677 0.936
 _ Mesh_contact 0.960 0.876 0.529
 _ Outside_hide 0.460 0.947 0.753
 _ Inside_hide 0.519 0.716 1.000
@@ -32,7 +32,7 @@ p approach 0.552 0.690 0.483
 n mount_attempt 0.793 1.000 0.000
 _ post_mount 0.655 0.034 0.276
 k attack_attempt 0.000 0.621 0.586
-g sniff_genital 1.000 0.448 0.000
+_ sniff_genital 1.000 0.448 0.000
 b sniff_body 1.000 0.724 0.621
 _ touch 0.655 0.345 0.000
 _ touch_attempt 0.966 0.069 0.724
@@ -60,7 +60,7 @@ _ male_qtip 0.724 0.828 0.172
 _ enter 0.655 0.897 1.000
 _ clean_genitals 0.483 0.448 0.000
 _ sniff_bedding 0.862 1.000 0.793
-g groom 1.000 0.759 0.828
+_ groom 1.000 0.759 0.828
 l allogrooming 0.276 0.345 0.069
 h headinvestigation 0.000 0.138 0.241
 _ bodyinvestigation 0.207 0.138 0.000
@@ -99,7 +99,7 @@ _ x593nm 0.552 1.000 0.103
 i ignore 0.414 0.310 0.793
 _ corner 0.000 0.138 0.483
 _ circling 0.586 0.621 1.000
-f snifface 0.793 0.000 0.172
+_ snifface 0.793 0.000 0.172
 u sniffurogenital 0.621 0.690 0.759
 _ sniffheld 0.276 0.000 0.241
 n intruder_enters 0.759 0.621 0.655
@@ -118,7 +118,7 @@ _ follow 0.966 1.000 0.000
 _ feeding 0.000 0.828 0.414
 r run 0.310 0.207 0.793
 _ stand 0.724 0.517 1.000
-f freeze 0.759 0.828 0.552
+_ freeze 0.759 0.828 0.552
 _ wildsniff 0.000 0.828 0.759
 _ manipulation 0.931 0.552 0.310
 _ social_grooming 0.000 0.276 0.000
@@ -131,7 +131,7 @@ _ attack_frontal 0.759 1.000 0.966
 _ attack_dorsal 0.552 1.000 0.655
 u intruder_out 1.000 0.310 0.931
 r circle 0.586 0.621 0.000
-g aggro 0.310 0.379 0.414
+_ aggro 0.310 0.379 0.414
 _ tailrattle 0.793 0.000 1.000
 y L473nm 0.345 0.172 0.000
 _ L593nm 0.207 0.862 0.000
@@ -168,3 +168,6 @@ _ bad_recording 0.759 0.448 0.345
 _ first_inv 0.483 0.241 0.483
 _ top_right 0.500 0.500 1.000
 _ feature_filter_1 0.729 0.729 0.810
+_ intruder_attack 0.586 0.448 0.759
+_ GCamP_left_vs_tdTomato_right 0.657 0.657 0.657
+_ abdomen 0.500 0.707 1.000
