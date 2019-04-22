@@ -1,4 +1,10 @@
 function trackType = promptTrackType()
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 pth         = fileparts(which('promptTrackType'));
 trackerList = dir([pth filesep 'tracking unpackers' filesep '*.m']);

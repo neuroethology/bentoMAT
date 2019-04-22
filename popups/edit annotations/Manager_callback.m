@@ -1,4 +1,10 @@
 function Manager_callback(source,~,action)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 h   = guidata(source);
 errstr=[];

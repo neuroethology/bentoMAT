@@ -1,4 +1,10 @@
 function openHelpMenu(source)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 str = {'---Playback Hotkeys---',''};
 str = [str;{[char(8592) ' ' char(8594)],'Step +/- one frame'}];

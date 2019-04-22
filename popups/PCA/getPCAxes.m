@@ -1,5 +1,11 @@
 function getPCAxes(gui,source,type)
 % ask the user which trials to use for dim red (and how many PCs to include?)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 m       = gui.data.info.mouse;
 sess    = gui.data.info.session;

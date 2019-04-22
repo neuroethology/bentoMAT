@@ -1,4 +1,10 @@
 function cPickHighlight(source,~)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 data = guidata(source);
 
 hit = find([data.h.bhvrs.Value]);

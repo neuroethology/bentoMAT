@@ -1,4 +1,10 @@
 function saveAnnotSheet(gui,trial,mouse,session,tr)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 fid     = trial.io.annot.fidSave;
 tmin    = trial.io.annot.tmin;

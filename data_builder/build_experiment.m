@@ -7,6 +7,10 @@ function exptGui = build_experiment(source,~)
 %   framerate
 %   - Audio data, audio log file/timestamp, framerate
 %   - Tracking data, tracking data format
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
 if(exist('source','var'))
     gui = guidata(source);

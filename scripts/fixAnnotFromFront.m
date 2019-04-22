@@ -1,4 +1,10 @@
 function fixAnnotFromFront(pth)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 doubleStepBack=0; %change this to 1 to do a broader search for corresponding movies
 

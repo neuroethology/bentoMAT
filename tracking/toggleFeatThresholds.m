@@ -1,6 +1,12 @@
 function toggleFeatThresholds(source,~,flag)
 % just changes the visibility of a bunch of buttons for when the user is
 % playing around with thresholding features
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 gui = guidata(source);
 

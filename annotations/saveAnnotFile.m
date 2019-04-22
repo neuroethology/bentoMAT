@@ -1,4 +1,10 @@
 function saveAnnotFile(source,~,pth)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 gui = guidata(source);
 
 bhvpic = gui.data.bhv;

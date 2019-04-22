@@ -1,4 +1,9 @@
 function [FR,annot] = setGlobalFR(allFR,annot,defaultFR)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 
 FRlist = [];
 for f = fieldnames(allFR)'

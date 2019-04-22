@@ -1,4 +1,10 @@
 function save_summary_rasters(pth,filter,suffix,FR,includeMARSOutput,overridePrompt)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 [cmapDef,hotkeys] = loadPreferredCmap();
 doPDF = exist('export_fig.m','file');

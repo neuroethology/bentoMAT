@@ -1,4 +1,10 @@
 function [rast,time] = unpackCaData(pth)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 [~,fname,ext] = fileparts(pth);
 disp(['Loading Ca file ' fname '...']);

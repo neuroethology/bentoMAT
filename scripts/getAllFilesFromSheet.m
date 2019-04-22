@@ -1,4 +1,10 @@
-00function [data,populated] = getAllFilesFromSheet(pth)
+function [data,populated] = getAllFilesFromSheet(pth)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 [~,sheets] = xlsfinfo(pth);
 [~,~,raw] = xlsread(pth,sheets{1}); %load the excel sheet

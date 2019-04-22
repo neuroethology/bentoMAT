@@ -1,4 +1,9 @@
 function cmap_M = read_cmap(cmap,bhvr)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 
 cmap_M = [];
 for i = 1:length(bhvr)

@@ -1,4 +1,10 @@
 function str = makeTime(num)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 sec = mod(num,60);
 msec = sec - floor(sec);

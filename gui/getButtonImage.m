@@ -1,4 +1,10 @@
 function cbox = getButtonImage(color,isActive)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 cbox = padarray(repmat(permute(color,[1 3 2]),[23 23 1]),[1 1 0]);
 

@@ -1,4 +1,10 @@
 function makeButton(parent,string)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 axes('parent',parent,'position',[0 0 1 1]);
 c = 0.1;

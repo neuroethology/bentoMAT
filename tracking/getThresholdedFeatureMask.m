@@ -1,4 +1,10 @@
 function [mask,params] = getThresholdedFeatureMask(gui,params)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % create mask parameters from current plots
 if(~exist('params','var'))

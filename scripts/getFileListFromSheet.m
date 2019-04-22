@@ -1,4 +1,10 @@
 function data = getFileListFromSheet(pth)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 [~,~,raw] = xlsread(pth,'Sheet1'); %load the excel sheet
 

@@ -1,5 +1,10 @@
 function gui = toggleAnnot(gui,toggle,key,lastKey)
-    
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
     gui.annot.prev = gui.annot.bhv;
     switch toggle
         case 'start'

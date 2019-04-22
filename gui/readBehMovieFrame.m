@@ -1,5 +1,11 @@
 function [movies,reader,frnum] = readBehMovieFrame(movie,time)
 % reader = the behavior movie struct; t = the current time in *seconds*
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 movies = [];
 reader = movie.reader;

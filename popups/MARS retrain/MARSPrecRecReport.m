@@ -1,4 +1,10 @@
 function varargout = MARSPrecRecReport(bhvr,gui,trials,GT)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 if(~nargout)
     close(figure(6759));

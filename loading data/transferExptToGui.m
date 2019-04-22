@@ -2,6 +2,12 @@ function transferExptToGui(data,gui)
 % data is either the path to an excel file, or is already the contents of
 % that excel file (if those contents were already loaded using the data
 % builder gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 if(iscell(data))
     raw = data;

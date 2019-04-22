@@ -1,4 +1,10 @@
 function feats = promptFeatures(data)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 f = fieldnames(data.args);
 f(strcmpi(f,'features'))=[];

@@ -3,6 +3,12 @@ function [annot, tmin, tmax, allFR, fid, fidSave] = unpackAnnotFromLoader(pth, a
 % startAnno  -> data{i,match.Start_Anno}
 % stopAnno   -> data{i,match.Stop_Anno}
 % subFrames  -> raw{1,9}
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 annoList    = strsplit(annoList,';');
 tmin        = zeros(1,length(annoList));

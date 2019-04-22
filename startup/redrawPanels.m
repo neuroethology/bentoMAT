@@ -1,6 +1,12 @@
 function gui = redrawPanels(gui)
 % this gets called when the user makes a change to the data being viewed-
 % eg, opens a movie, adds tracking data, etc. It is terrible.
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 enabled     = fieldnames(gui.enabled);
 config      = gui.config;
 

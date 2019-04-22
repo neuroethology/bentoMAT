@@ -1,4 +1,10 @@
 function figBoxCheck(source,eventdata,boxID)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 gui = guidata(source);
 t = toc(gui.ctrl.slider.timer);
 if(t>0.25)

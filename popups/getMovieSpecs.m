@@ -1,5 +1,11 @@
 function specs = getMovieSpecs(gui,info)
 % first frame, last frame, framerate, profile, quality, background color, show scrollbar
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 h.fig = figure(1);clf;
 set(h.fig,'dockcontrols','off','menubar','none','position',[250 450 650 300],...

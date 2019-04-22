@@ -1,4 +1,10 @@
 function gui = applySliderUpdates(gui,type,info)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % remove existing annotation data:
 set(gui.ctrl.slider.bg,'CData',[]);

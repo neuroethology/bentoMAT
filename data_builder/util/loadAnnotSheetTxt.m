@@ -1,4 +1,10 @@
 function [annot,tmin,tmax,FR] = loadAnnotSheetTxt(fname,winStart,winStop)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % in case a Bento user doesn't want to load all frames of the annotations,
 % we let Bento pass tmin/tmax values:

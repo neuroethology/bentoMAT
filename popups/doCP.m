@@ -1,4 +1,10 @@
 function CP = doCP(sig1,sig2)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 dat = [sig1 sig2];
 bins  = linspace(min(dat)*.9,max(dat)*1.1,500);

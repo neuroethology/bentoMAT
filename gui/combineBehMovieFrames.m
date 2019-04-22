@@ -1,4 +1,10 @@
 function mov = combineBehMovieFrames(gui,movies)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % add tracking data if included
 if(all(gui.enabled.tracker))

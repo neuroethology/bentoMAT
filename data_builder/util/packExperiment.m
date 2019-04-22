@@ -1,4 +1,10 @@
 function [M,flag] = packExperiment(gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % blank out any accidental text that made it into hidden columns
 gui.t.Data(:,~gui.rowVis) = {[]};

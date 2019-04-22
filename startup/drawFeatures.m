@@ -1,4 +1,10 @@
 function gui = drawFeatures(gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 if(isfield(gui,'tracker'))
     if(isfield(gui.features,'hullPlot'))

@@ -1,4 +1,10 @@
 function config = loadConfig()
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 config.midline   = 0.6;
 config.rowscale  = 0.06;

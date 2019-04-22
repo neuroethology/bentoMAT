@@ -1,3 +1,9 @@
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 if(~exist('gui','var')|~isstruct(gui))
     gui = struct();
     if(isfield(gui,'data')), gui = rmfield(gui,'data'); end

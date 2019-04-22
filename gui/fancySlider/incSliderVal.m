@@ -1,6 +1,12 @@
 function h = incSliderVal(source)
 % this function just implements normal slider behavior (arrow and bar
 % clicks).
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 gui = guidata(source);
 h = gui.ctrl.slider;
 

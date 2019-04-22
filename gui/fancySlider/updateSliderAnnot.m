@@ -1,4 +1,10 @@
 function updateSliderAnnot(gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 if(gui.enabled.annot(2))
     if(~isempty(gui.data.annoTime))

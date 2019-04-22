@@ -1,4 +1,9 @@
 function updatePreferredCmap(cmap,hotkeys)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 
 fname       = [fileparts(mfilename('fullpath')) '\color_profiles.txt']; %gets the full path to this file
 if(~exist(fname,'file'))

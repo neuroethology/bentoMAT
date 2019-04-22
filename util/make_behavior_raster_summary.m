@@ -1,4 +1,10 @@
 function make_behavior_raster_summary(annot,cmapDef,hotkeys,maxTime,FR,h,tstr)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 annot  = rmBlankChannels(annot);
 

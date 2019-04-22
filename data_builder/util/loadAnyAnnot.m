@@ -1,4 +1,10 @@
 function [annotations,tmax,tmin,FR,fid,hotkeys] = loadAnyAnnot(filename,tmin,tmax)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 [~,~,ext] = fileparts(filename);
 loadRange = exist('tmin','var');

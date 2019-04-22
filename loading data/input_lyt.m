@@ -1,5 +1,6 @@
 function datapara=input_lyt(fn)
 
+
 fid=fopen(fn,'r','b');
 file_info = dir(fn);
 time_stamp = file_info.date;

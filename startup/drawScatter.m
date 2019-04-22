@@ -1,4 +1,10 @@
 function gui = drawScatter(gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 if(isfield(gui,'scatter'))
     delete(gui.scatter.panel);

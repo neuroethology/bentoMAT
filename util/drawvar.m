@@ -1,5 +1,11 @@
 function h2=drawvar(X,Y,color,nstd,varargin)
 %X,Y,color,nstd,[variance if computed externally]
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 if(isempty(varargin))
     h=area(X,[nanmean(Y,1)-nanstd(Y,1)*nstd; nanstd(Y,1)*nstd; nanstd(Y,1)*nstd]');
 else

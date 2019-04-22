@@ -1,4 +1,9 @@
 function updateLegend(gui,showHidden)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 
     delete(gui.legend.axes.Children);
     if(~exist('showHidden'))

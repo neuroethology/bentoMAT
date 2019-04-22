@@ -1,4 +1,10 @@
 function gui = updateWithMARSOutputs(gui,vals,model_type)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % add the classifier outputs back as an annotation channel
 data    = gui.allData(vals(1)).(['session' num2str(vals(2))])(vals(3));

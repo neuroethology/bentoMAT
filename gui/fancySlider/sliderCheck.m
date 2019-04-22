@@ -1,6 +1,12 @@
 function sliderCheck(source,~,parent)
 % if the user interacts with the slider, this function modifies the
 % gui.Action flag, so that the gui is updated appropriately.
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 gui    = guidata(parent);
 

@@ -1,4 +1,10 @@
 function [flag,path_to_MARS,config] = BentoPyConfig(config)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 flag=0;
 [~, ~, isloaded] = pyversion; %get python up and running if it's not already

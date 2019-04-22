@@ -1,5 +1,11 @@
 function h = setSliderVal(source)
 % this function lets the user click and drag the slider.
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 gui     = guidata(source);
 h       = gui.ctrl.slider;
 

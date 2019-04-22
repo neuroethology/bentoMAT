@@ -1,5 +1,11 @@
 function runCPsort(source)
 % ask the user which trials and conditions to use for CP analysis
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 gui = guidata(source);
 m       = gui.data.info.mouse;

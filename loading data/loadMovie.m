@@ -1,4 +1,10 @@
 function [gui,data] = loadMovie(gui,data)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 reader = {};tMin=inf;
 for col = 1:size(data.io.movie.fid,1)

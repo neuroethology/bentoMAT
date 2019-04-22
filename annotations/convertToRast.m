@@ -1,4 +1,10 @@
 function rast = convertToRast(bhvr,tmax)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 time = 1:tmax;
 rast = false(size(time));

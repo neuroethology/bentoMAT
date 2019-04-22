@@ -1,4 +1,10 @@
 function processCP(~,~,h,gui,m,sess,trList,bhvList)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % temp = transferAnnot(temp,data)
 bhv1 = bhvList(h.bhv1.Value);

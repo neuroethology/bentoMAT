@@ -1,4 +1,9 @@
 function mouse = load_experiment(filename,skipvideos)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 
 if(isempty(filename))
     [filename pth] = uigetfile('*.xls;*.xlsx');

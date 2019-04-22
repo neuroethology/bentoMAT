@@ -1,4 +1,10 @@
 function MARSoptions(source,~)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
     gui     = guidata(source);
     
     [flag,path_to_MARS,config] = BentoPyConfig(gui.config); %initialize python

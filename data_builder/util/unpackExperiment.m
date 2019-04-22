@@ -1,6 +1,11 @@
 function [mouse,enabled,pth,hotkeys] = unpackExperiment(raw,skipvideos)
 % parses the metadata in the excel sheet, then loads all of the listed
 % files and formats their data.
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 for i = 3:size(raw,1)
     inds = [4 5 9 10 15 16 17];
     inds(inds>size(raw,2))=[];

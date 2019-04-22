@@ -1,4 +1,10 @@
 function annot = drawannot(gui,row,scale,nRows)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 annot.panel = uipanel('parent',gui.ctrl.panel,...
         'position',[0.01 (row-.5)/(nRows+1) 0.98 scale/(nRows+1)],'bordertype','none');

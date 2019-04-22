@@ -1,4 +1,10 @@
 function launchFinder(source,~)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 gui = guidata(source);
 h = figure(998);clf;

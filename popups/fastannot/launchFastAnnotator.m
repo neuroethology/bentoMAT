@@ -1,5 +1,11 @@
 % function launchFastAnnotator(source,~)
 % gui  = guidata(source);
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 h.guifig = gui.h0;
 h.fig = figure('dockcontrols','off','menubar','none',...

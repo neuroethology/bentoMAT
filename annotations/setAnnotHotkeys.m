@@ -1,4 +1,10 @@
 function setAnnotHotkeys(source,~)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
     gui = guidata(source);
     bhvList = fieldnames(gui.annot.bhv);
     keyList = cell(size(bhvList));

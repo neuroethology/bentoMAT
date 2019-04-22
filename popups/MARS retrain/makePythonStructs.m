@@ -1,4 +1,9 @@
 function [movies,feat,annot,front,frame_start,frame_stop] = makePythonStructs(allData,vals,doAnnot,mask)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 
 for i=1:size(vals,1)
     data    = allData(vals(i,1)).(['session' num2str(vals(i,2))])(vals(i,3));

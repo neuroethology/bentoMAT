@@ -1,4 +1,10 @@
 function trainClassifierOnFiles(loader,behaviorMap)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
     config  = loadConfig();
     [flag,path_to_MARS] = BentoPyConfig(config); %initialize python
     if(isunix)

@@ -1,4 +1,10 @@
 function gui = applyToAllMice(gui,action,varargin)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 data    = gui.allData;
 inds    = gui.allPopulated;

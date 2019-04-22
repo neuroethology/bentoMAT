@@ -1,5 +1,11 @@
 function [annot,tmax] = loadAnnotSheet(fname,tmin,tmax)
 % still need to add support for multiple annotations for file
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 if(nargin<2)
     tmin = nan;
     tmax = nan;

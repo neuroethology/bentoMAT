@@ -1,4 +1,10 @@
 function updateThresholdBoxes(gui,featInd)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 lim     = get(gui.features.feat(featInd).axes,'ylim');
 limU = str2num(gui.features.feat(featInd).threshValU.String);

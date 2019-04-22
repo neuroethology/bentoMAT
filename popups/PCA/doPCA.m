@@ -1,4 +1,10 @@
 function doPCA(source,~,parent,h,trials,nPCs,gui,m,sess,trList,type)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 source.String = 'Computing...';
 drawnow;

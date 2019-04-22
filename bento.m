@@ -1,3 +1,9 @@
+% Call bento.m to initialize or restart Bento
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
 addpath(genpath(fileparts(mfilename('fullpath')))); %add all folders in the same directory as bento.m
 if(~exist('quitloop','var') || ~exist('gui','var') || ~isstruct(gui) || ~isfield(gui,'h0') || ~isvalid(gui.h0))
     fclose all;

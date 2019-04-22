@@ -1,4 +1,10 @@
 function [cmap,hotkeys] = loadPreferredCmap()
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 formatSpec  = '%s %s %.3f %.3f %.3f';
 pth         = [fileparts(mfilename('fullpath')) filesep 'color_profiles.txt'];

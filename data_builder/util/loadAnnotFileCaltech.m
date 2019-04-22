@@ -1,4 +1,10 @@
 function [annot,maxTime,hotkeys] = loadAnnotFileCaltech(M,tmin,tmax)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % get full list of labels
 listend = find(strcmp(M,''));

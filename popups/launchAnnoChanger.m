@@ -1,4 +1,10 @@
 function launchAnnoChanger(source)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 gui=guidata(source);
 answer = inputdlg({'Enter new annotation framerate:','Apply to all loaded data? (y/n)'},'Change framerate');

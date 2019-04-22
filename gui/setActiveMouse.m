@@ -1,4 +1,10 @@
 function gui = setActiveMouse(gui,m,sess,tr,newMovie)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 % save the data from the current mouse- need a catch if there is no current
 % mouse (ie on startup)

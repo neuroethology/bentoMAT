@@ -1,4 +1,10 @@
 function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName,promptOverride)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 if(~isempty(trial.io.annot.fid))
     fid     = trial.io.annot.fid{:};

@@ -1,4 +1,10 @@
 function gui = drawWelcome(gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 welcome.panel  = uipanel('position',[0 0 1 1],'bordertype','none');
 

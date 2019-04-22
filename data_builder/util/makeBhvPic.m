@@ -1,4 +1,10 @@
 function bhvpic = makeBhvPic(data,labels)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 bhvpic = [];
 for b = 1:length(labels)

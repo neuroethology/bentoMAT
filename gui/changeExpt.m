@@ -1,4 +1,10 @@
 function changeExpt(source,~)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 useSource = source.Parent.Parent.Parent;
 gui = guidata(useSource);
 

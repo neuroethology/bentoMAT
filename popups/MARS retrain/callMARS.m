@@ -1,4 +1,10 @@
 function callMARS(source,~,gui)
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 
 [flag,path_to_MARS,config] = BentoPyConfig(gui.config); %initialize python
 if(flag)

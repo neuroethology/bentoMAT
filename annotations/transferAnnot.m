@@ -1,6 +1,12 @@
 function gui = transferAnnot(gui,data)
 % copies information regarding the current set of annotations into a format
 % the gui understands.
+%
+% (C) Ann Kennedy, 2019
+% California Institute of Technology
+% Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
+
+
 annot = gui.annot;
 
 cmap    = annot.cmapDef;
