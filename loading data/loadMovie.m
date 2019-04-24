@@ -19,7 +19,7 @@ for col = 1:size(data.io.movie.fid,1)
                 rtemp.reader    = temp;
                 disp('getting timestamps...');
 %                rtemp.TS        = (1:length(rtemp.seek))/rtemp.fps;
-                 rtemp.TS        = rtemp.reader.getts();
+                 rtemp.TS        = getSeqTimestamps(data.io.movie.fid{col,i},temp);
                 disp('done');
                 reader{col,i}   = rtemp;
                 tMax            = reader{col,i}.TS(end);
