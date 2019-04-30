@@ -8,6 +8,9 @@
 #########################
 bento/loading data/ca_source_extraction/*
 bento/loading data/piotr_toolbox/*
+loading data/ca_source_extraction/*
+loading data/piotr_toolbox/*
+
 
 # debugging #
 #############
