@@ -1,10 +1,11 @@
 # **B**ehavior **E**nsemble and **N**eural **T**rajectory **O**bservatory
 
-Bento is a Matlab GUI for browsing and annotating joint calcium imaging + video datasets.
+Bento is a Matlab GUI for browsing and annotating joint calcium imaging + video datasets. It lets you browse and annotate behavioral and neural data, and makes it easy to organize and navigate trials within a batch of experiments.
+<div align=center><img src=/docs/bento_screenshot_plain.png?raw=true width=500px></div>
 
-## Getting Started
 
-Want to get a quick visual sense of what's going on in your data? Bento lets you browse and annotate behavioral and neural data, and makes it easy to organize and navigate trials within a batch of experiments.
+## Installation
+The easiest way to keep your local version up to date is to clone this git repository. Bento requires the following software:
 
 ### Prerequisites
 * Matlab 2014b or later
@@ -15,10 +16,6 @@ Want to get a quick visual sense of what's going on in your data? Bento lets you
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if using calcium traces extracted with CNMF_E
 * [JSONLab](https://github.com/fangq/jsonlab) for some tracker files- if your MATLAB doesn't have native *.json support (pre-2017?)
 
-## Installation
-The easiest way to keep your local version up to date is to clone this git repository; GitHub's software then lets you update to the latest version of the code at the press of a button.
-
-A copy of the code is also posted to the Anderson lab private server, however this copy is less frequently updated.
 
 ## Creating your first experiment
 Clicking "New Experiment" in the welcome menu brings up a window in which you can enter experiment metadata + paths to your data; entered text can be saved into an excel sheet ("Save info") and reloaded in subsequent sessions ("Edit experiment"/"Load experiment" in the main menu).
