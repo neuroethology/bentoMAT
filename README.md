@@ -24,7 +24,7 @@ You may also wish to install:
 ## Code Contributors
 Bento was created by [Ann Kennedy](https://annkennedy.github.io/), but has benefitted from the suggestions of several members of the [David J Anderson lab](https://davidandersonlab.caltech.edu) at Caltech, including Tomomi Karigo, Bin Yang, and Jalani Williams.
 
-MARS, a pose estimation and behavior classification system that can be integrated with Bento, was created by Cristina Segalin, Jalani Williams, and Ann Kennedy, with support of members of the Anderson and Perona labs. Code and documentation for MARS is coming soon.
+MARS, a pose estimation and behavior classification system that can be integrated with Bento, was created by Cristina Segalin, Jalani Williams, and Ann Kennedy, with support of members of the [Anderson](https://davidandersonlab.caltech.edu) and [Perona](http://www.vision.caltech.edu/Perona.html) labs at Caltech. Code and documentation for MARS is coming soon.
 
 Bento is an actively developed package, and we welcome community involvement. For questions about Bento, consult the project [Wiki](https://github.com/annkennedy/bento/wiki).
 
