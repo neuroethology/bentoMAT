@@ -19,7 +19,7 @@ You may also wish to install:
 * [JSONLab](https://github.com/fangq/jsonlab) if you use our mouse tracker, MARS, and your MATLAB doesn't have native *.json support (pre-2017)
 
 <div align=center>
-<img src=docs/tracking_demo.gif?raw=true style="float:left; width=30%; margin-right=2%"> <img src=docs/annotation_demo.gif?raw=true style="float:left; width=30%"> <img src=docs/features_demo.gif?raw=true style="float:left; width=30%; margin-left=2%">
+<img src=docs/tracking_demo.gif?raw=true style="float:left; max-width=30%; margin-right=2%"> <img src=docs/annotation_demo.gif?raw=true style="float:left; max-width=30%"> <img src=docs/features_demo.gif?raw=true style="float:left; max-width=30%; margin-left=2%">
 </div>
 
 ## Code Contributors
