@@ -17,7 +17,7 @@ pth(end) = strrep(pth(end),'\','')
 files = dir([pth '\**\*.annot']);
 drop = find(~cellfun(@isempty,strfind({files.name},'_TS.annot')));
 files(drop)=[];
-files2 = dir([pth '**\*.txt']);
+files2 = dir([pth '\**\*.txt']);
 files = [files;files2];
 
 ans = questdlg(['Found ' num2str(length(files)) ' files. Continue?'],'Converting frames to times','Yes','No','Yes');
