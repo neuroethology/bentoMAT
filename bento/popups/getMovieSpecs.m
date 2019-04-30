@@ -1,5 +1,5 @@
 function specs = getMovieSpecs(gui,info)
-% first frame, last frame, framerate, profile, quality, background color, show scrollbar
+% returns: first frame, last frame, framerate, profile, quality, background color, show scrollbar
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -16,7 +16,7 @@ ss.panel = {'bordertype','line','units','normalized','highlightcolor',[.7 .7 .7]
 ss.R = {'units','normalized','fontsize',10,'horizontalalign','right'};
 ss.L = {'units','normalized','fontsize',10,'horizontalalign','left'};
 ss.C = {'units','normalized','fontsize',10,'horizontalalign','center'};
-strs = {'Motion JPEG AVI','Archival','Motion JPEG 2000','MPEG-4','Uncompressed AVI','Indexed AVI','Grayscale AVI'};
+strs = {'Motion JPEG AVI','MPEG-4','GIF','Archival','Motion JPEG 2000','Uncompressed AVI','Indexed AVI','Grayscale AVI'};
 bhvs = ['all';strrep(fieldnames(gui.annot.bhv),'_',' ')];
 
 h.quality  = uipanel(h.fig,ss.panel{:},'title','Quality settings','units','normalized','position',[.025 .6 .45 .35]);

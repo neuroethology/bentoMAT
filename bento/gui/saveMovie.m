@@ -19,17 +19,32 @@ data      = gui.data; % back up full versions of data
 annot     = gui.annot;
 
 specs        = getMovieSpecs(gui,info);
-v            = VideoWriter(saveDataName,specs.profile);
-v.FrameRate  = specs.FR*specs.playback;
-if(strcmpi(specs.profile,'Motion JPEG AVI')|strcmpi(specs.profile,'MPEG-4'))
-    v.Quality    = round(specs.quality);
+isGif = strcmpi(specs.profile,'GIF');
+
+if(~isGif)
+    v            = VideoWriter(saveDataName,specs.profile);
+    v.FrameRate  = specs.FR*specs.playback;
+    if(strcmpi(specs.profile,'Motion JPEG AVI')|strcmpi(specs.profile,'MPEG-4'))
+        v.Quality    = round(specs.quality);
+    end
 end
 
-oldColor = gui.h0.Color;
+oldColor = [.94 .94 .94];
 gui.h0.Color = specs.color;
+visFlipped = [];
 for i=1:length(gui.h0.Children)
     if(strcmpi(gui.h0.Children(i).Type,'uipanel'))
         gui.h0.Children(i).BackgroundColor = specs.color;
+        for ii = 1:length(gui.h0.Children(i).Children)
+            if(strcmpi(gui.h0.Children(i).Children(ii).Type,'uipanel'))
+                gui.h0.Children(i).Children(ii).BackgroundColor = specs.color;
+            elseif(strcmpi(gui.h0.Children(i).Children(ii).Type,'uicontrol'))
+                visFlipped(i,ii) = strcmpi(gui.h0.Children(i).Children(ii).Visible,'on');
+                if(visFlipped(i,ii))
+                    gui.h0.Children(i).Children(ii).Visible = 'off';
+                end
+            end
+        end
     end
 end
 
@@ -70,7 +85,9 @@ if(specs.title~=1 && all(gui.enabled.movie))
 end
 
 % this is the actual save loop!--------------------------------------------
-open(v);
+if(~isGif)
+    open(v);
+end
 temp = [];
 dt          = 1/specs.FR;
 if(strcmpi(specs.bhvr,'all'))
@@ -100,13 +117,30 @@ for i = 1:length(startTime)
         elseif(gui.enabled.audio(2))
             img = getframe(gui.audio.axes);
         end
-        writeVideo(v,img);
+        if(isGif) 
+            img = frame2im(img); 
+            img = imresize(img,.5);
+            [imind,cm] = rgb2ind(img,256); 
+            if t==startTime(1) 
+                imwrite(imind,cm,saveDataName,'gif', 'Loopcount',inf,'DelayTime',1/(specs.playback*specs.FR));
+            else 
+                imwrite(imind,cm,saveDataName,'gif','WriteMode','append','DelayTime',1/(specs.playback*specs.FR));
+            end
+        else
+            writeVideo(v,img);
+        end
     end
     for j=1:5
-        writeVideo(v,img); %add a pause at end of the bout
+        if(isGif)
+
+        else
+            writeVideo(v,img); %add a pause at end of the bout
+        end
     end
 end
-close(v);
+if(~isGif)
+    close(v);
+end
 % -------------------------------------------------------------------------
 
 gui.data = data;
@@ -120,6 +154,13 @@ gui.h0.Color = oldColor;
 for i=1:length(gui.h0.Children)
     if(strcmpi(gui.h0.Children(i).Type,'uipanel'))
         gui.h0.Children(i).BackgroundColor = oldColor;
+        for ii = 1:length(gui.h0.Children(i).Children)
+            if(strcmpi(gui.h0.Children(i).Children(ii).Type,'uipanel'))
+                gui.h0.Children(i).Children(ii).BackgroundColor = oldColor;
+            elseif(strcmpi(gui.h0.Children(i).Children(ii).Type,'uicontrol') && visFlipped(i,ii))
+                gui.h0.Children(i).Children(ii).Visible = 'on';
+            end
+        end
     end
 end
 
