@@ -88,7 +88,7 @@ for f = 1:length(files)
     TS      = temp.getts();
 
     disp('   fixing annotations...');
-    [annot,tmin,tmax,FR] = loadAnyAnnot(fname);
+    [annot,tmax,tmin,FR] = loadAnyAnnot(fname);
     if(isnan(FR))
         FR=30;
     end
