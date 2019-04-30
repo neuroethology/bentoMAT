@@ -102,7 +102,9 @@ for f = 1:length(files)
     end
     disp('   saving...');
     clear trial;
-    trial.io.annot.fid  = {strrep(fname,'.annot','_TS.annot')};
+    fname = strrep(fname,'.annot','_TS.annot');
+    fname = strrep(fname,'.txt','_TS.annot');
+    trial.io.annot.fid  = {fname};
     trial.io.annot.tmin = tmin;
     trial.io.annot.tmax = tmax;
     trial.io.annot.FR   = FR;
