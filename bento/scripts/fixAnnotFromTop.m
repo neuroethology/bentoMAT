@@ -34,7 +34,7 @@ for f = 1:length(files)
         mov = regexprep(fname,'_[a-z_]*actions_pred_v[0-9]*_[0-9]*.txt','_Top.seq');
         [pth,mov] = fileparts(mov);
         pth = fileparts(fileparts(pth));
-        mov = [pth filesep mov];
+        mov = [pth filesep mov '.seq'];
         if(~exist(mov,'file'))
             disp('Couldn''t find movie! Looked in:');
             disp(['    ' mov]);
