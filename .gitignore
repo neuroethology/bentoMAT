@@ -6,12 +6,12 @@
 
 # other matlab packages #
 #########################
-loading data/ca_source_extraction/*
-loading data/piotr_toolbox/*
+bento/loading data/ca_source_extraction/*
+bento/loading data/piotr_toolbox/*
 
 # debugging #
 #############
-gui_test/*
+bento/gui_test/*
 
 # MARS stuff #
 ##############
@@ -19,4 +19,4 @@ gui_test/*
 
 # user-specific settings #
 ##########################
-annotations/color_profiles.txt
+bento/annotations/color_profiles.txt
