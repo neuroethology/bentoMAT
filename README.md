@@ -6,12 +6,10 @@ Bento is a Matlab GUI for browsing and annotating joint calcium imaging + video 
 
 ## Installation
 The easiest way to keep your local version up to date is to clone this git repository. Bento requires the following software:
-
-### Prerequisites
 * Matlab 2014b or later
 * Microsoft Excel (for assembling of metadata. This requirement will be softened in the future.)
 
-### Additional Resources
+#### Optional additional tools:
 * [Piotr's Matlab Toolbox](https://pdollar.github.io/toolbox/) if behavior videos are in *.seq format
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if using calcium traces extracted with CNMF_E
 * [JSONLab](https://github.com/fangq/jsonlab) for some tracker files- if your MATLAB doesn't have native *.json support (pre-2017?)
