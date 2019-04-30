@@ -40,6 +40,7 @@ for f = 1:length(files)
             disp(['    ' mov]);
             continue;
         end
+        stim = '';
     else
         % first try getting the movie name from the annot file:
         fid     = fopen(fname);
