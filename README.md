@@ -19,6 +19,7 @@ You may also wish to install:
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if you use calcium traces extracted with CNMF_E
 * [JSONLab](https://github.com/fangq/jsonlab) if you use our mouse tracker, MARS, and your MATLAB doesn't have native *.json support (pre-2017)
 
+<br>
 <p><img src='docs/annotation_demo.gif?raw=true' width='48%'> <img src='docs/features_demo.gif?raw=true' width='48%'></p>
 
 ## Code Contributors
@@ -29,6 +30,9 @@ MARS, a pose estimation and behavior classification system that can be integrate
 Bento is an actively developed package, and we welcome community involvement. For questions about Bento, consult the project [Wiki](https://github.com/annkennedy/bento/wiki).
 
 If you wish to contribute to Bento, or your question was not answered by the [Wiki](https://github.com/annkennedy/bento/wiki), please contact <a class="u-email" href="mailto:&#x6b;&#x65;&#x6e;&#x6e;&#x65;&#x64;&#x79;&#x61;&#x40;&#x63;&#x61;&#x6c;&#x74;&#x65;&#x63;&#x68;&#x2e;&#x65;&#x64;&#x75;">&#x6b;&#x65;&#x6e;&#x6e;&#x65;&#x64;&#x79;&#x61;&#x40;&#x63;&#x61;&#x6c;&#x74;&#x65;&#x63;&#x68;&#x2e;&#x65;&#x64;&#x75;</a>.
+
+<br>
+<p><img src='docs/panels_demo.gif?raw=true' width='48%'> <img src='docs/PCA_demo.gif?raw=true' width='48%'></p>
 
 ## Licensing
 Bento is licensed through Caltech; redistribution and use for academic and other non-commercial purposes, with or without modification, are permitted provided that conditions of the [license](https://github.com/annkennedy/bento/blob/master/LICENSE.txt) are met.
