@@ -13,8 +13,22 @@ sessList = get(gui.ctrl.expt.session,'String');
 trList   = get(gui.ctrl.expt.trial,'String');
 
 m       = str2num(mList{get(gui.ctrl.expt.mouse,'Value')});
-sess    = ['session' sessList{get(gui.ctrl.expt.session,'Value')}];
+sess    = str2num(sessList{get(gui.ctrl.expt.session,'Value')});
 tr      = str2num(trList{get(gui.ctrl.expt.trial,'Value')});
+
+% make sure we have a valid session for this mouse
+matches = gui.allPopulated(gui.allPopulated(:,1)==m,:);
+if(~any(matches(:,2)==sess))
+    sess = matches(1,2);
+end
+% make sure we have a valid trial for this session
+matches = matches(matches(:,2)==sess,:);
+if(~any(matches(:,3)==tr))
+    tr = matches(1,3);
+end
+
+sess = ['session' num2str(sess)];
+    
 
 % determine whether we have to load a new seq movie (loading can take a while)
 if(~gui.enabled.movie(1)) % movies aren't enabled

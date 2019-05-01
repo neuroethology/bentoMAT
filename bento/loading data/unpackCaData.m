@@ -19,10 +19,7 @@ switch ext
         % get rid of artifacts
         rast((1:500))    = nan;
         rast(end-119:end) = nan;
-        
-    case {'.xls','.xlsx'}
-        % Prabhat's fiberphotometry data
-        rast = [];
+
     case '.mat'
         temp = load(pth);
         f    = fieldnames(temp);
