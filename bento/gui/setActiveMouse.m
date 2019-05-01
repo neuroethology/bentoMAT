@@ -46,15 +46,12 @@ end
 
 %update session list for the new mouse
 use = gui.allPopulated(:,1)==m;
-if(~any(gui.allPopulated(use,2)==str2double(strrep(sess,'session',''))))
-    sess = ['session' num2str(gui.allPopulated(find(use,1,'first'),2))];
-    set(gui.ctrl.expt.session,'Value',1);
-end
 set(gui.ctrl.expt.session,'String',strtrim(cellstr(num2str(unique(gui.allPopulated(use,2))))));
 
 %update trial list for the new session
 use2 = use & (gui.allPopulated(:,2)==str2double(strrep(sess,'session','')));
-if(m~=mOld|~strcmpi(sess,sessOld))
+
+if(m~=mOld || ~strcmpi(sess,sessOld)) % if we changed mice or sessions, jump to the first trial
     tr = gui.allPopulated(find(use2,1,'first'),3);
     set(gui.ctrl.expt.trial,'Value',1);
 end

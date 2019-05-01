@@ -20,11 +20,13 @@ tr      = str2num(trList{get(gui.ctrl.expt.trial,'Value')});
 matches = gui.allPopulated(gui.allPopulated(:,1)==m,:);
 if(~any(matches(:,2)==sess))
     sess = matches(1,2);
+    set(gui.ctrl.expt.session,'Value',1);
 end
 % make sure we have a valid trial for this session
 matches = matches(matches(:,2)==sess,:);
 if(~any(matches(:,3)==tr))
     tr = matches(1,3);
+    set(gui.ctrl.expt.trial,'Value',1);
 end
 
 sess = ['session' num2str(sess)];
