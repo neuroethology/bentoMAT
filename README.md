@@ -18,9 +18,6 @@ You may also wish to install:
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if you use calcium traces extracted with CNMF_E
 * [JSONLab](https://github.com/fangq/jsonlab) if you use our mouse tracker, MARS, and your MATLAB doesn't have native *.json support (pre-2017)
 
-|:---------:|:---------:|:---------:|
-|![](https://...Ocean.png)  |  ![](https://...Dark.png)
-![](docs/tracking_demo.gif?raw=true =256x256) | ![](docs/annotation_demo.gif?raw=true) | ![](docs/features_demo.gif?raw=true)|
 
 ## Code Contributors
 Bento was created by [Ann Kennedy](https://annkennedy.github.io/), but has benefitted from the suggestions of several members of the [David J Anderson lab](https://davidandersonlab.caltech.edu) at Caltech, including Tomomi Karigo, Bin Yang, and Jalani Williams.
