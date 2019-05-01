@@ -4,7 +4,7 @@ Bento is a Matlab GUI for managing multimodal neuroscience datasets. It lets you
 
 Visit the [Bento wiki](https://github.com/annkennedy/bento/wiki) for documentation and tutorials!
 
-![](/docs/bento_screenshot_plain.png?raw=true)
+![](/docs/tracking_demo.gif?raw=true)
 
 ## Installation
 The easiest way to keep your local version up to date is to clone this git repository. To launch Bento, enter `addpath(genpath('path\to\bento\repository'))` in the Matlab command line, followed by `bento`.
@@ -18,6 +18,7 @@ You may also wish to install:
 * [Source2D Toolbox](https://github.com/zhoupc/CNMF_E) (in ca_source_extraction) if you use calcium traces extracted with CNMF_E
 * [JSONLab](https://github.com/fangq/jsonlab) if you use our mouse tracker, MARS, and your MATLAB doesn't have native *.json support (pre-2017)
 
+<p><img src='docs/annotation_demo.gif?raw=true' width='48%'> <img src='docs/features_demo.gif?raw=true' width='48%'></p>
 
 ## Code Contributors
 Bento was created by [Ann Kennedy](https://annkennedy.github.io/), but has benefitted from the suggestions of several members of the [David J Anderson lab](https://davidandersonlab.caltech.edu) at Caltech, including Tomomi Karigo, Bin Yang, and Jalani Williams.
