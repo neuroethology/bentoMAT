@@ -20,7 +20,7 @@ You may also wish to install:
 * [JSONLab](https://github.com/fangq/jsonlab) if you use our mouse tracker, MARS, and your MATLAB doesn't have native *.json support (pre-2017)
 
 <br>
-<p><img src='https://github.com/annkennedy//annotation_demo.gif?raw=true' width='48%'> <img src='https://github.com/annkennedy/bento/blob/master/docs/features_demo.gif?raw=true' width='48%'></p>
+<p><img src='https://github.com/annkennedy/bento/blob/master/docs/annotation_demo.gif?raw=true' width='48%'> <img src='https://github.com/annkennedy/bento/blob/master/docs/features_demo.gif?raw=true' width='48%'></p>
 
 ## Code Contributors
 Bento was created by [Ann Kennedy](https://annkennedy.github.io/), but has benefitted from the suggestions of several members of the [David J Anderson lab](https://davidandersonlab.caltech.edu) at Caltech, including Tomomi Karigo, Bin Yang, and Jalani Williams.
