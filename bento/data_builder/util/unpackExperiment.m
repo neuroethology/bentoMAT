@@ -216,10 +216,12 @@ for i=1:size(data,1)
             fid = [pth strip(strip(data{i,match.Tracking},'left','.'),'left',filesep)];
             [~,~,ext] = fileparts(fid);
             if(strcmpi(ext,'.mat'))
-                temp = load(fid); %virtual load should be faster/more memory friendly?
+                temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
                 f = fieldnames(temp);
                 if(length(f)==2)
                     temp=temp.(f{2});
+                elseif(length(f)==1)
+                    temp = temp.(f{1});
                 end
                 strtemp.tracking.args = temp;
                 strtemp.io.feat.fid = {fid};
@@ -235,6 +237,9 @@ for i=1:size(data,1)
                     strtemp.tracking.args = [];
                 end
                 strtemp.io.feat.fid = {fid};
+            elseif(strcmpi(ext,'.h5')) %DeepLabCut output
+                args = h5read(fid,'/df_with_missing/table');
+                strtemp.tracking.args = args.values_block_0;
             end
         else
             strtemp.tracking.args = [];

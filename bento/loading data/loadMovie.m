@@ -18,8 +18,11 @@ for col = 1:size(data.io.movie.fid,1)
                 rtemp           = temp.getinfo();
                 rtemp.reader    = temp;
                 disp('getting timestamps...');
-%                rtemp.TS        = (1:length(rtemp.seek))/rtemp.fps;
-                 rtemp.TS        = getSeqTimestamps(data.io.movie.fid{col,i},temp);
+                rtemp.TS        = getSeqTimestamps(data.io.movie.fid{col,i},temp);
+                temp = rtemp.TS(2:end) - rtemp.TS(1:end-1);
+                if (mean(temp<0)>.01) %  sometimes timestamps and fps data in seq files are garbage :(
+                    rtemp.TS = (1:length(rtemp.seek))/30;
+                end
                 disp('done');
                 reader{col,i}   = rtemp;
                 tMax            = reader{col,i}.TS(end);

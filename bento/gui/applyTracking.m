@@ -78,7 +78,7 @@ else
             movies{rr,cc} = insertShape(movies{rr,cc},'Line',plotActive(j,i-2:i+1),'linewidth',3,'color',c);
             movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotActive(j,i:i+1) 6],'color',c);
         end
-%         movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
+        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[plotActive(j,1:2) 7],'color','red','opacity',1);
     end
     for j=1:size(plotInactive,1)
         if(isnumeric(color)), c = color(j,:);

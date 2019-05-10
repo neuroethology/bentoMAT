@@ -51,7 +51,7 @@ set(gui.ctrl.expt.session,'String',strtrim(cellstr(num2str(unique(gui.allPopulat
 %update trial list for the new session
 use2 = use & (gui.allPopulated(:,2)==str2double(strrep(sess,'session','')));
 
-if(m~=mOld || ~strcmpi(sess,sessOld)) % if we changed mice or sessions, jump to the first trial
+if(m~=mOld | ~strcmpi(sess,sessOld)) % if we changed mice or sessions, jump to the first trial
     tr = gui.allPopulated(find(use2,1,'first'),3);
     set(gui.ctrl.expt.trial,'Value',1);
 end
