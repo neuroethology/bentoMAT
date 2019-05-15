@@ -4,17 +4,24 @@ function outputBTA(source,~,gui)
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-var = inputdlg('Assign variable name:');
-var=var{1};
-var(ismember(var,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
-if(isempty(var))
-    msgbox('Invalid variable name, data not saved.');
-    return;
+var = inputdlg({'Assign variable name:','Assign time axis name:'},...
+               'Saving behavior-triggered average...',1,...
+               {'BTA','BTA_time'});
+           
+[BTA,time] = computeBTA(source,[],gui);
+for i=1:length(var)
+    var{i}(ismember(var{i},'?!@#$%^&*()+=-<>,./\[]}{')) = [];
+    if(isempty(var{i}))
+        msgbox(['Invalid name(s), variable ' strrep(num2str(i:2),'  ',', ') ' not saved.']);
+        return;
+    end
+    if(isnumeric(var{i}(1)))
+        var{i} = ['var_' var{i}];
+    end
+    if(i==1)
+        assignin('base',var{1},BTA);
+    else
+        assignin('base',var{2},time);
+    end
 end
-if(isnumeric(var(1)))
-    var = ['var_' var];
-end
-
-BTA=computeBTA(source,[],gui);
-assignin('base',var,BTA);
-msgbox(['Traces saved as ' var]);
+msgbox('Traces saved.');

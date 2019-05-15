@@ -1,4 +1,4 @@
-function BTA = computeBTA(source,~,gui)
+function [BTA,time] = computeBTA(source,~,gui)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -162,12 +162,13 @@ BTAmax  = max(nanmean(BTA,2));
 
 axes(h.fig);
 SEM  = 1/sqrt(max(length(use),1));
+time = win/useFR;
 if(size(BTA,1)>1)
-    drawvar(win/useFR,BTA,usecolor,SEM);
+    drawvar(time,BTA,usecolor,SEM);
     p(1) = min(min(nanmean(BTA) - nanstd(BTA)*SEM),0);
     p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM)*1.05 + eps;
 else
-    plot(win/useFR,BTA,'color',usecolor);
+    plot(time,BTA,'color',usecolor);
     p(1) = min([BTAmin 0]);
     p(2) = BTAmax+eps;
 end
@@ -184,7 +185,7 @@ image(winB/gui.data.annoFR,[-size(BTA,1) -1],flipud(bouts)*2/3+1/3);
 if(plotTraces)
     BTAplot = bsxfun(@minus,BTA,min(BTA(:)));
     BTAplot = bsxfun(@times,BTAplot,1./max(BTAplot(:)));
-    plot(win/useFR,bsxfun(@plus,BTAplot',-(1:size(BTAplot,1)))-.5,'k');
+    plot(time,bsxfun(@plus,BTAplot',-(1:size(BTAplot,1)))-.5,'k');
 end
 ylim([-size(BTA,1)-0.5 -0.5]);
 
