@@ -1,4 +1,4 @@
-function computeBTA(source,~,gui)
+function BTA=computeBTA(source,~,gui)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology

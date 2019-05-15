@@ -1,10 +1,9 @@
-function launchBTA(source,~)
+function behavior_triggered_average(source,~)
     %
     % (C) Ann Kennedy, 2019
     % California Institute of Technology
     % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-    parent      = source;
     gui = guidata(source);
     hfig = figure(23423);
     set(hfig,'dockcontrols','off','menubar','none',...
@@ -210,7 +209,7 @@ function launchBTA(source,~)
     uicontrol('parent',h.panelCtrl,'Style','pushbutton',...
             'String','Save BTA to Workspace',...
             'Position',[22 bump 130 30],...
-            'Callback',@outputBTA);
+            'Callback',{@outputBTA,gui});
 
     guidata(source,gui);
     guidata(hfig,h);
