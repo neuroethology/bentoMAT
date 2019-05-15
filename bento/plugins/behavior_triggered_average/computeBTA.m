@@ -50,6 +50,18 @@ switch lower(str(1))
         usecolor = gui.annot.cmap.(strrep(str,'behavior: ',''));
         h.chAvgTxt.Enable='on';
         h.chAvg.Enable='on';
+
+    case 'f' % feature
+        [~,~,featnum]=regexp(str,'feature *([0-9])*:');
+        featnum = str2num(str(featnum{1}(1):featnum{1}(2)));
+        [~,~,chnum]=regexp(str,'Ch([0-9])*');
+        chnum = str2num(str(chnum{1}(1):chnum{1}(2)));
+        sig = gui.data.tracking.features(chnum,:,featnum);
+        [p,q]   = rat(useFR/gui.data.annoFR);
+        sig     = resample(sig,p,q);
+        usecolor = 'k';
+        h.chAvgTxt.Enable='off';
+        h.chAvg.Enable='off';
 end
 
 

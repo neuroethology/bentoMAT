@@ -20,8 +20,8 @@ for i = 1:nfeat
     xlabel(gui.features.feat(i).axes,'');
     set(gui.features.feat(i).axes,'xtick',[]);
     
-    lim = [min(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[])) ...
-            max(reshape(gui.data.tracking.features(:,:,gui.features.feat(i).featNum),1,[]))];
+    lim = [min(reshape(gui.data.tracking.features(gui.features.feat(i).ch,:,gui.features.feat(i).featNum),1,[])) ...
+            max(reshape(gui.data.tracking.features(gui.features.feat(i).ch,:,gui.features.feat(i).featNum),1,[]))];
     set(gui.features.feat(i).axes,'ylim',lim);
     set(gui.features.feat(i).zeroLine,'ydata',lim);
 

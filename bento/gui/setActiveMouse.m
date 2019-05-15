@@ -100,16 +100,22 @@ if(gui.enabled.tracker(1))
             data.trackTime = data.io.movie.reader{rr,cc}.TS;
         end
     end
+
     if(isfield(data.tracking.args,'features'))
-        gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.args.features,1))')));
-        gui.features.menu.String        = data.tracking.args.features;
+
         if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
-            data.tracking.features = eval([data.tracking.fun '_features(data.tracking.args)']);
+            [data.tracking.features,featnames] = eval([data.tracking.fun '_features(data.tracking.args)']);
+
         elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support
-            data.tracking.features = MARS_top_features(data.tracking.args);
+            [data.tracking.features,featnames] = MARS_top_features(data.tracking.args);
+
         else % just ask which variable to use and hope for the best
-            data.tracking.features = promptFeatures(data);
+            [data.tracking.features,featnames] = promptFeatures(data);
+
         end
+        gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
+        gui.features.menu.String        = featnames;
+
         if(isempty(data.tracking.features))
             gui.enabled.features = [0 0];
         end

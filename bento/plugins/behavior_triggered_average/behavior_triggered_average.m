@@ -156,19 +156,25 @@ function behavior_triggered_average(source,~)
             'Position',[20 bump 120 30]);
         
     bump = bump - 20;
+    % Populating menu -----------------------------------------------------
     bhvlist = fieldnames(gui.annot.bhv);
     menuStr={};
     if(size(gui.data.rast,1))
         menuStr     = {'Population average'};
     end
-    % temp        = strcat('PC ',{' '},cellstr(num2str((1:size(gui.data.PCs,1))')));
-    % menuStr     = {menuStr{:},temp{:}};
     if(size(gui.data.rast,1))
         temp        = strcat('unit ',{' '},cellstr(num2str((1:size(gui.data.rast,1))')));
         menuStr     = {menuStr{:},temp{:}};
     end
     temp = strcat('behavior: ',{' '},bhvlist);
     menuStr = {menuStr{:},temp{:}};
+
+    for ch = gui.features.channels.String'
+        feats = strcat('feature',{' '},num2str((1:length(gui.features.menu.String))'),...
+                ': ',{' '},gui.features.menu.String,{', '},ch{:});
+        menuStr = {menuStr{:},feats{:}};
+    end
+
     h.unit = uicontrol('parent',h.panelCtrl,'Style','popup',...
             'String',menuStr,...
             'Value',1,...
@@ -197,7 +203,8 @@ function behavior_triggered_average(source,~)
             'Value',0,...
             'Position',[110 bump+13 80 20],...
             'Callback',{@updateBTA,gui});
-
+    %----------------------------------------------------------------------
+    
     bump = bump - 30;
     uicontrol('parent',h.panelCtrl,'Style','text',...
             'String','Behaviors to show:',...
