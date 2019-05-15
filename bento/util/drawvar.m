@@ -15,38 +15,44 @@ end
     set(h,'FaceColor','none')
     set(h,'LineStyle','none')
 
-    switch color
-        case 'r'
-            set(h([2 3]),'FaceColor',[1 .5 .5]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
-        case 'b'
-            set(h([2 3]),'FaceColor',[.5 .6 1]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
-        case 'g'
-            set(h([2 3]),'FaceColor',[.5 1 .5]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
-        case 'c'
-            set(h([2 3]),'FaceColor',[.5 1 1]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
-        case 'm'
-            set(h([2 3]),'FaceColor',[1 .5 .6]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
-        case 'y'
-            set(h([2 3]),'FaceColor',[1 1 .5]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
-        case 'k'
-            set(h([2 3]),'FaceColor',[.5 .5 .5]);
-            set(get(h(2),'children'),'facealpha',0.5)
-            set(get(h(3),'children'),'facealpha',0.5)
+    if(isnumeric(color))
+        set(h([2 3]),'FaceColor',color,'FaceAlpha',0.5);
+        set(get(h(2),'children'),'facealpha',0.5)
+        set(get(h(3),'children'),'facealpha',0.5)
+    else
+        switch color
+            case 'r'
+                set(h([2 3]),'FaceColor',[1 .5 .5]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+            case 'b'
+                set(h([2 3]),'FaceColor',[.5 .6 1]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+            case 'g'
+                set(h([2 3]),'FaceColor',[.5 1 .5]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+            case 'c'
+                set(h([2 3]),'FaceColor',[.5 1 1]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+            case 'm'
+                set(h([2 3]),'FaceColor',[1 .5 .6]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+            case 'y'
+                set(h([2 3]),'FaceColor',[1 1 .5]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+            case 'k'
+                set(h([2 3]),'FaceColor',[.5 .5 .5]);
+                set(get(h(2),'children'),'facealpha',0.5)
+                set(get(h(3),'children'),'facealpha',0.5)
+        end
     end
     
     %now add the average overtop:
     hold on;
-    h2=plot(X,nanmean(Y,1),color,'linewidth',1);
+    h2=plot(X,nanmean(Y,1),'color',color,'linewidth',1);
 %     plot(X,mean(Y,1)/max(abs(mean(Y,1))),color,'linewidth',2)

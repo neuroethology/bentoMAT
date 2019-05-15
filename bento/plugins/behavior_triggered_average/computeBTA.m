@@ -17,6 +17,7 @@ switch lower(str(1))
         sig     = nanmean(gui.data.rast);
         sig     = nan_fill(sig);
         sig     = resample(sig,useFR,gui.data.CaFR);
+        usecolor = 'k';
         
     case 'u' % unit
         if(isfield(gui.data,'PCs'))
@@ -27,6 +28,7 @@ switch lower(str(1))
         sig     = gui.data.rast(unit - 1 - bump,:);
         sig     = nan_fill(sig);
         sig     = resample(sig,useFR,gui.data.CaFR);
+        usecolor = 'k';
         
     case 'b' % behavior
         sig = double(gui.annot.bhv.(strrep(str,'behavior: ','')));
@@ -36,6 +38,7 @@ switch lower(str(1))
         sig2 = round(sig2*useFR/gui.data.annoFR);
         sig = double(convertToRast(sig2,round(length(sig)*useFR/gui.data.annoFR))); % sig is now binary at our desired framerate~
         plotTraces = 0;
+        usecolor = gui.annot.cmap.(strrep(str,'behavior: ',''));
         
 end
 
@@ -140,11 +143,11 @@ BTAmax  = max(nanmean(BTA,2));
 axes(h.fig);
 SEM  = 1/sqrt(max(length(use),1));
 if(size(BTA,1)>1)
-    drawvar(win/useFR,BTA,'b',SEM);
+    drawvar(win/useFR,BTA,usecolor,SEM);
     p(1) = min(min(nanmean(BTA) - nanstd(BTA)*SEM),0);
     p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM)*1.05 + eps;
 else
-    plot(win/useFR,BTA,'b');
+    plot(win/useFR,BTA,'color',usecolor);
     p(1) = min([BTAmin 0]);
     p(2) = BTAmax+eps;
 end
@@ -153,6 +156,7 @@ p(isnan(p)) = 1;
 
 set(h.figLine,'ydata',p);
 set(h.fig,'ylim',p);
+h.fig.Title.String = [strrep(bhv,'_',' ') '-triggered average of ' strrep(strrep(str,'_',' '),'behavior: ','')];
 uistack(h.figLine,'top');
 
 axes(h.fig_sub);
