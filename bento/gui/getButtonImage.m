@@ -6,11 +6,11 @@ function cbox = getButtonImage(color,isActive)
 
 
 
-cbox = padarray(repmat(permute(color,[1 3 2]),[19 19 1]),[1 1 0]);
+cbox = padarray(repmat(permute(color,[1 3 2]),[17 17 1]),[1 1 0]);
 
-Xpic = ones(17)-(eye(17) | fliplr(eye(17)) |...
-                 diag(ones(1,16),-1) | fliplr(diag(ones(1,16),-1)) |...
-                 diag(ones(1,16),1)  | fliplr(diag(ones(1,16),1)));
+Xpic = ones(15)-(eye(15) | fliplr(eye(15)) |...
+                 diag(ones(1,14),-1) | fliplr(diag(ones(1,14),-1)) |...
+                 diag(ones(1,14),1)  | fliplr(diag(ones(1,14),1)));
 Xpic = padarray(Xpic,[2 2],1);
 
 if(isActive)

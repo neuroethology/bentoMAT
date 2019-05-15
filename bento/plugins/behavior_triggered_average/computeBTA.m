@@ -1,4 +1,4 @@
-function BTA=computeBTA(source,~,gui)
+function BTA = computeBTA(source,~,gui)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -18,6 +18,8 @@ switch lower(str(1))
         sig     = nan_fill(sig);
         sig     = resample(sig,useFR,gui.data.CaFR);
         usecolor = 'k';
+        h.chAvgTxt.Enable='off';
+        h.chAvg.Enable='off';
         
     case 'u' % unit
         if(isfield(gui.data,'PCs'))
@@ -27,31 +29,39 @@ switch lower(str(1))
         end
         sig     = gui.data.rast(unit - 1 - bump,:);
         sig     = nan_fill(sig);
-        [p,q]=rat(useFR/gui.data.CaFR);
+        [p,q]   = rat(useFR/gui.data.CaFR);
         sig     = resample(sig,p,q);
         usecolor = 'k';
+        h.chAvgTxt.Enable='off';
+        h.chAvg.Enable='off';
         
     case 'b' % behavior
-        sig = double(gui.annot.bhv.(strrep(str,'behavior: ','')));
-        sig = nan_fill(sig);
-        % resample at the desired framerate:
-        sig2 = convertToBouts(sig);
-        sig2 = round(sig2*useFR/gui.data.annoFR);
-        sig = double(convertToRast(sig2,round(length(sig)*useFR/gui.data.annoFR))); % sig is now binary at our desired framerate~
+        sigStack = [];
+        for ch = h.chAvg.String(h.chAvg.Value)'
+            sig = double(gui.data.annot.(ch{:}).(strrep(str,'behavior: ','')));
+            
+            % resample at the desired framerate:
+            sig = round(sig*useFR/gui.data.annoFR);
+            sig = double(convertToRast(sig,round(length(gui.data.annoTime)*useFR/gui.data.annoFR)));
+            sigStack = [sigStack;sig];
+        end
+        sig = sigStack;
         plotTraces = 0;
         usecolor = gui.annot.cmap.(strrep(str,'behavior: ',''));
-        
+        h.chAvgTxt.Enable='on';
+        h.chAvg.Enable='on';
 end
 
 
 % now find our triggering behavior ----------------------------------------
 
 bhv         = h.bhv.String{h.bhv.Value};
+ch          = h.chTrig.String{h.chTrig.Value};
 discard     = str2double(h.discard.String)/str2double(h.bin.String);
 merge       = str2double(h.merge.String)/str2double(h.bin.String);
 
 % find the trigger frames for the behavior raster
-rast    = gui.annot.bhv.(bhv);
+rast    = convertToRast(gui.data.annot.(ch).(bhv),length(gui.data.annoTime));
 dt      = rast(2:end) - rast(1:end-1);
 tbB     = find(dt==1);
 teB     = find(dt==-1);
@@ -125,13 +135,22 @@ end
 boutPic = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],length(gui.data.annoTime),showAnnot);
 
 clearBTA(source,[]);
-    
-for i = 1:length(use)
-    inds = find((use(i)+win)>0 & (use(i)+win)<length(sig));
-    BTA(i,inds) = sig(use(i) + win(inds));
-    
-    boutInds    = find((useB(i)+winB)>0 & (useB(i)+winB)<length(boutPic));
-    bouts(i,boutInds,:) = boutPic(1,useB(i) + winB(boutInds),:);
+
+N = size(sig,1);bump = 0;
+for n = 1:N
+    if(~plotTraces)
+        gui.annot.activeCh = h.chAvg.String{h.chAvg.Value(n)};
+        gui = transferAnnot(gui,gui.data);
+        boutPic = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],length(gui.data.annoTime),showAnnot);
+    end
+    for i = 1:length(use)
+        inds = find((use(i)+win)>0 & (use(i)+win)<length(sig));
+        BTA(i+bump,inds) = sig(n,use(i) + win(inds));
+
+        boutInds    = find((useB(i)+winB)>0 & (useB(i)+winB)<length(boutPic));
+        bouts(i+bump,boutInds,:) = boutPic(1,useB(i) + winB(boutInds),:);
+    end
+    bump = bump + length(use);
 end
 BTAmeans = nanmean(BTA,2);
 BTAstd   = nanstd(BTA,[],2)+eps;
