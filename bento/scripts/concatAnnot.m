@@ -8,7 +8,7 @@ function concatAnnot(varargin)
 %
 % Example usage:
 % concatAnnot('C:\users\bento\documents\file1.annot','C:\users\bento\documents\file2.annot');
-% concatAnnot('C:\users\bento\documents\',file1.annot','file2.annot');
+% concatAnnot('C:\users\bento\documents\','file1.annot','file2.annot');
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology

@@ -4,7 +4,8 @@ function outputBTA(source,~,gui)
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-var = input('Assign variable name:');
+var = inputdlg('Assign variable name:');
+var=var{1};
 var(ismember(var,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
 if(isempty(var))
     msgbox('Invalid variable name, data not saved.');

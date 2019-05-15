@@ -27,7 +27,8 @@ switch lower(str(1))
         end
         sig     = gui.data.rast(unit - 1 - bump,:);
         sig     = nan_fill(sig);
-        sig     = resample(sig,useFR,gui.data.CaFR);
+        [p,q]=rat(useFR/gui.data.CaFR);
+        sig     = resample(sig,p,q);
         usecolor = 'k';
         
     case 'b' % behavior
@@ -160,13 +161,15 @@ h.fig.Title.String = [strrep(bhv,'_',' ') '-triggered average of ' strrep(strrep
 uistack(h.figLine,'top');
 
 axes(h.fig_sub);
-image(winB/gui.data.annoFR,[-size(BTA,1) -1]*6,flipud(bouts)*2/3+1/3);
+image(winB/gui.data.annoFR,[-size(BTA,1) -1],flipud(bouts)*2/3+1/3);
 if(plotTraces)
-    plot(win/useFR,bsxfun(@plus,BTA',-(1:size(BTA,1))*6),'k');
+    BTAplot = bsxfun(@minus,BTA,min(BTA(:)));
+    BTAplot = bsxfun(@times,BTAplot,1./max(BTAplot(:)));
+    plot(win/useFR,bsxfun(@plus,BTAplot',-(1:size(BTAplot,1)))-.5,'k');
 end
-ylim([-size(BTA,1)-0.5 -0.5]*6);
+ylim([-size(BTA,1)-0.5 -0.5]);
 
-set(h.figLineS,'ydata',[-size(BTA,1)-0.5 -0.5]*6);
+set(h.figLineS,'ydata',[-size(BTA,1)-0.5 -0.5]);
 uistack(h.figLineS,'top');
 
 h.isActive = 1;
