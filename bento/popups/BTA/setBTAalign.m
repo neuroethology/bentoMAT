@@ -1,4 +1,4 @@
-function setBTAalign(source,~,data,val)
+function setBTAalign(source,~,gui,val)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -15,4 +15,4 @@ else
     set(h.toggle.end,'Value',1);
 end
 
-updateBTA(source,[],data);
+updateBTA(source,[],gui);

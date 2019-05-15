@@ -1,4 +1,4 @@
-function resizeBTA(source,~,data)
+function resizeBTA(source,~,gui)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -13,4 +13,4 @@ post    = str2num(h.post.String);
 set(h.fig,'xlim',[-pre post]);
 set(h.fig_sub,'xlim',[-pre post]);
 
-updateBTA(source,[],data);
+updateBTA(source,[],gui);

@@ -17,6 +17,6 @@ for i=2:length(lines)
     delete(lines(i));
 end
 
-h.isActive = 0;
+% h.isActive = 0;
 
 guidata(source,h);

@@ -29,7 +29,8 @@ switch ext
         try
         [annotations,tmin,tmax,FR] = loadAnnotSheetTxt(filename);
         catch
-            keyboard
+            sprintf('Couldn''t find an annotation file at %s.\n', filename);
+            [annotations,tmax,tmin,fid,hotkeys] = deal([]);
         end
     end
     
