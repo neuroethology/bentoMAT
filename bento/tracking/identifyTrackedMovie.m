@@ -7,6 +7,9 @@ function [rr,cc] = identifyTrackedMovie(data)
 
 
 rr=1;cc=1;
+if(~isfield(data.io.movie,'fid'))
+return;
+end
 if(length(data.io.movie.fid)>1)
     if(contains(data.tracking.fun,'top'))
         [rr,cc] = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Top')));

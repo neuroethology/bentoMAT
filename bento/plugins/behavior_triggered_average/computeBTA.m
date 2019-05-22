@@ -6,124 +6,151 @@ function [BTA,time] = computeBTA(source,~,gui)
 
 
 h = guidata(source);
-
-% first get the signal we're analyzing, and sample at the desired rate ----
-plotTraces = 1;
-unit    = h.unit.Value;
-str = h.unit.String{unit};
-useFR = 1/str2double(h.bin.String);
-switch lower(str(1))
-    case 'p' % population average
-        sig     = nanmean(gui.data.rast);
-        sig     = nan_fill(sig);
-        sig     = resample(sig,useFR,gui.data.CaFR);
-        usecolor = 'k';
-        h.chAvgTxt.Enable='off';
-        h.chAvg.Enable='off';
-        
-    case 'u' % unit
-        if(isfield(gui.data,'PCs'))
-            bump = size(gui.data.PCs,1);
-        else
-            bump = 0;
-        end
-        sig     = gui.data.rast(unit - 1 - bump,:);
-        sig     = nan_fill(sig);
-        [p,q]   = rat(useFR/gui.data.CaFR);
-        sig     = resample(sig,p,q);
-        usecolor = 'k';
-        h.chAvgTxt.Enable='off';
-        h.chAvg.Enable='off';
-        
-    case 'b' % behavior
-        sigStack = [];
-        for ch = h.chAvg.String(h.chAvg.Value)'
-            sig = double(gui.data.annot.(ch{:}).(strrep(str,'behavior: ','')));
-            
-            % resample at the desired framerate:
-            sig = round(sig*useFR/gui.data.annoFR);
-            sig = double(convertToRast(sig,round(length(gui.data.annoTime)*useFR/gui.data.annoFR)));
-            sigStack = [sigStack;sig];
-        end
-        sig = sigStack;
-        plotTraces = 0;
-        usecolor = gui.annot.cmap.(strrep(str,'behavior: ',''));
-        h.chAvgTxt.Enable='on';
-        h.chAvg.Enable='on';
-
-    case 'f' % feature
-        [~,~,featnum]=regexp(str,'feature *([0-9])*:');
-        featnum = str2num(str(featnum{1}(1):featnum{1}(2)));
-        [~,~,chnum]=regexp(str,'Ch([0-9])*');
-        chnum = str2num(str(chnum{1}(1):chnum{1}(2)));
-        sig = gui.data.tracking.features(chnum,:,featnum);
-        [p,q]   = rat(useFR/gui.data.annoFR);
-        sig     = resample(sig,p,q);
-        usecolor = 'k';
-        h.chAvgTxt.Enable='off';
-        h.chAvg.Enable='off';
-end
-
-
-% now find our triggering behavior ----------------------------------------
-
-bhv         = h.bhv.String{h.bhv.Value};
-ch          = h.chTrig.String{h.chTrig.Value};
-discard     = str2double(h.discard.String)/str2double(h.bin.String);
-merge       = str2double(h.merge.String)/str2double(h.bin.String);
-
-% find the trigger frames for the behavior raster
-rast    = convertToRast(gui.data.annot.(ch).(bhv),length(gui.data.annoTime));
-dt      = rast(2:end) - rast(1:end-1);
-tbB     = find(dt==1);
-teB     = find(dt==-1);
-
-% find the trigger frames for the plotted trace
-tb      = round(tbB*useFR/gui.data.annoFR);
-te      = round(teB*useFR/gui.data.annoFR);
-
-if(isempty(tb))
-    clearBTA(source,[]);
-    axes(h.fig);
-    px=get(h.fig,'xlim');
-    py=get(h.fig,'ylim');
-    text(mean(px),mean(py),'no bouts found','HorizontalAlignment','center');
-    uistack(h.figLine,'top');
-    h.isActive = 1;
-    guidata(source,h);
-    return;
-end
-
-if(te(1)<tb(1)), te(1) = []; end
-if(length(te)<length(tb)), tb(end) = []; end
-if(teB(1)<tbB(1)), teB(1) = []; end
-if(length(teB)<length(tbB)), tbB(end) = []; end
-
-% merge bouts that are close together
-drop = find((tb(2:end)-te(1:end-1)) < merge);
-tb(drop+1)=[];
-te(drop)=[];
-tbB(drop+1)=[];
-teB(drop)=[];
-
-% delete short bouts
-drop = find((te - tb) < discard);
-tb(drop) = [];
-te(drop) = [];
-tbB(drop)=[];
-teB(drop)=[];
-
-if(h.toggle.start.Value)
-    use = round(tb);
-    useB = round(tbB);
+if(h.trAvg.Enable)
+    trList = h.trAvg.String(h.trAvg.Value)';
+    for i = 1:length(trList)
+        [m(i),s(i),tr(i)] = parseTrialString(trList{i});
+    end
 else
-    use = round(te);
-    useB = round(teB);
+    m  = gui.data.info.mouse;
+    s  = gui.data.info.session;
+    tr = gui.data.info.trial;
 end
 
+[BTAstack,BTBstack] = deal([]);
+for ii = 1:length(m)
+    data = gui.allData(m(ii)).(['session' num2str(s(ii))])(tr(ii));
+    data = loadCurrentFeatures(gui,data);
+    % first get the signal we're analyzing, and sample at the desired rate ----
+    plotTraces = 1;
+    str = h.unit.String{h.unit.Value};
+    useFR = 1/str2double(h.bin.String);
+    switch lower(str(1))
+        case 'p' % population average: across trials yes (not implemented yet), across channels no
+            usecolor = 'k';
+            sig     = nanmean(data.rast);
+            sig     = nan_fill(sig);
+            sig     = resample(sig,useFR,gui.data.CaFR);
 
-% make sure we still have some bouts left
-if(isempty(use))
+        case 'u' % unit: across trials no, across channels no
+            usecolor = 'k';
+            sig     = data.rast(h.unit.Value - 1,:);
+            sig     = nan_fill(sig);
+            [p,q]   = rat(useFR/gui.data.CaFR);
+            sig     = resample(sig,p,q);
+
+        case 'b' % behavior: across trials yes, across channels yes
+            plotTraces = 0;
+            usecolor = gui.annot.cmap.(strrep(str,'behavior: ',''));
+            sigStack = [];
+            for ch = h.chAvg.String(h.chAvg.Value)'
+                sig2 = double(data.annot.(ch{:}).(strrep(str,'behavior: ','')));
+                sig2 = round(sig2*useFR/gui.data.annoFR);
+                sig2 = double(convertToRast(sig2,round(length(data.annoTime)*useFR/data.annoFR)));
+                sigStack = [sigStack;sig2];
+            end
+            sig = sigStack;
+
+        case 'f' % feature: across trials yes, across channels no
+            usecolor = 'k';
+            [~,~,featnum]   = regexp(str,'feature *([0-9])*:');
+            featnum         = str2double(str(featnum{1}(1):featnum{1}(2)));
+            [~,~,chnum]     = regexp(str,'Ch([0-9])*');
+            chnum           = str2double(str(chnum{1}(1):chnum{1}(2)));
+
+            if(isfield(data.tracking,'features'))
+                sig     = squeeze(data.tracking.features(chnum,:,featnum));
+                [p,q]   = rat(useFR/gui.data.annoFR);
+                sig     = resample(sig,p,q);
+            else
+                sig = zeros(1,length(gui.data.annoTime));
+            end
+    end
+
+    win  = round(-str2double(h.pre.String)*useFR):round(str2double(h.post.String)*useFR);
+    winB = round(-str2double(h.pre.String)*gui.data.annoFR):round(str2double(h.post.String)*gui.data.annoFR);
+
+    showAnnot = struct();
+    for i = 1:length(h.bhvrs)
+        showAnnot.(strrep(h.bhvrs(i).Tag,'checkbox_','')) = h.bhvrs(i).Value;
+    end
+
+    % now find our triggering behavior ------------------------------------
+
+    bhv     = h.bhv.String{h.bhv.Value};
+    ch      = h.chTrig.String{h.chTrig.Value};
+    discard = str2double(h.discard.String)/str2double(h.bin.String);
+    merge   = str2double(h.merge.String)/str2double(h.bin.String);
+
+    % find the trigger frames for the behavior raster
+    rast    = convertToRast(data.annot.(ch).(bhv),length(data.annoTime));
+    dt      = rast(2:end) - rast(1:end-1);
+    tbB     = find(dt==1);
+    teB     = find(dt==-1);
+
+    % find the trigger frames for the plotted trace
+    tb      = round(tbB*useFR/data.annoFR);
+    te      = round(teB*useFR/data.annoFR);
+    if(isempty(tb)), continue; end
+
+    if(te(1)<tb(1)), te(1) = []; end
+    if(length(te)<length(tb)), tb(end) = []; end
+    if(teB(1)<tbB(1)), teB(1) = []; end
+    if(length(teB)<length(tbB)), tbB(end) = []; end
+
+    % merge bouts that are close together
+    drop = find((tb(2:end)-te(1:end-1)) < merge);
+    tb(drop+1)=[];
+    te(drop)=[];
+    tbB(drop+1)=[];
+    teB(drop)=[];
+
+    % delete short bouts
+    drop = find((te - tb) < discard);
+    tb(drop) = [];
+    te(drop) = [];
+    tbB(drop)=[];
+    teB(drop)=[];
+    if(isempty(tb)), continue; end
+
+    if(h.toggle.start.Value)
+        use = round(tb);
+        useB = round(tbB);
+    else
+        use = round(te);
+        useB = round(teB);
+    end
+
+    % now compute the BTA for this trial ----------------------------------
+    gui = transferAnnot(gui,data);
+    boutPic = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],length(gui.data.annoTime),showAnnot);
+
+    BTA = nan(length(use),length(win));
+    BTB = ones(length(use),length(win),3);
+    N = size(sig,1);bump = 0;
+    for n = 1:N
+        if(~plotTraces) %change active channel
+            gui.annot.activeCh = h.chAvg.String{h.chAvg.Value(n)};
+            gui = transferAnnot(gui,data);
+            boutPic = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],length(gui.data.annoTime),showAnnot);
+        end
+        for i = 1:length(use)
+            inds = find((use(i)+win)>0 & (use(i)+win)<length(sig));
+            BTA(i+bump,inds) = sig(n,use(i) + win(inds));
+
+            boutInds    = find((useB(i)+winB)>0 & (useB(i)+winB)<length(boutPic));
+            BTB(i+bump,boutInds,:) = boutPic(1,useB(i) + winB(boutInds),:);
+        end
+        bump = bump + length(use);
+    end
+    BTAstack = [BTAstack;BTA];
+    BTBstack = cat(1,BTBstack,BTB);
+end
+BTA=BTAstack;
+BTB=BTBstack;
+
+% make sure we got some bouts
+if(isempty(BTA))
     axes(h.fig);
     px=get(h.fig,'xlim');
     py=get(h.fig,'ylim');
@@ -134,36 +161,6 @@ if(isempty(use))
     return;
 end
 
-% now compute the BTA -----------------------------------------------------
-win  = round(-str2double(h.pre.String)*useFR):round(str2double(h.post.String)*useFR);
-winB = round(-str2double(h.pre.String)*gui.data.annoFR):round(str2double(h.post.String)*gui.data.annoFR);
-BTA  = nan(length(use),length(win));
-
-bouts   = ones(length(use),length(win),3);
-showAnnot = struct();
-for i = 1:length(h.bhvrs)
-    showAnnot.(strrep(h.bhvrs(i).Tag,'checkbox_','')) = h.bhvrs(i).Value;
-end
-boutPic = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],length(gui.data.annoTime),showAnnot);
-
-clearBTA(source,[]);
-
-N = size(sig,1);bump = 0;
-for n = 1:N
-    if(~plotTraces)
-        gui.annot.activeCh = h.chAvg.String{h.chAvg.Value(n)};
-        gui = transferAnnot(gui,gui.data);
-        boutPic = makeBhvImage(gui.annot.bhv,gui.annot.cmap,[],length(gui.data.annoTime),showAnnot);
-    end
-    for i = 1:length(use)
-        inds = find((use(i)+win)>0 & (use(i)+win)<length(sig));
-        BTA(i+bump,inds) = sig(n,use(i) + win(inds));
-
-        boutInds    = find((useB(i)+winB)>0 & (useB(i)+winB)<length(boutPic));
-        bouts(i+bump,boutInds,:) = boutPic(1,useB(i) + winB(boutInds),:);
-    end
-    bump = bump + length(use);
-end
 BTAmeans = nanmean(BTA,2);
 BTAstd   = nanstd(BTA,[],2)+eps;
 if(h.zscore.Value)
@@ -172,6 +169,10 @@ end
 BTAmin  = min(nanmean(BTA,2));
 BTAmax  = max(nanmean(BTA,2));
 
+
+
+
+clearBTA(source,[]);
 axes(h.fig);
 SEM  = 1/sqrt(max(length(use),1));
 time = win/useFR;
@@ -193,7 +194,7 @@ h.fig.Title.String = [strrep(bhv,'_',' ') '-triggered average of ' strrep(strrep
 uistack(h.figLine,'top');
 
 axes(h.fig_sub);
-image(winB/gui.data.annoFR,[-size(BTA,1) -1],flipud(bouts)*2/3+1/3);
+image(winB/gui.data.annoFR,[-size(BTA,1) -1],flipud(BTB)*2/3+1/3);
 if(plotTraces)
     BTAplot = bsxfun(@minus,BTA,min(BTA(:)));
     BTAplot = bsxfun(@times,BTAplot,1./max(BTAplot(:)));
@@ -206,8 +207,14 @@ uistack(h.figLineS,'top');
 
 h.isActive = 1;
 guidata(source,h);
+end
 
-
+function [m,s,tr] = parseTrialString(trial)
+    [~,~,hits]=regexp(trial,['mouse (\d+), session (\d+), trial (\d+)']);
+    m = str2double(trial(hits{1}(1,1):hits{1}(1,2)));
+    s = str2double(trial(hits{1}(2,1):hits{1}(2,2)));
+    tr = str2double(trial(hits{1}(3,1):hits{1}(3,2)));
+end
 
 
 
