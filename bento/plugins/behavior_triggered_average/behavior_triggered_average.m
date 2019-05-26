@@ -169,10 +169,12 @@ function behavior_triggered_average(source,~)
     temp = strcat('behavior: ',{' '},bhvlist);
     menuStr = {menuStr{:},temp{:}};
 
-    for ch = gui.features.channels.String'
-        feats = strcat('feature',{' '},num2str((1:length(gui.features.menu.String))'),...
-                ': ',{' '},gui.features.menu.String,{', '},ch{:});
-        menuStr = {menuStr{:},feats{:}};
+    if(gui.enabled.features(1))
+        for ch = gui.features.channels.String'
+            feats = strcat('feature',{' '},num2str((1:length(gui.features.menu.String))'),...
+                    ': ',{' '},gui.features.menu.String,{', '},ch{:});
+            menuStr = {menuStr{:},feats{:}};
+        end
     end
 
     h.unit = uicontrol('parent',h.panelCtrl,'Style','popup',...

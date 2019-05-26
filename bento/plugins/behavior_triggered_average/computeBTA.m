@@ -20,7 +20,6 @@ end
 [BTAstack,BTBstack] = deal([]);
 for ii = 1:length(m)
     data = gui.allData(m(ii)).(['session' num2str(s(ii))])(tr(ii));
-    data = loadCurrentFeatures(gui,data);
     % first get the signal we're analyzing, and sample at the desired rate ----
     plotTraces = 1;
     str = h.unit.String{h.unit.Value};
@@ -59,6 +58,7 @@ for ii = 1:length(m)
             chnum           = str2double(str(chnum{1}(1):chnum{1}(2)));
 
             if(isfield(data.tracking,'features'))
+                data = loadCurrentFeatures(gui,data);
                 sig     = squeeze(data.tracking.features(chnum,:,featnum));
                 [p,q]   = rat(useFR/gui.data.annoFR);
                 sig     = resample(sig,p,q);
@@ -182,8 +182,8 @@ if(size(BTA,1)>1)
     p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM)*1.05 + eps;
 else
     plot(time,BTA,'color',usecolor);
-    p(1) = min([BTAmin 0]);
-    p(2) = BTAmax+eps;
+    p(1) = min([BTA 0]);
+    p(2) = max(BTA)+eps;
 end
 
 p(isnan(p)) = 1;
