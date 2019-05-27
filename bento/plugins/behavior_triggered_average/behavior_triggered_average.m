@@ -1,4 +1,4 @@
-function behavior_triggered_average(source,~)
+function Behavior_triggered_average(source,~)
     %
     % (C) Ann Kennedy, 2019
     % California Institute of Technology

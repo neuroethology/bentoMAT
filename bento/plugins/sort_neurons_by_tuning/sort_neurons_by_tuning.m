@@ -1,10 +1,11 @@
-function sort_neurons_by_tuning(source)
-% ask the user which trials and conditions to use for CP analysis
+function Sort_neurons_by_tuning(source)
+% ask the user which trials and conditions to use for CP analysis.
+% processCP does the real work, with help from doCP.
+
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
-
 
 
 gui = guidata(source);
@@ -83,6 +84,7 @@ h.tr2 = uicontrol('Style','listbox',...
 
 
 uicontrol('Style','pushbutton','String','Ok',...
+            'backgroundcolor',[.65 1 .65],...
             'units','normalized',...
             'position',[.8 .05 .15 .1],...
             'callback',{@processCP,h,gui,m,sess,trList,bhvList});
