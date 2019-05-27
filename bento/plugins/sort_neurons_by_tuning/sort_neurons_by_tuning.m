@@ -1,4 +1,4 @@
-function runCPsort(source)
+function sort_neurons_by_tuning(source)
 % ask the user which trials and conditions to use for CP analysis
 %
 % (C) Ann Kennedy, 2019
@@ -20,7 +20,7 @@ for tr = trList'
 end
 
 h.fig = figure('dockcontrols','off','menubar','none',...
-    'Tag','CP Setup','name','sorting cells by Choice Probability','NumberTitle','off');
+    'Tag','CP Setup','name','sorting cells by behavior Choice Probability','NumberTitle','off');
 gui.browser = h.fig;
 p = get(h.fig,'Position');
 set(h.fig,'Position',[p(1:2)-[160 0] 740 360]);

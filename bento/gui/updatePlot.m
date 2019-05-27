@@ -133,12 +133,10 @@ time = time - gui.ctrl.slider.Min; %gui.data.io.movie.tmin/gui.data.io.movie.FR;
 if(all(gui.enabled.traces))
     inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
     inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    show        = find(gui.traces.show);
-    [~,order]   = sort(gui.traces.order(show));
-    order       = max(order)-order+1;
     bump        = gui.traces.yScale;
     
-    [tr,lims] = getFormattedTraces(gui,inds,order);
+    show        = find(gui.traces.show);
+    [tr,lims] = getFormattedTraces(gui,inds);
     
     if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image'))
         set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',[2 10-.5/length(show)*8],'cdata',tr*64);
@@ -332,12 +330,13 @@ pause(min(gui.ctrl.slider.SliderStep(1) - toc(evaltime),0));
 drawnow;
 end
 
-function [traces,lims] = getFormattedTraces(gui,inds,order)
+function [traces,lims] = getFormattedTraces(gui,inds)
+% something with Order is screwed up here----------------------------------
 
     if(strcmpi(gui.traces.toPlot,'PCA'))
-        traces = gui.data.PCA(:,gui.traces.show)'*gui.data.rast;
+        traces = gui.data.PCA'*gui.data.rast;
     else
-        traces = gui.data.(gui.traces.toPlot)(gui.traces.show,:);
+        traces = gui.data.(gui.traces.toPlot);
     end
     
     switch gui.ctrl.track.plotType.scaling.String{gui.ctrl.track.plotType.scaling.Value}
@@ -370,7 +369,10 @@ function [traces,lims] = getFormattedTraces(gui,inds,order)
             traces = zscore(traces(:,2:end-1)')'/10;
     end
     
+    [~,order]   = sort(gui.traces.order);
+    order       = fliplr(order);
     traces  = traces(order,:);
+    traces  = traces(gui.traces.show,:);
     lims    = [min(traces(1,:)) max(traces(end,:))];
     traces  = traces(:,inds);
     

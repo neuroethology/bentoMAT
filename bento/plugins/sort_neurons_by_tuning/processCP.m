@@ -63,9 +63,8 @@ rast2 = rast2(:,mask2~=0);
 for i = 1:size(rast1,1)
     CP(i) = doCP(rast1(i,:),rast2(i,:));
 end
-[~,order] = sort(CP,'ascend');
 
-gui.traces.order = order;
+gui.traces.order = CP;
 guidata(gui.h0,gui);
 updatePlot(gui.h0,[]);
 
