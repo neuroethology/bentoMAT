@@ -53,11 +53,11 @@ switch eventdata.Key
             start   = floor((gui.ctrl.slider.Value - gui.ctrl.slider.Min + 1/gui.data.annoFR)*gui.data.annoFR)+1;
             if(start==1) start=2; end
             if(strcmpi(eventdata.Key,'pageup'))
-                    jumpFun = @(s) 2 + find(gui.annot.bhv.(s)(2:start-3) & ~gui.annot.bhv.(s)(1:start-4),1,'last');
+                    jumpFun = @(s) 1 + find(gui.annot.bhv.(s)(2:start-4) & ~gui.annot.bhv.(s)(1:start-5),1,'last');
             else
-                    jumpFun = @(s) start + find(gui.annot.bhv.(s)(start:end) & ~gui.annot.bhv.(s)(start-1:end-1),1,'first');
+                    jumpFun = @(s) start + 1 + find(gui.annot.bhv.(s)(start+2:end) & ~gui.annot.bhv.(s)(start+1:end-1),1,'first');
             end
-            ind=inf*(2*strcmpi(eventdata.Key,'pagedown')-1);
+            ind=inf*(2*strcmpi(eventdata.Key,'pagedown')-1); %start at +/-inf
             if(~gui.Keys.Shift)
                 for f = fieldnames(gui.annot.bhv)'
                     i2 = jumpFun(f{:});
