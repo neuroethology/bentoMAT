@@ -15,24 +15,10 @@ str = [str; {'','show episodes of current bhvr'}];
 str = [str; {'',''}];
 
 str = [str; {'---Navigating annotations---',''}];
-str = [str; {'t/g','Cycle current behavior'}];
 str = [str; {'PgDown','Next bout (any bhvr)'}];
 str = [str; {'PgUp','Prev bout (any bhvr)'}];
 str = [str; {'[Shift]+PgDown','Next bout (current bhvr)'}];
 str = [str; {'[Shift]+PgUp','Prev bout (current bhvr)'}];
-str = [str; {'',''}];
-
-str = [str; {'---Modifying annotations---',''}];
-str = [str; {'a','Toggle annot (current bhvr)'}];
-str = [str; {'e','Toggle erase (current bhvr)'}];
-str = [str; {'[Shift]+e','Toggle erase (all bhvrs)'}];
-str = [str; {'[Ctrl]+z','Undo'}];
-str = [str; {'s','Save changes to annotations'}];
-str = [str; {'',''}];
-str = [str; {'---Other---',''}];
-str = [str; {'h','Open this menu'}];
-str = [str; {'v','Toggle data visibility'}];
-str = [str; {'n','Toggle annot. visibility'}];
 str = [str; {'',''}];
 
 str(:,1) = pad(str(:,1),10,'both');
