@@ -12,8 +12,8 @@ function pickUnits(source)
         case 'rast'
             plotStr = 'Cell ';
             rast = gui.data.rast;
-        case 'PCs'
-            plotStr = 'PC ';
+        case 'PCA'
+            plotStr = 'Component ';
             rast = gui.data.PCA'*gui.data.rast;
         case 'dt'
             plotStr = 'Cell ';
