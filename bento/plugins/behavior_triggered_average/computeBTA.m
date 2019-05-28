@@ -57,7 +57,7 @@ for ii = 1:length(m)
             [~,~,chnum]     = regexp(str,'Ch([0-9])*');
             chnum           = str2double(str(chnum{1}(1):chnum{1}(2)));
 
-            if(isfield(data.tracking,'features'))
+            if(isfield(data.tracking.args,'features'))
                 data = loadCurrentFeatures(gui,data);
                 sig     = squeeze(data.tracking.features(chnum,:,featnum));
                 [p,q]   = rat(useFR/gui.data.annoFR);
