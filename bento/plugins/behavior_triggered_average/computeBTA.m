@@ -29,7 +29,8 @@ for ii = 1:length(m)
             usecolor = 'k';
             sig     = nanmean(data.rast);
             sig     = nan_fill(sig);
-            sig     = resample(sig,useFR,gui.data.CaFR);
+            [p,q]   = rat(useFR/gui.data.CaFR);
+            sig     = resample(sig,p,q);
 
         case 'u' % unit: across trials no, across channels no
             usecolor = 'k';

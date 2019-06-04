@@ -54,9 +54,6 @@ enabled.audio     = any(~cellfun(@isempty,data(:,match.Audio_file)))*[1 1];
 enabled.tsne      = [0 0];
 enabled.scatter   = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 0];
 enabled.fineAnnot = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 0];
-if(~enabled.movie(1))
-    enabled.fineAnnot(2) = enabled.fineAnnot(1);
-end
 
 %load the data:
 mouse = struct();
