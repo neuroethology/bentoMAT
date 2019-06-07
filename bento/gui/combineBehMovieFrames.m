@@ -1,4 +1,4 @@
-function mov = combineBehMovieFrames(gui,movies)
+function mov = combineBehMovieFrames(gui,movies,time)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -8,7 +8,7 @@ function mov = combineBehMovieFrames(gui,movies)
 
 % add tracking data if included
 if(all(gui.enabled.tracker))
-    movies = applyTracking(gui,movies);
+    movies = applyTracking(gui,movies,time);
 end
 
 % convert to 3-channel color
