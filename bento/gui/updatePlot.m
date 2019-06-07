@@ -73,16 +73,18 @@ time = gui.ctrl.slider.Value;
 if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     if(all(gui.enabled.movie))
         [mov, gui.data.io.movie.reader,movieFrame] = readBehMovieFrame(gui.data.io.movie,time);
-        mov = combineBehMovieFrames(gui,mov);
+        mov = combineBehMovieFrames(gui,mov,time);
         mov = mov*gui.movie.sc;
-    elseif(gui.enabled.movie(1))
-        mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;
+    else
+        if(gui.enabled.movie(1))
+            mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;
+        else
+            mov = ones(540,1024,'uint8')*255;
+        end
         if(all(gui.enabled.tracker)) % add tracking data if included
-            mov = applyTracking(gui,{mov});
+            mov = applyTracking(gui,{mov},time);
         end
         mov=mov{1};
-    else
-        mov = ones(1024,540,'uint8')*255;
     end
 	
     % apply crop+zoom if turned on

@@ -1,18 +1,22 @@
-function movies = applyTracking(gui,movies)
+function movies = applyTracking(gui,movies,time)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
 
+if(gui.enabled.movie(1))
+    % check which movie we're plotting tracking on
+    [rr,cc] = identifyTrackedMovie(gui.data);
 
-% check which movie we're plotting tracking on
-[rr,cc] = identifyTrackedMovie(gui.data);
-
-info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
-frnum = info.curFrame+1;
-if(frnum<2)
-    return;
+    info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
+    frnum = info.curFrame+1;
+    if(frnum<2)
+        return;
+    end
+else
+    [rr,cc]=deal(1);
+    frnum = find(gui.data.annoTime>time,1,'first');
 end
     
 eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args, ' num2str(frnum) ' );']);

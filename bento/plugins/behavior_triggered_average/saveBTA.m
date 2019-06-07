@@ -8,7 +8,6 @@ h2.hfig2        = figure('position',[p2(1:2) p(3)/.8 p(4)]);
 h2.panelPlots   = uipanel('parent',h2.hfig2,'position',[.2 0 .8 1],'bordertype','none','BackgroundColor','white');
 h2.fig          = copyobj(h.fig,h2.panelPlots);
 h2.fig_sub      = copyobj(h.fig_sub,h2.panelPlots);
-set(h2.fig.Title,'String',[h2.fig.Title.String ' of ' strrep(h.unit.String{h.unit.Value},'behavior: ','')]);
 set(h2.hfig2,'color','white');
 
 h2 = drawLegend(h2);

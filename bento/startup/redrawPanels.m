@@ -26,9 +26,12 @@ for i = 1:length(enabled)
         gui.(enabled{i}).panel.Visible = 'off';
     end
 end
+if(gui.enabled.tracker(2)) %one exception- we still have the movie panel on if just tracking is enabled
+    gui.movie.panel.Visible = 'on';
+end
 
 %determine whether our display is one column or two
-leftOn  = gui.enabled.movie(2);
+leftOn  = gui.enabled.movie(2) || gui.enabled.tracker(2);
 rightOn = gui.enabled.traces(2) || gui.enabled.features(2) || gui.enabled.scatter(2) ||...
             (~gui.enabled.movie(2) && (gui.enabled.audio(2) || gui.enabled.fineAnnot(2)));
 numOn   = (gui.enabled.traces(2)||gui.enabled.scatter(2)) + ...

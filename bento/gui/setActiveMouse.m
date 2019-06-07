@@ -90,7 +90,7 @@ if(gui.enabled.tracker(1))
     
     data = loadCurrentFeatures(gui,data);
 
-    if(isempty(data.tracking.features))
+    if(~isfield(data.tracking,'features') || isempty(data.tracking.features))
         gui.enabled.features = [0 0];
     end
     gui = redrawPanels(gui);
