@@ -6,6 +6,7 @@ function mov = combineBehMovieFrames(gui,movies,time)
 
 
 
+
 % add tracking data if included
 if(all(gui.enabled.tracker))
     movies = applyTracking(gui,movies,time);

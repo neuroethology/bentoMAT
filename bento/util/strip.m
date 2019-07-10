@@ -4,7 +4,12 @@ function str = strip(str,dir,char)
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-
+if(~exist('char','var'))
+    char = ' ';
+end
+if(~exist('dir','var'))
+    dir = 'left';
+end
 
 if(strcmpi(dir,'right'))
     str = fliplr(str);

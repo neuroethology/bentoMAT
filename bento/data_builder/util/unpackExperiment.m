@@ -82,26 +82,32 @@ for i=1:size(data,1)
         CaFR    = data{i,match.FR_Ca};
         
         if(~strcmpi(fid,prevCa)) %save some time by not re-loading files used previously
-            [rast,CaTime]    = unpackCaData(fid);
-            if(size(rast,1)>size(rast,2))
-                rast=rast';
+            [rast,CaTime,spikes,ROIs]    = unpackCaData(fid);
+            if(size(rast,1)>size(rast,2)) %sometimes data is stored transposed. we usually have more timepoints than cells, so use this fact to detect this
+                rast=rast';spikes=spikes';
             end
             prevCa  = fid;
-            strtemp.rast = rast;
-%             [~,ctrs] = kmeans(zscore(rast')',10,'replicates',10);
-            ctrs = rast;
-            strtemp.ctrs = ctrs;
+            strtemp.rast    = rast;
+            strtemp.spikes  = spikes;
+            strtemp.ROIs    = ROIs;
         else
-            strtemp.rast = rast;
-            strtemp.ctrs = ctrs;
+            strtemp.rast    = rast;
+            strtemp.spikes  = spikes;
+            strtemp.ROIs    = ROIs;
         end
         cutCa = ~any(isempty(tstart))&&~any(isnan(tstart));
         if(cutCa)
             if(~isnumeric(tstart))
                 tstart = str2num(tstart); tstop = str2num(tstop);
             end
-            strtemp.rast = rast(:,tstart:tstop);
-            strtemp.ctrs = ctrs(:,tstart:tstop);
+            try
+            strtemp.rast    = rast(:,tstart:tstop);
+            catch
+                keyboard
+            end
+            if(~isempty(spikes))
+                strtemp.spikes  = spikes(:,tstart:tstop);
+            end
         end
         drdt = [zeros(size(strtemp.rast(:,1),1),1) strtemp.rast(:,2:end)-strtemp.rast(:,1:end-1)];
         strtemp.ddt = smoothts(drdt,'g',50,10)*20;
@@ -157,7 +163,7 @@ for i=1:size(data,1)
     end
     
     % link movies----------------------------------------------------------
-    if(~isempty(data{i,match.Behavior_movie}) && ~skipvideos)
+    if(~isempty(data{i,match.Behavior_movie}))
         colList   = strsplit(data{i,match.Behavior_movie},';;');
         
         for col = 1:length(colList)
@@ -175,32 +181,34 @@ for i=1:size(data,1)
                 
             end
         end
-        
         strtemp.io.movie.FR  = data{i,match.FR_Anno}; %should change this to allow multiple FR's in the future
-        if(raw{1,9})
-            strtemp.io.movie.tmin = data{i,match.Start_Anno};
-            strtemp.io.movie.tmax = data{i,match.Stop_Anno};
-        else
-            strtemp.io.movie.tmin = 1;
-            switch(strtemp.io.movie.fid{1}(end-2:end))
-                case 'seq'
-                    tmax = inf;
-                    for j = 1:length(strtemp.io.movie.fid)
-                        info = seqIo(strtemp.io.movie.fid{j},'getInfo');
-                        tmax = min([tmax info.numFrames]);
-                    end
-                otherwise
-                    tmax = inf;
-                    for j = 1:length(strtemp.io.movie.fid)
-                        try
-                        info = VideoReader(strtemp.io.movie.fid{j});
-                        catch
-                            keyboard
+        
+        if(~skipvideos)
+            if(raw{1,9})
+                strtemp.io.movie.tmin = data{i,match.Start_Anno};
+                strtemp.io.movie.tmax = data{i,match.Stop_Anno};
+            else
+                strtemp.io.movie.tmin = 1;
+                switch(strtemp.io.movie.fid{1}(end-2:end))
+                    case 'seq'
+                        tmax = inf;
+                        for j = 1:length(strtemp.io.movie.fid)
+                            info = seqIo(strtemp.io.movie.fid{j},'getInfo');
+                            tmax = min([tmax info.numFrames]);
                         end
-                        tmax = min([tmax round(info.Duration*info.FrameRate)]);
-                    end
+                    otherwise
+                        tmax = inf;
+                        for j = 1:length(strtemp.io.movie.fid)
+                            try
+                            info = VideoReader(strtemp.io.movie.fid{j});
+                            catch
+                                keyboard
+                            end
+                            tmax = min([tmax round(info.Duration*info.FrameRate)]);
+                        end
+                end
+                strtemp.io.movie.tmax = tmax;
             end
-            strtemp.io.movie.tmax = tmax;
         end
         
     else

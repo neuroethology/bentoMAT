@@ -73,8 +73,8 @@ time = gui.ctrl.slider.Value;
 if(all(gui.enabled.movie)||all(gui.enabled.tracker))
     if(all(gui.enabled.movie))
         [mov, gui.data.io.movie.reader,movieFrame] = readBehMovieFrame(gui.data.io.movie,time);
+        mov = cellfun(@times,mov,{gui.movie.sc},'uniformoutput',false);
         mov = combineBehMovieFrames(gui,mov,time);
-        mov = mov*gui.movie.sc;
     else
         if(gui.enabled.movie(1))
             mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;

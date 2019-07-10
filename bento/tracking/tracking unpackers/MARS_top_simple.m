@@ -10,4 +10,4 @@ end
 m1      = squeeze(v(1,:,inds));
 m2      = squeeze(v(2,:,inds));
 
-pts = [1 m1(:)'; 2 m2(:)'];
+pts = {[1 m1(:)'], [2 m2(:)']};

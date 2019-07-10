@@ -84,7 +84,11 @@ for ii = 1:length(m)
     merge   = str2double(h.merge.String)/str2double(h.bin.String);
 
     % find the trigger frames for the behavior raster
-    rast    = convertToRast(data.annot.(ch).(bhv),length(data.annoTime));
+    if(isfield(data.annot.(ch),bhv))
+        rast    = convertToRast(data.annot.(ch).(bhv),length(data.annoTime));
+    else
+        rast = zeros(1,length(data.annoTime));
+    end
     dt      = rast(2:end) - rast(1:end-1);
     tbB     = find(dt==1);
     teB     = find(dt==-1);

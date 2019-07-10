@@ -1,3 +1,3 @@
 function pts = MARS_feats_only(data,fr)
-    pts = [];
+    pts = {};
 end

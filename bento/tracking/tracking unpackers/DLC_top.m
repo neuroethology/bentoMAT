@@ -7,5 +7,5 @@ function pts = DLC_top(data,fr)
     m1      = data([px(inds); py(inds)],fr);
     m2      = data([px(inds); py(inds)]+21,fr);
 
-    pts = [1 m1(:)'; 2 m2(:)'];
+    pts = {[1 m1(:)'], [2 m2(:)']};
 end

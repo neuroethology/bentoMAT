@@ -14,9 +14,11 @@ else
         gui.enabled.tracker = [0 0];
     elseif(isfield(data.io.movie,'reader'))
         [rr,cc] = identifyTrackedMovie(data);
-        data.trackTime = data.io.movie.reader{rr,cc}.TS;
-    else
-        data.trackTime = data.annoTime;
+        if(isfield(data.io.movie.reader{rr,cc},'TS'))
+            data.trackTime = data.io.movie.reader{rr,cc}.TS;
+        else
+            data.trackTime = data.annoTime;
+        end
     end
 end
 

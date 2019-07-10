@@ -18,7 +18,7 @@ else
 end
 img = ones(1,L,3);
 for i = 1:length(bhvList)
-    if((isempty(showAnnot) || showAnnot.(bhvList{i})) && ~isempty(bhv.(bhvList{i})) && ~strcmpi(bhvList{i},'other'))
+    if((isempty(showAnnot) || ~isfield(showAnnot,bhvList{i}) || showAnnot.(bhvList{i})) && ~isempty(bhv.(bhvList{i})) && ~strcmpi(bhvList{i},'other'))
         if(min(size(bhv.(bhvList{i})))==2 || length(bhv.(bhvList{i}))==2)
             if(~isempty(inds))
                 use = bhv.(bhvList{i});
