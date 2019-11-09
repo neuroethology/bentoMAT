@@ -142,7 +142,7 @@ if(all(gui.enabled.traces))
     bump        = gui.traces.yScale;
     
     show        = find(gui.traces.show);
-    [tr,lims] = getFormattedTraces(gui,inds);
+    [tr,lims,gui] = getFormattedTraces(gui,inds);
     
     if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image'))
         set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',[2 10-.5/length(show)*8],'cdata',tr*64);
@@ -157,8 +157,8 @@ if(all(gui.enabled.traces))
                 set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
                                          'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
                 else
-                set(gui.traces.traces(i),'xdata',[min(gui.data.CaTime(inds(2:end))-time)*1.1 gui.data.CaTime(inds(2:end))-time max(gui.data.CaTime(inds(2:end))-time)*1.1*[1 1]],...
-                                         'ydata',([0 tr(i,:) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+                set(gui.traces.traces(i),'xdata',[min(gui.data.CaTime(inds(2:end))-time) gui.data.CaTime(inds)-time max(gui.data.CaTime(inds(2:end))-time)*1.1*[1 1]],...
+                                         'ydata',([0 0 tr(i,2:end) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
                 end
             else
                 if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
@@ -166,8 +166,8 @@ if(all(gui.enabled.traces))
                                                      (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
                                                      'color',[.1 .1 .1],'hittest','off');
                 else
-                    gui.traces.traces(i) = patch(gui.traces.axes, [min(gui.data.CaTime(inds)-time)*1.1 gui.data.CaTime(inds)-time max(gui.data.CaTime(inds)-time)*1.1*[1 1]],...
-                                                     ([0 tr(i,:) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
+                    gui.traces.traces(i) = patch(gui.traces.axes, [min(gui.data.CaTime(inds)-time) gui.data.CaTime(inds)-time max(gui.data.CaTime(inds)-time)*1.1*[1 1]],...
+                                                     ([0 0 tr(i,2:end) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
                                                      lineColors(i,:),'hittest','off','FaceAlpha',0.5);
                 end
             end
@@ -336,7 +336,7 @@ pause(min(gui.ctrl.slider.SliderStep(1) - toc(evaltime),0));
 drawnow;
 end
 
-function [traces,lims] = getFormattedTraces(gui,inds)
+function [traces,lims,gui] = getFormattedTraces(gui,inds)
 % something with Order is screwed up here----------------------------------
 
     if(strcmpi(gui.traces.toPlot,'PCA'))
@@ -377,6 +377,10 @@ function [traces,lims] = getFormattedTraces(gui,inds)
     
     [~,order]   = sort(gui.traces.order);
     order       = fliplr(order);
+    if(length(order)~=size(traces,1))
+        gui.traces.order = 1:size(traces,1);
+        order = gui.traces.order;
+    end
     traces  = traces(order,:);
     traces  = traces(gui.traces.show,:);
     lims    = [min(traces(1,:)) max(traces(end,:))];
