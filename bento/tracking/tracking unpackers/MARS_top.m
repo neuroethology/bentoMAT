@@ -12,4 +12,20 @@ function pts = MARS_top(data,fr)
     m2      = squeeze(v(2,:,inds));
 
     pts = {[1 m1(:)'] [2 m2(:)']};
+    
+    if(isfield(data,'crop_bounds')) % support for multi-arena MARS
+        bounds = data.crop_bounds;
+        if((bounds(2,1)-bounds(1,1)) < (bounds(2,2)-bounds(1,2)))
+            for i=1:length(pts)
+                temp = pts{i};
+                pts{i}(2:2:end) = temp(3:2:end);
+                pts{i}(3:2:end) = temp(2:2:end);
+            end
+        end
+        for i=1:length(pts)
+            pts{i}(2:2:end) = pts{i}(2:2:end)+double(bounds(1,1));
+            pts{i}(3:2:end) = pts{i}(3:2:end)+double(bounds(1,2));
+        end
+    end
+    
 end

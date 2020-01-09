@@ -22,13 +22,15 @@ else
     end
 end
 
-if(isfield(data.tracking.args,'features'))
+% TODO: update this to support features from multiple tracking files in one
+% experiment
+if(isfield(data.tracking.args{1},'features'))
 
     if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
-        [data.tracking.features,featnames] = eval([data.tracking.fun '_features(data.tracking.args)']);
+        [data.tracking.features,featnames] = eval([data.tracking.fun '_features(data.tracking.args{1})']);
 
     elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support
-        [data.tracking.features,featnames] = MARS_top_features(data.tracking.args);
+        [data.tracking.features,featnames] = MARS_top_features(data.tracking.args{1});
 
     else % just ask which variables to use and hope for the best
         [data.tracking.features,featnames] = promptFeatures(data);

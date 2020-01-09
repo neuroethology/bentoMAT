@@ -30,7 +30,7 @@ end
                 set(get(h(2),'children'),'facealpha',0.5)
                 set(get(h(3),'children'),'facealpha',0.5)
             case 'g'
-                set(h([2 3]),'FaceColor',[.5 1 .5]);
+                set(h([2 3]),'FaceColor',[0 .75 1]);
                 set(get(h(2),'children'),'facealpha',0.5)
                 set(get(h(3),'children'),'facealpha',0.5)
             case 'c'

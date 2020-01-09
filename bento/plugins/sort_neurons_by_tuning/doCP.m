@@ -6,7 +6,7 @@ function CP = doCP(sig1,sig2)
 
 
 dat = [sig1 sig2];
-bins  = linspace(min(dat) - .05*range(dat),max(dat)+.05*range(dat),500);
+bins  = linspace(min(dat) - .05*range(dat),max(dat)+.05*range(dat),200);
 sigh1 = cumsum(hist(sig1,bins))/length(sig1);
 sigh2 = cumsum(hist(sig2,bins))/length(sig2);
 

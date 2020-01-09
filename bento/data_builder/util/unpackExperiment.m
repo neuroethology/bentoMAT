@@ -218,33 +218,36 @@ for i=1:size(data,1)
     % add tracking data----------------------------------------------------
     if(enabled.tracker(1))
         if(~isempty(data{i,match.Tracking}))
-            fid = [pth strip(strip(data{i,match.Tracking},'left','.'),'left',filesep)];
-            [~,~,ext] = fileparts(fid);
-            if(strcmpi(ext,'.mat'))
-                temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
-                f = fieldnames(temp);
-                if(length(f)==2)
-                    temp=temp.(f{2});
-                elseif(length(f)==1)
-                    temp = temp.(f{1});
+            trackList = strsplit(data{i,match.Tracking},';');
+            for trackFile = 1:length(trackList)
+                fid = [pth strip(strip(trackList{trackFile},'left','.'),'left',filesep)];
+                [~,~,ext] = fileparts(fid);
+                if(strcmpi(ext,'.mat'))
+                    temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
+                    f = fieldnames(temp);
+                    if(length(f)==2)
+                        temp=temp.(f{2});
+                    elseif(length(f)==1)
+                        temp = temp.(f{1});
+                    end
+                    strtemp.tracking.args{trackFile} = temp;
+                    strtemp.io.feat.fid{trackFile} = fid;
+                elseif(strcmpi(ext,'.json'))
+                    if(exist('jsondecode','builtin'))
+                        disp('loading tracking data');
+                        strtemp.tracking.args{trackFile} = jsondecode(fileread(fid));
+                    elseif(exist('loadjson','file'))
+                        disp('Using loadjson.')
+                        strtemp.tracking.args{trackFile} = loadjson(fid);
+                    else
+                        disp('Please download jsonlab (https://github.com/fangq/jsonlab) or upgrade to Matlab 2016b or later.')
+                        strtemp.tracking.args{trackFile} = [];
+                    end
+                    strtemp.io.feat.fid{trackFile} = fid;
+                elseif(strcmpi(ext,'.h5')) %DeepLabCut output
+                    args = h5read(fid,'/df_with_missing/table');
+                    strtemp.tracking.args{trackFile} = args.values_block_0;
                 end
-                strtemp.tracking.args = temp;
-                strtemp.io.feat.fid = {fid};
-            elseif(strcmpi(ext,'.json'))
-                if(exist('jsondecode','builtin'))
-                    disp('loading tracking data');
-                    strtemp.tracking.args = jsondecode(fileread(fid));
-                elseif(exist('loadjson','file'))
-                    disp('Using loadjson.')
-                    strtemp.tracking.args = loadjson(fid);
-                else
-                    disp('Please download jsonlab (https://github.com/fangq/jsonlab) or upgrade to Matlab 2016b or later.')
-                    strtemp.tracking.args = [];
-                end
-                strtemp.io.feat.fid = {fid};
-            elseif(strcmpi(ext,'.h5')) %DeepLabCut output
-                args = h5read(fid,'/df_with_missing/table');
-                strtemp.tracking.args = args.values_block_0;
             end
         else
             strtemp.tracking.args = [];

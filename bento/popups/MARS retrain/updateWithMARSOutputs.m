@@ -22,17 +22,20 @@ end
 
 % add the classifier probabilities in as (possibly new) features, and
 % display those feature automatically
+%
+% TODO: update this to support multiple feature sets per experiment...
+% somehow?
 fid     = [pth '\' mID '_classifier_probabilities_mlp.mat'];
 probs   = load(fid);
 for i = 1:size(probs.behaviors,1)
     behLabel = [model_type '_' probs.behaviors(i,:)];
-    ind = find(~cellfun(@isempty,strfind(cellstr(data.tracking.args.features),behLabel)),1);
+    ind = find(~cellfun(@isempty,strfind(cellstr(data.tracking.args{1}.features),behLabel)),1);
     if(isempty(ind))
-        data.tracking.args.features = [pad(behLabel,size(data.tracking.args.features,2)); ...
+        data.tracking.args{1}.features = [pad(behLabel,size(data.tracking.args{1}.features,2)); ...
                                        data.tracking.args.features];
-        data.tracking.args.data_smooth = cat(3,flipud(permute(probs.probabilities,[3 2 1])),data.tracking.args.data_smooth);
+        data.tracking.args{1}.data_smooth = cat(3,flipud(permute(probs.probabilities,[3 2 1])),data.tracking.args{1}.data_smooth);
     else
-        data.tracking.args.data_smooth(:,:,ind) = flipud(permute(probs.probabilities,[3 2 1]));
+        data.tracking.args{1}.data_smooth(:,:,ind) = flipud(permute(probs.probabilities,[3 2 1]));
     end
 end
 

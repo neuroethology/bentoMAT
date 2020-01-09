@@ -30,6 +30,15 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
                 time    = min(time, tMax);
                 reader{col,i}.currentTime = time;
                 movies{col,i} = readFrame(reader{col,i});
+%                 imfix = zeros(480,720,3);
+%                 for ch = 1:3
+%                     temp = reshape(squeeze(movies{col,i}(:,:,ch)),480,[]);
+%                     imfix(:,(ch-1)*(810-720)+1:end,ch) = temp(:,1:(720-(ch-1)*(810-720)));
+%                     if(ch<3)
+%                         imfix(:,1:(ch)*(810-720),ch+1) = temp(:,720-(ch-1)*(810-720)+1:end);
+%                     end
+%                 end
+%                 movies{col,i} = imfix(:,1:720,:)/255;
                 frnum = round(time*reader{col,i}.FrameRate);
         end
     end

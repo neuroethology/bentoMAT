@@ -102,9 +102,9 @@ if(gui.enabled.tracker(1))
         data.tracking.active    = cell(1,length(data.tracking.features));
         data.tracking.inactive  = cell(1,length(data.tracking.features));
     else
-        f = fieldnames(data.tracking.args);
-        data.tracking.active    = cell(1,length(data.tracking.args.(f{1})));
-        data.tracking.inactive  = cell(1,length(data.tracking.args.(f{1})));
+        f = fieldnames(data.tracking.args{1});
+        data.tracking.active    = cell(1,length(data.tracking.args{1}.(f{1})));
+        data.tracking.inactive  = cell(1,length(data.tracking.args{1}.(f{1})));
     end
     data.tracking.active(1:end) = {1}; %default active settings
     data.tracking.inactive(1:end) = {2:1e5};
