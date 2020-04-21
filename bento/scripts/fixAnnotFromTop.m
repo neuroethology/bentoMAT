@@ -6,7 +6,7 @@ function fixAnnotFromTop(pth)
 
 
 
-doubleStepBack=0; %change this to 1 to do a broader search for corresponding movies
+doubleStepBack=1; %change this to 1 to do a broader search for corresponding movies
 
 if(~exist('pth','var'))
     pth = uigetdir(pwd,'Select directory to convert');
@@ -85,7 +85,7 @@ for f = 1:length(files)
 
     disp(['   getting timestamps for ' mov '...']);
     temp    = seqIo(mov,'reader');
-    TS      = temp.getts();
+    TS        = getSeqTimestamps(mov,temp);
 
     disp('   fixing annotations...');
     [annot,tmax,tmin,FR] = loadAnyAnnot(fname);

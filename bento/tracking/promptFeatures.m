@@ -6,14 +6,14 @@ function [feats,names] = promptFeatures(data)
 
 
 
-f = fieldnames(data.args);
+f = fieldnames(data.tracking.args{1});
 f(strcmpi(f,'features'))=[];
 
 [selection,flag] = listdlg('ListString',f,'SelectionMode','single',...
                             'PromptString','Which variable contains features?');
 if(flag)
-    feats       = data.args.(selection);
-    if(length(size(data.args.(selection)))==2)
+    feats       = data.tracking.args{1}.(selection);
+    if(length(size(data.tracking.args{1}.(selection)))==2)
         feats   = permute(feats,[3 1 2]);
     end
 else
@@ -23,8 +23,8 @@ end
 [selection,flag] = listdlg('ListString',f,'SelectionMode','single',...
                             'PromptString','Which variable contains feature names?');
 if(flag)
-    names       = data.args.(selection);
-    if(length(size(data.args.(selection)))==2)
+    names       = data.tracking.args{1}.(selection);
+    if(length(size(data.tracking.args{1}.(selection)))==2)
         names   = permute(names,[3 1 2]);
     end
 else
