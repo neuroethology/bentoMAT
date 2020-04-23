@@ -2,7 +2,7 @@
 
 Bento is a Matlab GUI for managing multimodal neuroscience datasets. It lets you browse and annotate behavioral and neural data, train behavior classifiers, and helps you organize and navigate trials within a batch of experiments.
 
-Visit the [Bento wiki](https://github.com/annkennedy/bento/wiki) for documentation and tutorials!
+**Visit the [Bento wiki](https://github.com/annkennedy/bento/wiki) for documentation and tutorials!**
 <div align=center>
 <img src='https://github.com/annkennedy/bento/blob/master/docs/tracking_demo.gif?raw=true'>
 </div>
