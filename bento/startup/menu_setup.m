@@ -7,7 +7,7 @@ function mh = menu_setup(gui)
 pluginPath  = [fileparts(fileparts(mfilename('fullpath'))) filesep 'plugins'];
 pluginFiles = dir(pluginPath);
 pluginList = {pluginFiles.name}';
-pluginList([pluginFiles.isdir] & contains({pluginFiles.name},'.')) = [];
+pluginList([pluginFiles.isdir] & ~cellfun(@isempty,strfind({pluginFiles.name},'.'))) = [];
 pluginCalls = strcat(pluginList,'(gcf)');
 pluginList = strcat('>',strrep(pluginList,'_',' '));
 

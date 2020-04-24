@@ -54,15 +54,15 @@ for trackFile = 1:length(gui.data.tracking.args)
         if(isnumeric(color)), c = color(j,:); else, c = color{j}; end
         for i = 2:2:length(pts{j})-2
             if(any(isnan(pts{j}(i:i+1)))), continue; end
-            movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(i:i+1).*scale(1:2) 6],'color',c);
+            movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(i:i+1).*scale(1:2) 4],'color',c);
 
             if(any(isnan(pts{j}(i:i+3)))), continue; end
             movies{rr,cc} = insertShape(movies{rr,cc},'Line',pts{j}(i:i+3).*scale,'linewidth',2,'color',c);
 
         end
         if(any(isnan(pts{j}(i:i+1)))), continue; end
-        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) 6],'color',c);
+        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) 4],'color',c);
         if(any(isnan(pts{j}(1:2)))), continue; end
-        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(2:3).*scale(1:2) 6],'color','red','opacity',1);
+        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(2:3).*scale(1:2) 4],'color','red','opacity',1);
     end
 end

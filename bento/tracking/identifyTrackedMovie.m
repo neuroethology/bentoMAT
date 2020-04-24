@@ -11,9 +11,9 @@ if(~isfield(data.io.movie,'fid'))
 return;
 end
 if(length(data.io.movie.fid)>1)
-    if(contains(data.tracking.fun,'top'))
+    if(~isempty(strfind(data.tracking.fun,'top')))
         [rr,cc] = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Top')));
-    elseif(contains(data.tracking.fun,'front'))
+    elseif(~isempty(strfind(data.tracking.fun,'front')))
         [rr,cc] = find(~cellfun(@isempty,strfind(data.io.movie.fid,'Fro')));
     end
 end

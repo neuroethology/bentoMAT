@@ -7,7 +7,7 @@ function updateBTA(source,~,gui)
 
 h = guidata(source);
 
-if(contains(source.Tag,'checkbox'))
+if(~isempty(strfind(source.Tag,'checkbox')))
     color = permute(source.CData(2,5,:),[1 3 2]);
     set(source,'CData',getButtonImage(color,source.Value));
 end
