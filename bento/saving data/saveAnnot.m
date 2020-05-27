@@ -1,9 +1,13 @@
-function saveAnnot(filename,annot,tmin,tmax,FR,movieNames,stim)
+function saveAnnot(filename,annot,tmin,tmax,FR,movieNames,stim,timeFlag)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
+% set a default value of timeFlag
+if(~exist('timeFlag','var'))
+    timeFlag = false;
+end
 
 fid = fopen(filename,'w');
 % write metadata-----------------------------------------------------------
@@ -16,6 +20,8 @@ if(~isempty(movieNames))
     end
     fstr = [fstr '\n'];
     fprintf(fid,fstr,'Movie file(s): ',movieNames{:});
+else
+    fprint(fid,'Movie file(s): \n');
 end
 fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',stim);
@@ -43,7 +49,7 @@ fprintf(fid,'\n');
 for c = 1:length(channels)
     Ch = channels{c};
     
-    [M,summaries.(Ch)] = makeBehaviorSummary(annot.(Ch),tmin,tmax,FR);
+    [M,summaries.(Ch)] = makeBehaviorSummary(annot.(Ch),tmin,tmax,FR,timeFlag);
     if(isempty(M))
         M{1,1} = '';
         continue;
