@@ -13,13 +13,20 @@ disp(['Loading Ca file ' fname '...']);
 % add cases to this switch statement for other data types~?
 switch ext
     case '.csv'
-        temp = csvread(pth);
-        time = temp(:,1)';
-        rast = temp(:,5)';
-        % get rid of artifacts
-        rast((1:500))    = nan;
-        rast(end-119:end) = nan;
-        spikes=[];
+        fid = fopen(pth);
+        temp = textscan(fid,'%f,%f,[%d %d],%d,%f');
+        neurons = unique(temp{1});
+        rast = [];
+        for i = neurons'
+            rast(i+1,:) = temp{6}(temp{1}==i);
+            rast(i+1,temp{5}(temp{1}==i)==0)=nan;
+        end
+%         time = temp(:,1)';
+%         rast = temp(:,5)';
+%         % get rid of artifacts
+%         rast((1:500))    = nan;
+%         rast(end-119:end) = nan;
+%         spikes=[];
 
     case '.mat'
         temp = load(pth);
@@ -50,6 +57,11 @@ switch ext
                 rast = temp.(use); %assume it's a matrix of traces
                 spikes = [];
             end
+            time = [];
+        elseif(length(f)==2 && any(strcmpi(f,'time')))
+            rast = temp.(f{~strcmpi(f,'time')});
+            spikes = [];
+            time = temp.(f{strcpmi(f,'time')});
         else
             disp(['unsure which variable to read in ' fname]);
             rast = []; spikes=[];

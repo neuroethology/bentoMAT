@@ -84,7 +84,7 @@ for ii = 1:length(m)
     merge   = str2double(h.merge.String)/str2double(h.bin.String);
 
     % find the trigger frames for the behavior raster
-    if(isfield(data.annot.(ch),bhv))
+    if(isfield(data.annot,ch) & isfield(data.annot.(ch),bhv))
         rast    = convertToRast(data.annot.(ch).(bhv),length(data.annoTime));
     else
         rast = zeros(1,length(data.annoTime));

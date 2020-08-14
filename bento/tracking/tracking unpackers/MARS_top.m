@@ -13,7 +13,7 @@ function pts = MARS_top(data,fr)
 
     pts = {[1 m1(:)'] [2 m2(:)']};
     
-    if(isfield(data,'crop_bounds')) % support for multi-arena MARS
+    if(isfield(data,'crop_bounds') && ~isempty(data.crop_bounds)) % support for multi-arena MARS
         bounds = data.crop_bounds;
         if((bounds(2,1)-bounds(1,1)) < (bounds(2,2)-bounds(1,2)))
             for i=1:length(pts)

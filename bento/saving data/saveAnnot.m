@@ -1,12 +1,12 @@
-function saveAnnot(filename,annot,tmin,tmax,FR,movieNames,stim,timeFlag)
+function saveAnnot(filename,annot,tmin,tmax,FR,movieNames,stim,frameFlag)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-% set a default value of timeFlag
-if(~exist('timeFlag','var'))
-    timeFlag = false;
+% set a default value of frameFlag
+if(~exist('frameFlag','var'))
+    frameFlag = false;
 end
 
 fid = fopen(filename,'w');
@@ -49,14 +49,16 @@ fprintf(fid,'\n');
 for c = 1:length(channels)
     Ch = channels{c};
     
-    [M,summaries.(Ch)] = makeBehaviorSummary(annot.(Ch),tmin,tmax,FR,timeFlag);
+    [M,summaries.(Ch)] = makeBehaviorSummary(annot.(Ch),tmin,tmax,FR,frameFlag);
     if(isempty(M))
         M{1,1} = '';
         continue;
     end
     %convert from frames to times, to avoid future tragedies
-    if(~any(cellfun(@any,cellfun(@(x)rem(x,1),{M{:}},'uniformOutput',false))))
-        M(cellfun(@isnumeric,M)) = cellfun(@(x) x/FR,M(cellfun(@isnumeric,M)),'uniformoutput',false);
+    if(~frameFlag)
+        if(~any(cellfun(@any,cellfun(@(x)rem(x,1),{M{:}},'uniformOutput',false))))
+            M(cellfun(@isnumeric,M)) = cellfun(@(x) x/FR,M(cellfun(@isnumeric,M)),'uniformoutput',false);
+        end
     end
     
     fprintf(fid,'%s----------\n',channels{c});

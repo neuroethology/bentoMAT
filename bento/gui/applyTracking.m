@@ -22,11 +22,18 @@ if(gui.enabled.movie(1))
     end
 else
     [rr,cc]=deal(1);
-    frnum = find(gui.data.annoTime>time,1,'first');
+    % problem!!! the annotation timestamps aren't necessarily the same as
+    % the pose estimation timestamps! default to assuming video was 30hz.
+    frnum = max(round(time*30),1);
+%     frnum = find(gui.data.annoTime>time,1,'first');
 end
 
 for trackFile = 1:length(gui.data.tracking.args)
+    try
     eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args{trackFile}, ' num2str(frnum) ' );']);
+    catch
+        keyboard
+    end
     if(isstruct(pts))
         color = pts.color;
         pts = pts.pts;

@@ -12,7 +12,7 @@ end
 
 fineAnnot.panel        = uipanel('position',[0 0 1 1],'bordertype','none');
 fineAnnot.axes         = axes('parent',fineAnnot.panel,'ytick',[],...
-                              'position',[0.1 0.11 0.85 .815]); hold on;
+                              'position',[0.1 0.2 0.85 .8]); hold on;
 fineAnnot.win          = 20;
 fineAnnot.img          = image();
 fineAnnot.img.ButtonDownFcn = {@figBoxCheck,'fineAnnot'};

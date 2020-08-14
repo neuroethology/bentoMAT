@@ -92,6 +92,9 @@ for c = 1:length(chInds)-1
             end
             if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop)
                 annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-winStart+1,0),winStop-winStart+1);
+                if(vals(2)-tmin+1 > tmax)
+                    tmax = vals(2)-tmin+2;
+                end
             end
             L=L+1; % go to the next line
         end

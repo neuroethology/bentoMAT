@@ -1,12 +1,12 @@
-function [M,channelSummary] = makeBehaviorSummary(channel,tmin,tmax,FR,timeFlag)
+function [M,channelSummary] = makeBehaviorSummary(channel,tmin,tmax,FR,frameFlag)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-% set a default value of timeFlag
-if(~exist('timeFlag','var'))
-    timeFlag = false;
+% set a default value of frameFlag
+if(~exist('frameFlag','var'))
+    frameFlag = false;
 end
 
 M = {};
@@ -22,10 +22,10 @@ for f = 1:length(fields)
 
         M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
         delta = channel.(fields{f})(:,2) - channel.(fields{f})(:,1);
-        if(timeFlag)
-            delta = delta + 1/FR;
-        else
+        if(frameFlag)
             delta = delta + 1;
+        else
+            delta = delta + 1/FR;
         end
         M(2+(1:size(channel.(fields{f}),1)),count*3) = num2cell(delta);
         
