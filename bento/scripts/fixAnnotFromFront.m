@@ -59,6 +59,7 @@ for f = 1:length(files)
         stim = strrep(stim,'Stimulus name: ','');
         mov = strsplit(strrep(movieNames,'Movie file(s):  ',''),'.seq');
         mov = [mov{find(~cellfun(@isempty,strfind(mov,'Front')))} '.seq'];
+        
 
         % if that fails, look for a movie with a compatible name
         if(isempty(strrep(mov,'.seq','')) || ~exist(mov,'file'))

@@ -6,7 +6,7 @@ function fixAnnotFromTop(pth)
 
 
 
-doubleStepBack=1; %change this to 1 to do a broader search for corresponding movies
+doubleStepBack=0; %change this to 1 to do a broader search for corresponding movies
 
 if(~exist('pth','var'))
     pth = uigetdir(pwd,'Select directory to convert');
@@ -32,6 +32,7 @@ for f = 1:length(files)
 
     if(strcmpi(ext,'.txt'))
         mov = regexprep(fname,'_[a-z_]*actions_pred_v[0-9]*_[0-9]*.txt','_Top.seq');
+%         mov = regexprep(fname,'_[A-Z]*.txt','_Top.seq');
         [pth,mov] = fileparts(mov);
         pth = fileparts(fileparts(pth));
         mov = [pth filesep mov '.seq'];

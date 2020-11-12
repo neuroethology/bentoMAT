@@ -34,6 +34,7 @@ for j = 1:length(annoList)
             [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}]);
         catch
             disp(['Couldn''t load annotations at ' pth annoList{j}]);
+            keyboard
         end
     end
     

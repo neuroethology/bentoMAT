@@ -109,6 +109,7 @@ for i=1:size(data,1)
                 strtemp.spikes  = spikes(:,tstart:tstop);
             end
         end
+        strtemp.sm_rast = strtemp.rast;
         drdt = [zeros(size(strtemp.rast(:,1),1),1) strtemp.rast(:,2:end)-strtemp.rast(:,1:end-1)];
         strtemp.ddt = smoothts(drdt,'g',50,10)*20;
         if(~isempty(CaTime))

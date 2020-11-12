@@ -88,7 +88,7 @@ end
 % get tracking type if needed
 if(gui.enabled.tracker(1))
     
-    data = loadCurrentFeatures(gui,data);
+    [gui,data] = loadCurrentFeatures(gui,data);
 
     if(~isfield(data.tracking,'features') || isempty(data.tracking.features))
         gui.enabled.features = [0 0];

@@ -135,6 +135,7 @@ end
 
 %now change time to be relative to start of relevant movie segment
 time = time - gui.ctrl.slider.Min; %gui.data.io.movie.tmin/gui.data.io.movie.FR;%slider.Min;
+
 % update the plotted traces
 if(all(gui.enabled.traces))
     inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));

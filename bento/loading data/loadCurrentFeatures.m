@@ -1,4 +1,4 @@
-function data = loadCurrentFeatures(gui,data)
+function [gui,data] = loadCurrentFeatures(gui,data)
 
 if(isfield(gui,'data'))
     data.tracking.fun = gui.data.tracking.fun;
@@ -24,9 +24,15 @@ end
 
 % TODO: update this to support features from multiple tracking files in one
 % experiment
-if(isfield(data.tracking.args{1},'features'))
+if(isfield(data.tracking.args{1},'features') || strcmpi(data.tracking.fun,'EMG'))
 
-    if(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
+    if(strcmpi(data.tracking.fun,'EMG')) % hard-coded miller lab emg support
+        [data,featnames] = EMG_features(data, data.tracking.args{1});
+        gui.enabled.traces = [1 1];
+        gui.enabled.annot  = [1 1];
+        gui.enabled.fineAnnot  = [1 0];
+        
+    elseif(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
         [data.tracking.features,featnames] = eval([data.tracking.fun '_features(data.tracking.args{1})']);
 
     elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support
