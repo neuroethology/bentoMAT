@@ -43,6 +43,7 @@ function changePlotType(source,~)
             gui.traces.toPlot = 'ctrs';
             gui.traces.show = true(10,1);
     end
+    gui.data.([gui.traces.toPlot '_formatted']) = applyScale(gui);
 
     if(~any(strcmpi(source.String{source.Value},{'PCs','NMF'})))
         guidata(source,gui);

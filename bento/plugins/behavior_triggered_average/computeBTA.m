@@ -59,12 +59,13 @@ for ii = 1:length(m)
             chnum           = str2double(str(chnum{1}(1):chnum{1}(2)));
 
             if(isfield(data.tracking.args{1},'features'))
-                data = loadCurrentFeatures(gui,data);
+                [gui,data] = loadCurrentFeatures(gui,data);
                 sig     = squeeze(data.tracking.features(chnum,:,featnum));
-                [p,q]   = rat(useFR/gui.data.annoFR);
+                trackFR = 1/(gui.data.trackTime(2) - gui.data.trackTime(1));
+                [p,q]   = rat(useFR/trackFR);
                 sig     = resample(sig,p,q);
             else
-                sig = zeros(1,length(gui.data.annoTime));
+                sig = zeros(1,length(gui.data.trackTime));
             end
     end
 

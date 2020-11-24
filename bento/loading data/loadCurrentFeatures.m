@@ -24,13 +24,25 @@ end
 
 % TODO: update this to support features from multiple tracking files in one
 % experiment
-if(isfield(data.tracking.args{1},'features') || strcmpi(data.tracking.fun,'EMG'))
+if(isfield(data.tracking.args{1},'features') || contains(data.tracking.fun,'EMG'))
 
     if(strcmpi(data.tracking.fun,'EMG')) % hard-coded miller lab emg support
         [data,featnames] = EMG_features(data, data.tracking.args{1});
         gui.enabled.traces = [1 1];
         gui.enabled.annot  = [1 1];
         gui.enabled.fineAnnot  = [1 0];
+        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
+        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
+        gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
+        
+    elseif(strcmpi(data.tracking.fun,'EMG_filtered')) % hard-coded miller lab emg support
+        [data,featnames] = EMG_filtered_features(data, data.tracking.args{1});
+        gui.enabled.traces = [1 1];
+        gui.enabled.annot  = [1 1];
+        gui.enabled.fineAnnot  = [1 0];
+        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
+        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
+        gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
         
     elseif(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
         [data.tracking.features,featnames] = eval([data.tracking.fun '_features(data.tracking.args{1})']);

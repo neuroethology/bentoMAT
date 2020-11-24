@@ -4,7 +4,9 @@ function movies = applyTracking(gui,movies,time)
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-
+if(isempty(time))
+    time=0;
+end
 if(gui.enabled.movie(1))
     % check which movie we're plotting tracking on
     [rr,cc] = identifyTrackedMovie(gui.data);

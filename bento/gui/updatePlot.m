@@ -14,7 +14,7 @@ if(~isempty(eventdata))
             if(gui.Keys.Shift && any(gui.Action~=0))
                 chNum = strcmpi(gui.annot.activeCh,gui.annot.channels);
                 match = strrep(strtrim(gui.movie.annot(chNum).String),' ','_');
-                if(~isempty(match))
+                if(~isempty(match) & isfield(gui.annot.bhv,strtrim(gui.movie.annot(chNum).String)))
                     inds    = gui.data.annoTime > (gui.ctrl.slider.Value - gui.ctrl.slider.Min);
                     tNext   = gui.data.annoTime(find(gui.annot.bhv.(match)(inds),1,'first'));
                     if(~isempty(tNext))
@@ -340,41 +340,10 @@ end
 function [traces,lims,gui] = getFormattedTraces(gui,inds)
 % something with Order is screwed up here----------------------------------
 
-    if(strcmpi(gui.traces.toPlot,'PCA'))
-        traces = gui.data.PCA'*gui.data.rast;
-    else
-        traces = gui.data.(gui.traces.toPlot);
+    if(~isfield(gui.data,[gui.traces.toPlot '_formatted']))
+        gui.data.([gui.traces.toPlot '_formatted']) = applyScale(gui);
     end
-    
-    switch gui.ctrl.track.plotType.scaling.String{gui.ctrl.track.plotType.scaling.Value}
-        case 'raw (scaled by session)'
-            if(strcmpi(gui.traces.toPlot,'PCA'))
-                all = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
-            else
-                all = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
-                all = all(gui.traces.show,:);
-            end
-            traces = traces - min(all(:));
-            traces = traces/max(all(:));
-            
-        case 'raw (scaled by trial)'
-            traces = traces-min(traces(:));
-            traces = traces/max(traces(:));
-            
-        case 'zscored (by session)'
-            if(strcmpi(gui.traces.toPlot,'PCA'))
-                all = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
-            else
-                all = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
-                all = all(gui.traces.show,:);
-            end
-            mu  = mean(all,2);
-            sig = std(all,[],2);
-            traces = bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)/10;
-            
-        case 'zscored (by trial)'
-            traces = zscore(traces(:,2:end-1)')'/10;
-    end
+    traces = gui.data.([gui.traces.toPlot '_formatted']);
     
     [~,order]   = sort(gui.traces.order);
     order       = fliplr(order);
@@ -382,9 +351,9 @@ function [traces,lims,gui] = getFormattedTraces(gui,inds)
         gui.traces.order = 1:size(traces,1);
         order = gui.traces.order;
     end
-    traces  = traces(order,:);
-    traces  = traces(gui.traces.show,:);
     lims    = [min(traces(1,:)) max(traces(end,:))];
     traces  = traces(:,inds);
+    traces  = traces(order,:);
+    traces  = traces(gui.traces.show,:);
     
 end

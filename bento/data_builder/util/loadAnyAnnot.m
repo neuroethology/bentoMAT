@@ -31,6 +31,7 @@ switch ext
         catch
             sprintf('Couldn''t find an annotation file at %s.\n', filename);
             [annotations,tmax,tmin,fid,hotkeys] = deal([]);
+            keyboard
         end
     end
     

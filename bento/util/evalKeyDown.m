@@ -24,7 +24,7 @@ switch eventdata.Key
             gui.ctrl.slider.timer = tic;
         end
         if(gui.Keys.Shift)
-            gui.Action = [gui.ctrl.slider.SliderStep(2) 0];
+            gui.Action = [-gui.ctrl.slider.SliderStep(2) 0];
         else
             gui.Action = [-gui.ctrl.slider.SliderStep(1) 0];
         end

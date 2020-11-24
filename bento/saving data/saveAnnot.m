@@ -21,12 +21,12 @@ if(~isempty(movieNames))
     fstr = [fstr '\n'];
     fprintf(fid,fstr,'Movie file(s): ',movieNames{:});
 else
-    fprint(fid,'Movie file(s): \n');
+    fprintf(fid,'Movie file(s): \n');
 end
 fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',stim);
 fprintf(fid,'%s %d\n','Annotation start frame:',tmin);
-fprintf(fid,'%s %d\n','Annotation stop frame:',tmax);
+fprintf(fid,'%s %d\n','Annotation stop frame:',tmax/FR);
 fprintf(fid,'%s %f\n','Annotation framerate:',FR);
 
 fprintf(fid,'\n%s\n','List of channels:');

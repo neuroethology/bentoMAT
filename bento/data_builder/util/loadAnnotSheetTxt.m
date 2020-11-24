@@ -53,7 +53,7 @@ labels = M(start:stop);
 annot = struct();
 for c = channels
     for f = labels
-        annot.(c{:}).(f{:}) = [];
+        annot.(c{:}).(strrep(f{:},' ','_')) = [];
     end
 end
 
@@ -75,19 +75,21 @@ isTime = any(~cellfun(@isempty,strfind(M(chInds(1):end),'.')));
 % alternatively you could search for ">" characters at the start of lines
 for c = 1:length(chInds)-1
     ch = M{chInds(c)}(1:end-10); % active channel
-    beh    = M{chInds(c)+1}(2:end);  %active behavior
+    beh    = strrep(M{chInds(c)+1}(2:end),' ','_');  %active behavior
     L = chInds(c)+3;
     while L<chInds(c+1)+1
         if(isempty(M{L}))   % blank line == we've reached the end of one behavior
-            beh = M{L+1}(2:end);
+            beh = strrep(M{L+1}(2:end),' ','_');
             L=L+3;          % skip the next two lines (behavior name + start/stop/duration headers)
         else
             vals = str2num(M{L});
             if(isTime) %need to convert to frames
                 if(~isnan(FR))
                     vals = round(vals*FR);
+                    tmax = tmax/FR;
                 else
                     vals = round(vals*30);
+                    tmax = tmax/30;
                 end
             end
             if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop)

@@ -7,6 +7,9 @@ function updateSlider(source,h)%
 gui = guidata(source);
 
 pos = (h.Value - h.Min)/(h.Max-h.Min)*h.Scale;
+if(isempty(pos))
+    pos = 0;
+end
 h.Marker.Position(1) = pos;
 
 gui.ctrl.slider = h;
