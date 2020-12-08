@@ -86,13 +86,17 @@ for c = 1:length(chInds)-1
             if(isTime) %need to convert to frames
                 if(~isnan(FR))
                     vals = round(vals*FR);
-                    tmax = tmax/FR;
-                else
+                    if(mod(tmax,1)~=0) % confirm tmax is a time not a frame
+                        tmax = tmax*FR;
+                    end
+                else % no framerate, assume 30 (whyyy)
                     vals = round(vals*30);
-                    tmax = tmax/30;
+                    if(mod(tmax,1)~=0) % confirm tmax is a time not a frame
+                        tmax = tmax*30;
+                    end
                 end
             end
-            if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop)
+            if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop) %if this annotation is within the range we're loading
                 annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-winStart+1,0),winStop-winStart+1);
                 if(vals(2)-tmin+1 > tmax)
                     tmax = vals(2)-tmin+2;
