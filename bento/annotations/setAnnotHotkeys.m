@@ -36,6 +36,7 @@ function setAnnotHotkeys(source,~)
         gui.annot.hotkeysDef.(keyStruct.(f{:})) = f{:};
     end
     updateLegend(gui,1);
+    updatePreferredCmap(gui.annot.cmapDef,gui.annot.hotkeysDef);
     guidata(gui.h0,gui);
 end
 
