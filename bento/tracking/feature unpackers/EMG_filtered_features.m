@@ -1,4 +1,4 @@
-function [data,featnames] = EMG_features(data, args)
+function [data,featnames] = EMG_filtered_features(data, args)
 
 if(iscell(args))
     argsStr = struct('features',[]);
@@ -19,8 +19,8 @@ data.rast = args.spikes_binned;
 data.CaFR       = 1/(data.CaTime(2)-data.CaTime(1));
 % data.annoFR     = data.CaFR;
 % data.annoTime   = data.CaTime;
-data.trackTime  = args.raw_EMG_timestamps;
-data.tracking.features          = permute(args.raw_EMGs,[3 2 1]);
+data.trackTime  = args.binnedFr;
+data.tracking.features          = permute(args.EMG_filtered,[3 2 1]);
 data.tracking.args{1}.features  = args.EMG_names;
 featnames = data.tracking.args{1}.features;
 
