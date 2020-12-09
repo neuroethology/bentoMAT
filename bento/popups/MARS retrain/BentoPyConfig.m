@@ -10,7 +10,7 @@ flag=0;
 [~, ~, isloaded] = pyversion; %get python up and running if it's not already
 if(~isloaded)
     try
-        pyversion 2.7; % MARS doesn't work with 3.5
+        pyversion 3.8;
     catch
         flag=0;
         path_to_MARS = config.path_to_MARS;
