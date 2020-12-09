@@ -13,6 +13,7 @@ function changePlotType(source,~)
     else
         delete(gui.traces.axes.Children(1:end-4));
         gui.traces.traces=[];
+        gui.traces.groupLines=[];
     end
 
     switch(source.String{source.Value})

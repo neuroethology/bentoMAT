@@ -13,6 +13,8 @@ bhv     = bhvList(h.bhv.Value);
 ch      = h.ch.String(h.ch.Value);
 trials  = trList(h.trials.Value);
 
+% make sure we're up to date:
+gui = guidata(gui.h0);
 % assemble trials:
 rast = [gui.allData(m).(sess)(trials).rast];
 
@@ -67,7 +69,7 @@ end
 set(h.go,'backgroundcolor',[.65 1 .65],'String','Go!');drawnow;
 
 
-gui.traces.order = -idx;
+gui.traces.order = idx + (1:length(idx))'/(length(idx)+1); % fractional values preserve original ordering
 guidata(gui.h0,gui);
 updatePlot(gui.h0,[]);
 

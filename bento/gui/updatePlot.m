@@ -49,7 +49,7 @@ if(~isempty(eventdata))
             gui.fineAnnot.win   = str2num(eventdata.Source.String);
             gui.features.win    = str2num(eventdata.Source.String);
             guidata(source,gui);
-
+            
             set(gui.traces.axes,   'xlim',gui.traces.win*[-1 1]);
             set(gui.audio.axes,    'xlim',gui.audio.win*[-1 1]);
             set(gui.fineAnnot.axes,'xlim',gui.fineAnnot.win*[-1 1]);
@@ -67,6 +67,11 @@ if(~isempty(eventdata))
             end
     end
 end
+gui.traces.win      = str2num(gui.ctrl.track.win.String);
+gui.features.win    = str2num(gui.ctrl.track.win.String);
+gui.audio.win       = str2num(gui.ctrl.track.win.String);
+gui.fineAnnot.win   = str2num(gui.ctrl.track.win.String);
+gui.features.win    = str2num(gui.ctrl.track.win.String);
 time = gui.ctrl.slider.Value;
 
 % update the movie panel
@@ -145,9 +150,12 @@ if(all(gui.enabled.traces))
     show        = find(gui.traces.show);
     [tr,lims,gui] = getFormattedTraces(gui,inds);
     
-    if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image'))
-        set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',[2 10-.5/length(show)*8],'cdata',tr*64);
-        set(gui.traces.axes,'ylim',[1 10+.5/length(show)]);
+    isImage = strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image');
+    if(isImage)
+        imLims = [2 10-.5/length(show)*8];
+        axisLims = [1 10+.5/length(show)];
+        set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',imLims,'cdata',tr*64);
+        set(gui.traces.axes,'ylim',axisLims);
         set(gui.traces.zeroLine,'ydata',[1 10]);
     else
         set(gui.traces.tracesIm,'visible','off');
@@ -177,10 +185,43 @@ if(all(gui.enabled.traces))
         delete(gui.traces.traces(i+1:end));
         gui.traces.traces(i+1:end) = [];
         sc = (-lims(1)+bump)/(length(show)*bump+lims(2));
-        set(gui.traces.axes,'ylim',10*[sc-0.025*(1-sc) 1+0.025*(1-sc)]);
-        set(gui.traces.zeroLine,'ydata',10*[sc-0.025*(1-sc) 1+0.025*(1-sc)]);
+        axisLims = 10*[sc-0.025*(1-sc) 1+0.025*(1-sc)];
+        imLims = axisLims;
+        set(gui.traces.axes,'ylim',axisLims);
+        set(gui.traces.zeroLine,'ydata',axisLims);
         uistack(gui.traces.traces,'top');
     end
+    
+    % show group divisions
+    if(max(gui.traces.order)>1)
+        [~,idx] = sort(gui.traces.order);
+        order   = gui.traces.order(gui.traces.show(idx));
+        if(isImage)
+            sc      = range(imLims)/length(order);
+            groupShift = imLims(1);
+        else
+            sc = range(axisLims)/length(order);
+            groupShift = axisLims(1);
+        end
+        bounds  = unique(ceil(order))';
+        i=[];
+        for i = bounds(1:end-1)
+            if((i-1)<=length(gui.traces.groupLines))
+                set(gui.traces.groupLines(i-1),'xdata',gui.data.CaTime([1 end]) - time,...
+                    'ydata',(sum(order<=i)-.5)*sc*[1 1] + groupShift,'visible','on');
+            else
+                gui.traces.groupLines(i-1) = plot(gui.traces.axes, gui.data.CaTime([1 end]) - time,...
+                                                (sum(order<=i)-.5)*sc*[1 1] + groupShift,'m','hittest','off');
+            end
+        end
+        if(isempty(i)), i = 0; end
+        delete(gui.traces.groupLines(i:end));
+        gui.traces.groupLines(i:end) = [];
+    else
+        delete(gui.traces.groupLines);
+        gui.traces.groupLines = [];
+    end
+    
 end
 
 % update scatterplot
@@ -338,7 +379,6 @@ drawnow;
 end
 
 function [traces,lims,gui] = getFormattedTraces(gui,inds)
-% something with Order is screwed up here----------------------------------
 
     if(~isfield(gui.data,[gui.traces.toPlot '_formatted']))
         gui.data.([gui.traces.toPlot '_formatted']) = applyScale(gui);
@@ -346,9 +386,8 @@ function [traces,lims,gui] = getFormattedTraces(gui,inds)
     traces = gui.data.([gui.traces.toPlot '_formatted']);
     
     [~,order]   = sort(gui.traces.order);
-    order       = fliplr(order);
     if(length(order)~=size(traces,1))
-        gui.traces.order = 1:size(traces,1);
+        gui.traces.order = (1:size(traces,1))/size(traces,1);
         order = gui.traces.order;
     end
     lims    = [min(traces(1,:)) max(traces(end,:))];

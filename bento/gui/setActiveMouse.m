@@ -115,7 +115,7 @@ end
 N = size(data.rast,1);
 if ~(isfield(gui,'data') && strcmpi(sess,sessOld) && m==mOld) %inherit show settings from previously used trial
     gui.traces.show   = true(N,1);
-    gui.traces.order  = 1:N;
+    gui.traces.order  = (1:N)/N;
 end
 data.rast = [nan(N,1) data.rast nan(N,1)]; % pad with nans for display
 if(isfield(gui,'data') && isfield(gui.data,'PCA') && size(gui.data.rast,1)==N)

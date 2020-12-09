@@ -218,6 +218,7 @@ for i=1:size(data,1)
     
     % add tracking data----------------------------------------------------
     if(enabled.tracker(1))
+        strtemp.trackTime = [];
         if(~isempty(data{i,match.Tracking}))
             trackList = strsplit(data{i,match.Tracking},';');
             for trackFile = 1:length(trackList)

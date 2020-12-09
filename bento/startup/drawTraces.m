@@ -17,6 +17,7 @@ traces.win          = 20;
 traces.traces       = [];
 traces.tracesIm     = image(ones(1,1,3),'hittest','off','visible','off');
 traces.zeroLine     = plot([0 0],get(gca,'ylim'),'k--');
+traces.groupLines(1)= plot(get(gca,'ylim'),[0 0],'m','visible','off','hittest','off');
 traces.bg           = image(ones(1,1,3),'hittest','off');
 uistack(traces.bg,'bottom');
 traces.axes.ButtonDownFcn = {@figBoxCheck,'traces'};
