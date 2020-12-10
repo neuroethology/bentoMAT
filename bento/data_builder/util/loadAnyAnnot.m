@@ -29,9 +29,8 @@ switch ext
         try
         [annotations,tmin,tmax,FR] = loadAnnotSheetTxt(filename);
         catch
-            sprintf('Couldn''t find an annotation file at %s.\n', filename);
             [annotations,tmax,tmin,fid,hotkeys] = deal([]);
-            keyboard
+            uialert('Couldn''t find an annotation file at %s.\n', filename);
         end
     end
     

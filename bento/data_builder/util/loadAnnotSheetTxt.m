@@ -68,6 +68,15 @@ if(chInds(end)~=length(M))
 end
 
 isTime = any(~cellfun(@isempty,strfind(M(chInds(1):end),'.')));
+if(isTime)
+    if(mod(tmax,1)~=0) % confirm tmax is a time not a frame
+        if(~isnan(FR))
+            tmax = tmax*FR;
+        else
+            tmax = tmax*30;
+        end
+    end
+end
 
 % loop over channels until everything's read.
 % individual behavior annotations are always prefaced by a blank line,
@@ -86,14 +95,8 @@ for c = 1:length(chInds)-1
             if(isTime) %need to convert to frames
                 if(~isnan(FR))
                     vals = round(vals*FR);
-                    if(mod(tmax,1)~=0) % confirm tmax is a time not a frame
-                        tmax = tmax*FR;
-                    end
                 else % no framerate, assume 30 (whyyy)
                     vals = round(vals*30);
-                    if(mod(tmax,1)~=0) % confirm tmax is a time not a frame
-                        tmax = tmax*30;
-                    end
                 end
             end
             if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop) %if this annotation is within the range we're loading
