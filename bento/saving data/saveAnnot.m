@@ -25,8 +25,8 @@ else
 end
 fprintf(fid,'\n');
 fprintf(fid,'%s %s\n','Stimulus name:',stim);
-fprintf(fid,'%s %d\n','Annotation start frame:',tmin);
-fprintf(fid,'%s %d\n','Annotation stop frame:',tmax/FR);
+fprintf(fid,'%s %d\n','Annotation start time:',tmin/FR);
+fprintf(fid,'%s %d\n','Annotation stop time:',tmax/FR);
 fprintf(fid,'%s %f\n','Annotation framerate:',FR);
 
 fprintf(fid,'\n%s\n','List of channels:');

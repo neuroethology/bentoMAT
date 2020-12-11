@@ -29,12 +29,12 @@ M{end+1}='';
 
 % read out frames + framerate (if available):
 L = find(~cellfun(@isempty,strfind(M,'Annotation start frame:')));
-tmin = str2num(M{L}(25:end));
+tmin = str2num(regexprep(M{L},'[A-Za-z :]',''));
 L = find(~cellfun(@isempty,strfind(M,'Annotation stop frame:')));
-tmax = str2num(M{L}(24:end));
+tmax = str2num(regexprep(M{L},'[A-Za-z :]',''));
 L = find(~cellfun(@isempty,strfind(M,'Annotation framerate:')));
 if(~isempty(L))
-    FR = str2num(strtrim(M{L}(22:end)));
+    FR = str2num(strtrim(regexprep(M{L},'[A-Za-z :]','')));
 else
     FR = nan;
 end
