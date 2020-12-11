@@ -5,7 +5,7 @@ function gui = drawTraces(gui)
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
 
-
+colormap(parula(256));
 if(isfield(gui,'traces'))
     delete(gui.traces.panel);
 end

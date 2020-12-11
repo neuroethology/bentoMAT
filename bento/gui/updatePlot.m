@@ -154,7 +154,7 @@ if(all(gui.enabled.traces))
     if(isImage)
         imLims = [2 10-.5/length(show)*8];
         axisLims = [1 10+.5/length(show)];
-        set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',imLims,'cdata',tr*64);
+        set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',imLims,'cdata',tr*256);
         set(gui.traces.axes,'ylim',axisLims);
         set(gui.traces.zeroLine,'ydata',[1 10]);
     else
@@ -208,10 +208,10 @@ if(all(gui.enabled.traces))
         for i = bounds(1:end-1)
             if((i-1)<=length(gui.traces.groupLines))
                 set(gui.traces.groupLines(i-1),'xdata',gui.data.CaTime([1 end]) - time,...
-                    'ydata',(sum(order<=i)-.5)*sc*[1 1] + groupShift,'visible','on');
+                    'ydata',(sum(order<=i))*sc*[1 1] + groupShift,'visible','on');
             else
                 gui.traces.groupLines(i-1) = plot(gui.traces.axes, gui.data.CaTime([1 end]) - time,...
-                                                (sum(order<=i)-.5)*sc*[1 1] + groupShift,'m','hittest','off');
+                                                (sum(order<=i))*sc*[1 1] + groupShift,'m','hittest','off');
             end
         end
         if(isempty(i)), i = 0; end
@@ -388,7 +388,7 @@ function [traces,lims,gui] = getFormattedTraces(gui,inds)
     [~,order]   = sort(gui.traces.order);
     if(length(order)~=size(traces,1))
         gui.traces.order = (1:size(traces,1))/size(traces,1);
-        order = gui.traces.order;
+        [~,order]   = sort(gui.traces.order);
     end
     lims    = [min(traces(1,:)) max(traces(end,:))];
     traces  = traces(:,inds);

@@ -36,9 +36,11 @@ function changePlotType(source,~)
             end
         case 'PCs'
             gui.traces.toPlot = 'PCA';
+            gui.data.PCA = ones(size(gui.data.rast,1),1);
             getPCAxes(gui,source,'PCA');
         case 'NMF'
             gui.traces.toPlot = 'PCA';
+            gui.data.PCA = ones(size(gui.data.rast,1),1);
             getPCAxes(gui,source,'NMF');
         case 'clusters'
             gui.traces.toPlot = 'ctrs';

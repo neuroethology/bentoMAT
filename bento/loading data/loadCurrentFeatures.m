@@ -2,11 +2,15 @@ function [gui,data] = loadCurrentFeatures(gui,data)
 
 if(isfield(gui,'data'))
     data.tracking.fun = gui.data.tracking.fun;
-    if(isfield(data.io.movie,'reader'))
-        [rr,cc] = identifyTrackedMovie(data);
-        data.trackTime = gui.data.io.movie.reader{rr,cc}.TS;
-    else
+    if(~isfield(data.io.movie,'reader'))
         data.trackTime = data.annoTime;
+    else
+        [rr,cc] = identifyTrackedMovie(data);
+        if(isfield(data.io.movie.reader{rr,cc},'TS'))
+            data.trackTime = gui.data.io.movie.reader{rr,cc}.TS;
+        else
+            data.trackTime = data.annoTime;
+        end
     end
 else
     data.tracking.fun = promptTrackType();
