@@ -96,16 +96,15 @@ if(gui.enabled.tracker(1))
     gui = redrawPanels(gui);
     
     if(isfield(data.io.movie,'tmax'))
-        data.tracking.active    = cell(1,data.io.movie.tmax-data.io.movie.tmin+1); %clear tracking features
-        data.tracking.inactive  = cell(1,data.io.movie.tmax-data.io.movie.tmin+1);
+        nFrames = round((data.io.movie.tmax-data.io.movie.tmin)*data.io.movie.FR) + 1;
     elseif(isfield(data.tracking,'features'))
-        data.tracking.active    = cell(1,length(data.tracking.features));
-        data.tracking.inactive  = cell(1,length(data.tracking.features));
+        nFrames = length(data.tracking.features);
     else
         f = fieldnames(data.tracking.args{1});
-        data.tracking.active    = cell(1,length(data.tracking.args{1}.(f{1})));
-        data.tracking.inactive  = cell(1,length(data.tracking.args{1}.(f{1})));
+        nFrames = length(data.tracking.args{1}.(f{1}));
     end
+    data.tracking.active    = cell(1,nFrames); %clear tracking features
+    data.tracking.inactive  = cell(1,nFrames);
     data.tracking.active(1:end) = {1}; %default active settings
     data.tracking.inactive(1:end) = {2:1e5};
     data.tracking.crop      = [];

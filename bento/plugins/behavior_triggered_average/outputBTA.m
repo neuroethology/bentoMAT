@@ -19,7 +19,7 @@ var = inputdlg({'Assign variable name:','Assign time axis name:'},...
 BTA = struct();
 for i = selection
     h.unit.Value = i;
-    [BTA.(regexprep(h.unit.String{i},' *','_')),time] = computeBTA(source,[],gui);
+    [BTA.(regexprep(regexprep(h.unit.String{i},' *','_'),'[^0-9a-zA-Z_]+','')),time] = computeBTA(source,[],gui);
 end
 
 for i=1:length(var)
