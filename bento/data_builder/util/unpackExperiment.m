@@ -249,6 +249,9 @@ for i=1:size(data,1)
                 elseif(strcmpi(ext,'.h5')) %DeepLabCut output
                     args = h5read(fid,'/df_with_missing/table');
                     strtemp.tracking.args{trackFile} = args.values_block_0;
+                elseif(strcmpi(ext,'.csv')) %also DeepLabCut output
+                    args = xlsread(fid);
+                    strtemp.tracking.args{trackFile} = args';
                 end
             end
             % we need a better way to get timestamps for the tracking data...
