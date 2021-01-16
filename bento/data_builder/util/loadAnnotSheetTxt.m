@@ -28,15 +28,19 @@ fclose(fid);
 M{end+1}='';
 
 % read out frames + framerate (if available):
-L = find(~cellfun(@isempty,strfind(M,'Annotation start frame:')));
-tmin = str2num(regexprep(M{L},'[A-Za-z :]',''));
-L = find(~cellfun(@isempty,strfind(M,'Annotation stop frame:')));
-tmax = str2num(regexprep(M{L},'[A-Za-z :]',''));
 L = find(~cellfun(@isempty,strfind(M,'Annotation framerate:')));
 if(~isempty(L))
     FR = str2num(strtrim(regexprep(M{L},'[A-Za-z :]','')));
 else
-    FR = nan;
+    FR = 30;
+end
+L = find(~cellfun(@isempty,strfind(M,'Annotation start')));
+tmin = str2num(regexprep(M{L},'[A-Za-z :]',''));
+L = find(~cellfun(@isempty,strfind(M,'Annotation stop')));
+tmax = str2num(regexprep(M{L},'[A-Za-z :]',''));
+if(~isempty(strfind(M{L},'time')))
+    tmin = ceil(tmin*FR);
+    tmax = ceil(tmax*FR);
 end
 
 % get the channel list/annotation list (starts at "list of channels"/

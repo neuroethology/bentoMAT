@@ -23,7 +23,7 @@ for f = 1:length(fields)
         if(frameFlag)
             M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
         else
-            M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f})/FR);
+            M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
         end
         delta = channel.(fields{f})(:,2) - channel.(fields{f})(:,1);
         if(frameFlag)

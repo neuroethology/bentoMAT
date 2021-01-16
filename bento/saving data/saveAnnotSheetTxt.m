@@ -1,4 +1,4 @@
-function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName,promptOverride,timeFlag)
+function filename = saveAnnotSheetTxt(movieNames,trial,suggestedName,promptOverride,frameFlag)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -32,9 +32,9 @@ else
     filename = fid;
 end
 
-% set a default value of timeFlag
-if(~exist('timeFlag','var'))
-    timeFlag = false;
+% set a default value of frameFlag
+if(~exist('frameFlag','var'))
+    frameFlag = false;
 end
 
 
@@ -49,7 +49,7 @@ end
 
 annot = trial.annot;
 stim  = trial.stim;
-saveAnnot(filename,annot,tmin,tmax,FR,movieNames,stim,timeFlag);
+saveAnnot(filename,annot,tmin,tmax,FR,movieNames,stim,frameFlag);
 
 
 

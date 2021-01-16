@@ -6,7 +6,7 @@ function fixAnnotFromFront(pth)
 
 
 
-doubleStepBack=0; %change this to 1 to do a broader search for corresponding movies
+doubleStepBack=1; %change this to 1 to do a broader search for corresponding movies
 
 if(~exist('pth','var'))
     pth = uigetdir(pwd,'Select directory to convert');
@@ -70,9 +70,10 @@ for f = 1:length(files)
             mov2 = strrep(mov2,'Mouse_','');
             mov2 = regexprep(mov2,'_[a-z_]*actions_pred_v[0-9]*_[0-9]*','');
 
-            mov2 = dir([fileparts(files(f).folder) filesep '*' mov2 '*.seq']);
             if(doubleStepBack)
-                mov2 = dir([fileparts(fileparts(files(f).folder)) filesep '**/*' mov2 '*.seq']);
+                mov2 = dir([fileparts(fileparts(files(f).folder)) filesep '**' filesep '*' mov2 '*.seq']);
+            else
+                mov2 = dir([fileparts(files(f).folder) filesep '*' mov2 '*.seq']);
             end
             if(isempty(mov2))
                 disp([mov ' could not be found!']);
@@ -102,17 +103,9 @@ for f = 1:length(files)
         end
     end
     disp('   saving...');
-    clear trial;
     fname = strrep(fname,'.annot','_TS.annot');
     fname = strrep(fname,'.txt','_TS.annot');
-    trial.io.annot.fid  = {fname};
-    trial.io.annot.tmin = tmin;
-    trial.io.annot.tmax = tmax;
-    trial.io.annot.FR   = FR;
-    trial.annoFR        = FR;
-    trial.stim          = stim;
-    trial.annot         = annot;
-    saveAnnotSheetTxt({movieNames},trial,[],1);
+    saveAnnot(fname,annot,tmin,tmax,FR,{movieNames},stim,0);
     disp('   done!');
 end
 

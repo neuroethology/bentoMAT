@@ -31,8 +31,8 @@ for f = 1:length(files)
     [~,~,ext] = fileparts(fname);
 
     if(strcmpi(ext,'.txt'))
-        mov = regexprep(fname,'_[a-z_]*actions_pred_v[0-9]*_[0-9]*.txt','_Top.seq');
-%         mov = regexprep(fname,'_[A-Z]*.txt','_Top.seq');
+%         mov = regexprep(fname,'_[a-z_]*actions_pred_v[0-9]*_[0-9]*.txt','_Top.seq');
+        mov = regexprep(fname,'_[A-Z]*.txt','_Top.seq');
         [pth,mov] = fileparts(mov);
         pth = fileparts(fileparts(pth));
         mov = [pth filesep mov '.seq'];
@@ -102,17 +102,9 @@ for f = 1:length(files)
         end
     end
     disp('   saving...');
-    clear trial;
     fname = strrep(fname,'.annot','_TS.annot');
     fname = strrep(fname,'.txt','_TS.annot');
-    trial.io.annot.fid  = {fname};
-    trial.io.annot.tmin = tmin;
-    trial.io.annot.tmax = tmax;
-    trial.io.annot.FR   = FR;
-    trial.annoFR        = FR;
-    trial.stim          = stim;
-    trial.annot         = annot;
-    saveAnnotSheetTxt({movieNames},trial,[],1);
+    saveAnnot(fname,annot,tmin,tmax,FR,{movieNames},stim,0);
     disp('   done!');
 end
 
