@@ -39,8 +39,8 @@ tmin = str2num(M{L}(strfind(M{L},':')+1:end));
 L = find(~cellfun(@isempty,strfind(M,'Annotation stop')));
 tmax = str2num(M{L}(strfind(M{L},':')+1:end));
 if(~isempty(strfind(M{L},'time')))
-    tmin = ceil(tmin*FR);
-    tmax = ceil(tmax*FR);
+    tmin = round(tmin*FR);
+    tmax = round(tmax*FR);
 end
 
 % get the channel list/annotation list (starts at "list of channels"/
