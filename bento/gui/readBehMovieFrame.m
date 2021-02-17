@@ -28,8 +28,10 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
             otherwise
                 tMax    = reader{col,i}.Duration - 1/reader{col,i}.FrameRate;
                 time    = min(time, tMax);
-                reader{col,i}.currentTime = time;
-                movies{col,i} = readFrame(reader{col,i});
+                frnum = round(time*reader{col,i}.FrameRate);
+%                 reader{col,i}.currentTime = time + 1/reader{col,i}.FrameRate;
+%                 movies{col,i} = readFrame(reader{col,i});
+                movies{col,i} = read(reader{col,i},frnum);
 %                 imfix = zeros(480,720,3);
 %                 for ch = 1:3
 %                     temp = reshape(squeeze(movies{col,i}(:,:,ch)),480,[]);
@@ -39,7 +41,6 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
 %                     end
 %                 end
 %                 movies{col,i} = imfix(:,1:720,:)/255;
-                frnum = round(time*reader{col,i}.FrameRate);
         end
     end
 end

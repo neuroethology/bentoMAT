@@ -16,8 +16,7 @@ if(gui.enabled.movie(1))
             info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
             frnum = info.curFrame+1;
         case 'vid'
-            frnum = round(gui.data.io.movie.reader{rr,cc}.CurrentTime * ...
-                          gui.data.io.movie.reader{rr,cc}.FrameRate);
+            frnum = round(time * gui.data.io.movie.reader{rr,cc}.FrameRate);
     end
     if(frnum<2)
         return;

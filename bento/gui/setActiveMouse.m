@@ -95,7 +95,7 @@ if(gui.enabled.tracker(1))
     end
     gui = redrawPanels(gui);
     
-    if(isfield(data.io.movie,'tmax'))
+    if(isfield(data.io.movie,'tmax') && isfield(data.io.movie,'FR'))
         nFrames = round((data.io.movie.tmax-data.io.movie.tmin)*data.io.movie.FR) + 1;
     elseif(isfield(data.tracking,'features'))
         nFrames = length(data.tracking.features);
