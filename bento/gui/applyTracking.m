@@ -7,6 +7,13 @@ function movies = applyTracking(gui,movies,time)
 if(isempty(time))
     time=0;
 end
+if gui.config.openCircles
+    trackMarker = 'Circle';
+else
+    trackMarker = 'FilledCircle';
+end
+
+
 if(gui.enabled.movie(1))
     % check which movie we're plotting tracking on
     [rr,cc] = identifyTrackedMovie(gui.data);
@@ -23,10 +30,13 @@ if(gui.enabled.movie(1))
     end
 else
     [rr,cc]=deal(1);
-    % problem!!! the annotation timestamps aren't necessarily the same as
-    % the pose estimation timestamps! default to assuming video was 30hz.
-    frnum = max(round(time*30),1);
-%     frnum = find(gui.data.annoTime>time,1,'first');
+    if(isfield(gui.data,'trackTime') && ~isempty(gui.data.trackTime))
+        frnum = find(gui.data.trackTime>time,1,'first');
+    else
+        % problem!!! the annotation timestamps aren't necessarily the same as
+        % the pose estimation timestamps! default to assuming video was 30hz.
+        frnum = max(round(time*30),1);
+    end
 end
 
 for trackFile = 1:length(gui.data.tracking.args)
@@ -40,7 +50,6 @@ for trackFile = 1:length(gui.data.tracking.args)
         pts = pts.pts;
     else
         color = {'green','blue','red','magenta'};
-        color = [color color color]; color = [color color color];
     end
     if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
         dims = [gui.data.io.movie.reader{1}.width];
@@ -59,18 +68,27 @@ for trackFile = 1:length(gui.data.tracking.args)
         else
             scale = [1 1 1 1];
         end
-        if(isnumeric(color)), c = color(j,:); else, c = color{j}; end
-        for i = 2:2:length(pts{j})-2
+        if(isnumeric(color)), c = color(mod(j,4)+1,:); else, c = color{mod(j,4)+1}; end
+        
+        if(length(pts{j})>3) % if it's a pose and not a single point
+            for i = 2:2:length(pts{j})-2
+                if(any(isnan(pts{j}(i:i+1)))), continue; end
+                movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(i:i+1).*scale(1:2) gui.config.ptSize],'color',c);
+
+                if(any(isnan(pts{j}(i:i+3)))), continue; end
+                movies{rr,cc} = insertShape(movies{rr,cc},'Line',pts{j}(i:i+3).*scale,'linewidth',2,'color',c);
+
+            end
             if(any(isnan(pts{j}(i:i+1)))), continue; end
-            movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(i:i+1).*scale(1:2) 4],'color',c);
-
-            if(any(isnan(pts{j}(i:i+3)))), continue; end
-            movies{rr,cc} = insertShape(movies{rr,cc},'Line',pts{j}(i:i+3).*scale,'linewidth',2,'color',c);
-
+            movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) gui.config.ptSize],'color',c);
         end
-        if(any(isnan(pts{j}(i:i+1)))), continue; end
-        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) 4],'color',c);
+        
         if(any(isnan(pts{j}(1:2)))), continue; end
-        movies{rr,cc} = insertShape(movies{rr,cc},'FilledCircle',[pts{j}(2:3).*scale(1:2) 4],'color','red','opacity',1);
+        movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize],'color','red','opacity',1);
+        
+        if(gui.config.trackingText)
+            textPos  = [pts{j}(2:3).*scale(1:2)] + .005*size(movies{rr,cc},1)*[1 1];
+            movies{rr,cc} = insertText(movies{rr,cc},textPos,num2str(j),'BoxColor','red','TextColor','white','FontSize',10);    
+        end
     end
 end

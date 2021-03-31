@@ -14,5 +14,10 @@ config.ctrl = {'slider','track','annot','expt'};
 % expt, spectrogram, slider, track, annot
 config.ctrlSc.spectrogram = 3; % lets you allocate extra space for a control bar
 
+config.path_to_MARS = '';
 
-config.path_to_MARS = '/home/ann/Documents/GitHub/MARS_train_infer/';
+% some display settings for tracking:
+
+config.trackingText = false; % set to true to display a number next to each tracked object
+config.openCircles = false;  % set to true to use open circles for tracked keypoints
+config.ptSize = 4; % size of tracker point in pixels

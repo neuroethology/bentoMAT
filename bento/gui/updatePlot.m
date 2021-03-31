@@ -88,7 +88,7 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
         if(gui.enabled.movie(1))
             mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;
         else
-            mov = ones(540,1024,'uint8')*255;
+            mov = ones(1024,1024,'uint8')*255;
         end
         if(all(gui.enabled.tracker)) % add tracking data if included
             mov = applyTracking(gui,{mov},time);

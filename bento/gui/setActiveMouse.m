@@ -77,6 +77,8 @@ if(gui.enabled.movie(1))
     end
 elseif(gui.enabled.traces(1))
     gui = applySliderUpdates(gui,'Ca',data);
+elseif(gui.enabled.tracker(1))
+    gui = applySliderUpdates(gui,'tracker',data);
 else
     gui = applySliderUpdates(gui,'annot',data);
 end

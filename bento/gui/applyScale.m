@@ -9,13 +9,13 @@ function traces = applyScale(gui)
     switch gui.ctrl.track.plotType.scaling.String{gui.ctrl.track.plotType.scaling.Value}
         case 'raw (scaled by session)'
             if(strcmpi(gui.traces.toPlot,'PCA'))
-                all = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
+                allTr = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
             else
-                all = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
-                all = all(gui.traces.show,:);
+                allTr = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
+                allTr = allTr(gui.traces.show,:);
             end
-            traces = traces - min(all(:));
-            traces = traces/max(all(:));
+            traces = traces - min(allTr(:));
+            traces = traces/max(allTr(:));
             
         case 'raw (scaled by trial)'
             trmin = min(traces(:));
@@ -25,17 +25,17 @@ function traces = applyScale(gui)
             
         case 'zscored (by session)'
             if(strcmpi(gui.traces.toPlot,'PCA'))
-                all = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
+                allTr = gui.data.PCA'*[gui.allData(gui.data.info.mouse).(gui.data.info.session).rast];
             else
-                all = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
-                all = all(gui.traces.show,:);
+                allTr = [gui.allData(gui.data.info.mouse).(gui.data.info.session).(gui.traces.toPlot)];
+                allTr = allTr(gui.traces.show,:);
             end
-            mu  = mean(all,2);
-            sig = std(all,[],2);
-            traces = bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)/10;
+            mu  = nanmean(allTr,2);
+            sig = nanstd(allTr,[],2);
+            traces = bsxfun(@times,bsxfun(@minus,traces,mu),1./sig)/5;
             
         case 'zscored (by trial)'
-            traces = zscore(traces(:,2:end-1)')'/10;
+            traces = nanzscore(traces(:,2:end-1)')'/5;
     end
     
     gui.data.([gui.traces.toPlot '_formatted']) = traces;
