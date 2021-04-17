@@ -70,6 +70,7 @@ for trackFile = 1:length(gui.data.tracking.args)
         end
         if(isnumeric(color)), c = color(mod(j,4)+1,:); else, c = color{mod(j,4)+1}; end
         
+        pts{j} = double(pts{j});
         if(length(pts{j})>3) % if it's a pose and not a single point
             for i = 2:2:length(pts{j})-2
                 if(any(isnan(pts{j}(i:i+1)))), continue; end
