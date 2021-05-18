@@ -113,7 +113,7 @@ if(all(gui.enabled.features) && isfield(gui.features,'feat'))
         channel = regexp(gui.features.feat(i).tag(3:5),'[\d]','match');
         channel = str2num(channel{:});
         set(gui.features.feat(i).trace,'xdata',gui.data.trackTime(inds) - time,...
-            'ydata',gui.data.tracking.features(channel,inds,gui.features.feat(i).featNum));
+            'ydata',gui.data.tracking.features{channel}(inds,gui.features.feat(i).featNum));
     end
 end
 

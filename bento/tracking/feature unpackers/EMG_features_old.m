@@ -22,7 +22,7 @@ data.CaFR       = 1/(data.CaTime(2)-data.CaTime(1));
 data.annoFR     = data.CaFR;
 data.annoTime   = data.CaTime;
 data.trackTime  = args.data{segNumber}.raw_EMG_timeframe;
-data.tracking.features          = permute(args.data{segNumber}.raw_EMG,[3 1 2]);
+data.tracking.features{1}        = args.data{segNumber}.raw_EMG;
 data.tracking.args{1}.features  = args.data{segNumber}.EMG_names;
 featnames = data.tracking.args{1}.features;
 

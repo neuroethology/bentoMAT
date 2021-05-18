@@ -60,7 +60,7 @@ for ii = 1:length(m)
 
             if(isfield(data.tracking.args{1},'features'))
                 [gui,data] = loadCurrentFeatures(gui,data);
-                sig     = squeeze(data.tracking.features(chnum,:,featnum));
+                sig     = squeeze(data.tracking.features{chnum}(:,featnum));
                 trackFR = 1/(gui.data.trackTime(2) - gui.data.trackTime(1));
                 [p,q]   = rat(useFR/trackFR);
                 sig     = resample(sig,p,q);

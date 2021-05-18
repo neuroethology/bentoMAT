@@ -21,9 +21,9 @@ if(~exist('params','var'))
 end
 
 % apply parameters to tracking data
-mask = true(1,size(gui.data.tracking.features,2));
+mask = true(1,size(gui.data.tracking.features{1},1));
 for i=1:length(params)
-    vals        = gui.data.tracking.features(params(i).ch,:,params(i).featNum);
+    vals        = gui.data.tracking.features{params(i).ch}(:,params(i).featNum);
     if(params(i).limL>params(i).limU)
         mask = mask & ((vals<=params(i).limL) & (vals>=params(i).limU));
     else

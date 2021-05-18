@@ -9,4 +9,4 @@ data.annoFR = data.CaFR;
 
 featnames = [];
 data.tracking.args{1}.features = featnames;
-data.tracking.features = [];
+data.tracking.features = {};

@@ -28,45 +28,67 @@ end
 
 % TODO: update this to support features from multiple tracking files in one
 % experiment
-if(isfield(data.tracking.args{1},'features') || contains(data.tracking.fun,'EMG') || contains(data.tracking.fun,'jelly'))
+allfeats=cell(size(data.tracking.args));
+addFeats=false(size(data.tracking.args));
+for i = 1:length(data.tracking.args)
+    addFeats(i) = isfield(data.tracking.args{i},'features') || contains(data.tracking.fun,'EMG') || contains(data.tracking.fun,'jelly');
+end
 
-    if(contains(data.tracking.fun,'jelly')) % hard-coded jellyfish support
-        [data,featnames] = jellyfish_neurons_features(data, data.tracking.args{1});
-        gui.enabled.traces = [1 1];
-        gui.enabled.annot  = [1 1];
-        gui.enabled.fineAnnot  = [1 0];
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
-        
-    elseif(strcmpi(data.tracking.fun,'EMG')) % hard-coded miller lab emg support
-        [data,featnames] = EMG_features(data, data.tracking.args{1});
-        gui.enabled.traces = [1 1];
-        gui.enabled.annot  = [1 1];
-        gui.enabled.fineAnnot  = [1 0];
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
-        
-    elseif(strcmpi(data.tracking.fun,'EMG_filtered')) % hard-coded miller lab emg support
-        [data,featnames] = EMG_filtered_features(data, data.tracking.args{1});
-        gui.enabled.traces = [1 1];
-        gui.enabled.annot  = [1 1];
-        gui.enabled.fineAnnot  = [1 0];
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
-        gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
-        
-    elseif(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
-        [data.tracking.features,featnames] = eval([data.tracking.fun '_features(data.tracking.args{1})']);
+for i = 1:length(data.tracking.args)
+    if(addFeats(i))
+        if(contains(data.tracking.fun,'jelly')) % hard-coded jellyfish support
+            [data,featnames] = jellyfish_neurons_features(data, data.tracking.args{1});
+            gui.enabled.traces = [1 1];
+            gui.enabled.annot  = [1 1];
+            gui.enabled.fineAnnot  = [1 0];
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
 
-    elseif(~isempty(strfind(data.tracking.fun,'MARS'))) %hard-coded MARS-top support
-        [data.tracking.features,featnames] = MARS_top_features(data.tracking.args{1});
+        elseif(strcmpi(data.tracking.fun,'EMG')) % hard-coded miller lab emg support
+            [data,featnames] = EMG_features(data, data.tracking.args{1});
+            gui.enabled.traces = [1 1];
+            gui.enabled.annot  = [1 1];
+            gui.enabled.fineAnnot  = [1 0];
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
 
-    else % just ask which variables to use and hope for the best
-        [data.tracking.features,featnames] = promptFeatures(data);
+        elseif(strcmpi(data.tracking.fun,'EMG_filtered')) % hard-coded miller lab emg support
+            [data,featnames] = EMG_filtered_features(data, data.tracking.args{1});
+            gui.enabled.traces = [1 1];
+            gui.enabled.annot  = [1 1];
+            gui.enabled.fineAnnot  = [1 0];
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial).info = data.info;
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial).trackTime = data.trackTime;
+            gui.allData(data.info.mouse).(data.info.session)(data.info.trial) = data;
 
+        elseif(exist([data.tracking.fun '_features.m'],'file')) % user provided their own feature extraction fn
+            [allfeats{i}.features,allfeats{i}.featnames] = eval([data.tracking.fun '_features(data.tracking.args{i})']);
+
+        else % just ask which variables to use and hope for the best
+            [allfeats{i}.features,allfeats{i}.featnames] = promptFeatures(data);
+
+        end
     end
-    gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:size(data.tracking.features,1))')));
-    gui.features.menu.String        = featnames;
+end
+
+count=0;
+formattedFeatNames={};
+for i = 1:length(data.tracking.args)
+    if(addFeats(i) && ~isempty(allfeats{i}))
+        formattedFeats = allfeats{i}.features;
+        nCh = size(formattedFeats,1);
+        for j = 1:nCh
+            count=count+1;
+            data.tracking.features{count} = squeeze(formattedFeats(j,:,:));
+            formattedFeatNames{count} = allfeats{i}.featnames;
+        end
+    end
+end
+
+if(count>0)
+    gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:length(data.tracking.features))')));
+    gui.features.menu.String        = allfeats{1}.featnames;
+    gui.features.featsByChannel     = formattedFeatNames;
 end

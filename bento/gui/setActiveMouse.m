@@ -99,8 +99,8 @@ if(gui.enabled.tracker(1))
     
     if(isfield(data.io.movie,'tmax') && isfield(data.io.movie,'FR'))
         nFrames = round((data.io.movie.tmax-data.io.movie.tmin)*data.io.movie.FR) + 1;
-    elseif(isfield(data.tracking,'features'))
-        nFrames = length(data.tracking.features);
+    elseif(isfield(data.tracking,'features') && ~isempty(data.tracking.features))
+        nFrames = length(data.tracking.features{1});
     else
         f = fieldnames(data.tracking.args{1});
         nFrames = length(data.tracking.args{1}.(f{1}));
