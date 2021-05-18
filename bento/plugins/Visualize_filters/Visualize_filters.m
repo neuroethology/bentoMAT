@@ -40,15 +40,16 @@ nFilt = length(filtData);
 maxSub = 1;
 leg=[];
 axisFlag=1;
+ax=[];
 for i=1:nFilt
     nSub = size(filtData{i}.names,1);
     maxSub = max([maxSub nSub]);
     for j = 1:nSub
-        subplot(nFilt,nSub,nSub*(i-1)+j);hold on;
-        leg(1) = plot(filtData{i}.filter_x,filtData{i}.bias + squeeze(filtData{i}.filter_y(j,1,:)),'r','linewidth',1.5);
-        leg(2) = plot(filtData{i}.filter_x,filtData{i}.bias + squeeze(filtData{i}.filter_y(j,2,:)),'b','linewidth',1.5);
-        leg(3) = plot(filtData{i}.filter_x([1 end]),filtData{i}.bias*[1 1],'c','linewidth',1.5);
-        title({filtData{i}.file,filtData{i}.names(j,:)},'interpreter','none');
+        ax(end+1) = subplot(nFilt,nSub,nSub*(i-1)+j);hold on;
+        leg(1) = plot(filtData{i}.filter_x,squeeze(filtData{i}.filter_y(j,1,:)),'r','linewidth',1.5);
+        leg(2) = plot(filtData{i}.filter_x,squeeze(filtData{i}.filter_y(j,2,:)),'b','linewidth',1.5);
+%         leg(3) = plot(filtData{i}.filter_x([1 end]),filtData{i}.bias*[1 1],'c','linewidth',1.5);
+        title({filtData{i}.file,strtrim(filtData{i}.names(j,:)),['Bias: ' num2str(filtData{i}.bias,3)]},'interpreter','none');
         xlim(filtData{i}.filter_x([1 end]));
         if(axisFlag)
             xlabel('Frame # with respect to predicted frame')
@@ -57,7 +58,8 @@ for i=1:nFilt
         end
     end
 end
-labels = {'resident','intruder','bias'};
+linkaxes(ax,'y');
+labels = {'resident','intruder'};%,'bias'};
 legend(leg(leg~=0),labels(leg~=0),'location','best');
 p=get(h.fig,'position');
 p(4) = p(4)*nFilt*2/3;
