@@ -53,7 +53,7 @@ for i=1:nFilt
         xlim(filtData{i}.filter_x([1 end]));
         if(axisFlag)
             xlabel('Frame # with respect to predicted frame')
-            ylabel('Feature Weight + Bias');
+            ylabel('Feature Weight');
             axisFlag=0;
         end
     end
