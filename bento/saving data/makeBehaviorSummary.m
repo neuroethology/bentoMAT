@@ -20,17 +20,14 @@ for f = 1:length(fields)
         M{1,count*3-2} = fields{f};
         M(2,(count-1)*3+(1:3)) = {'Start','Stop','Duration'};
 
-        if(frameFlag)
+        if(frameFlag) % save in frames
             M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
-        else
-            M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
+            delta = 1;
+        else % save in seconds (default)
+            M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}))/FR;
+            delta = 1/FR;
         end
-        delta = channel.(fields{f})(:,2) - channel.(fields{f})(:,1);
-        if(frameFlag)
-            delta = delta + 1;
-        else
-            delta = delta + 1/FR;
-        end
+        delta = delta + channel.(fields{f})(:,2) - channel.(fields{f})(:,1);
         M(2+(1:size(channel.(fields{f}),1)),count*3) = num2cell(delta);
         
         channelSummary{count,1} = fields{f};
