@@ -71,7 +71,10 @@ if(chInds(end)~=length(M))
     chInds = [chInds length(M)];
 end
 
-isTime = any(~cellfun(@isempty,strfind(M(chInds(1):end),'.')));
+M2 = cellfun(@str2num,M,'UniformOutput',false);
+M2 = M2(~cellfun(@isempty,M2));
+M2 = cellfun(@(x) x(1),M2);
+isTime = any(floor(M2)~=M2); % if any of our event starts is a decimal, assume it's times not frames
 if(isTime)
     if(mod(tmax,1)~=0) % confirm tmax is a time not a frame
         if(~isnan(FR))
