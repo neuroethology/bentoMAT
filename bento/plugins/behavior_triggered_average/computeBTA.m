@@ -29,6 +29,8 @@ for ii = 1:length(m)
             usecolor = 'k';
             sig     = nanmean(data.rast);
             sig     = nan_fill(sig);
+            useFR = min(useFR,gui.data.CaFR);
+            h.bin.String = num2str(1/useFR);
             [p,q]   = rat(useFR/gui.data.CaFR);
             sig     = resample(sig,p,q);
 
@@ -36,6 +38,8 @@ for ii = 1:length(m)
             usecolor = 'k';
             sig     = data.rast(h.unit.Value - 1,:);
             sig     = nan_fill(sig);
+            useFR = min(useFR,gui.data.CaFR);
+            h.bin.String = num2str(1/useFR);
             [p,q]   = rat(useFR/gui.data.CaFR);
             sig     = resample(sig,p,q);
 
@@ -43,6 +47,8 @@ for ii = 1:length(m)
             plotTraces = 0;
             usecolor = gui.annot.cmap.(strrep(str,'behavior: ',''));
             sigStack = [];
+            useFR = min(useFR,gui.data.annoFR);
+            h.bin.String = num2str(1/useFR);
             for ch = h.chAvg.String(h.chAvg.Value)'
                 sig2 = double(data.annot.(ch{:}).(strrep(str,'behavior: ','')));
                 sig2 = round(sig2*useFR/gui.data.annoFR);
@@ -62,6 +68,8 @@ for ii = 1:length(m)
                 [gui,data] = loadCurrentFeatures(gui,data);
                 sig     = squeeze(data.tracking.features{chnum}(:,featnum));
                 trackFR = 1/(gui.data.trackTime(2) - gui.data.trackTime(1));
+                useFR = min(useFR,trackFR);
+                h.bin.String = num2str(1/useFR);
                 [p,q]   = rat(useFR/trackFR);
                 sig     = resample(sig,p,q);
             else
