@@ -41,6 +41,7 @@ if(any(strcmpi(fieldnames(gui.annot.hotkeysDef),newStr)) && ~strcmpi(gui.annot.h
     if(strcmpi(newStr,'unsaved_feature'))
         hotkey='z';
     end
+    gui.annot.hotkeysDef.(newStr) = hotkey;
     gui.annot.hotkeys.(hotkey) = newStr;
 
 elseif(~strcmpi(newStr,'unsaved_feature'))

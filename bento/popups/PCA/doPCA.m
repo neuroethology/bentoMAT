@@ -9,7 +9,7 @@ function doPCA(source,~,parent,h,trials,nPCs,gui,m,sess,trList,type)
 source.String = 'Computing...';
 drawnow;
 
-rast    = [gui.allData(m).(sess)(trList(setdiff(1:length(trList),trials.Value))).rast];
+rast    = [gui.allData(m).(sess)(trList(setdiff(1:length(trList),trials.Value))).rast(:,2:end-1)];
 nPCs    = min(str2num(nPCs.String),size(rast,1));
 switch type
     case 'PCA'

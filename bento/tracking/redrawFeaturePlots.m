@@ -46,6 +46,7 @@ if(strcmpi(gui.annot.activeCh,'thresholded_features'))
     updatePlot(gui.h0,[]);
 end
 
-
-set(gui.features.feat(1).axes, 'XTickMode', 'auto', 'XTickLabelMode', 'auto');
-xlabel(gui.features.feat(1).axes,'time (sec)');
+if(length(gui.features.feat))
+    set(gui.features.feat(1).axes, 'XTickMode', 'auto', 'XTickLabelMode', 'auto');
+    xlabel(gui.features.feat(1).axes,'time (sec)');
+end

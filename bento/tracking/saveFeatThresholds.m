@@ -21,6 +21,26 @@ else
 end
 
 if(strcmpi(gui.annot.activeCh,'thresholded_features'))
+    prompt = ['Save to channel:'];
+    channels = [setdiff(gui.annot.channels,'thresholded_features'); {'[create new channel]'}];
+    [chStr, tf] = listdlg('promptString',prompt,'listString',channels,'SelectionMode','single');
+    if ~tf
+        return;
+    end
+    
+    if chStr==length(channels)
+        newCh   = addNewFieldPopup('Name of new channel:',{''});
+        temp            = gui.annot.bhv.unsaved_feature; % remove the temporary feature for channel creation
+        gui.annot.bhv   = rmfield(gui.annot.bhv,'unsaved_feature');
+        gui             = addChannel(gui, newCh);
+        
+        gui.annot.activeCh = 'thresholded_features'; % flip the active channel back to where it should be
+        gui.annot.bhv.unsaved_feature = temp;
+        chStr = newCh;
+    else
+        chStr = channels{chStr};
+    end
+        
     str     = ['feature_filter_' num2str(length(gui.features.savedFilters))];
     prompt  = ['Name of new annotation:'];
     newStr  = inputdlg(prompt,'',1,{str});
@@ -31,9 +51,13 @@ if(strcmpi(gui.annot.activeCh,'thresholded_features'))
     newStr  = strrep(newStr,' ','_');
     
     gui = addLabel(gui,newStr);
-    gui.ctrl.annot.annot.Value = 1;
+    gui.annot.bhv = rmfield(gui.annot.bhv,newStr);
     newStr(ismember(newStr,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
-    gui.annot.bhv.(newStr) = mask;
+    gui.data.annot.(chStr).(newStr) = convertToBouts(mask);
+    
+    gui.enabled.legend       = [1 1];
+    gui.enabled.fineAnnot(1) = 1; % don't display fineAnnot by default
+    gui = redrawPanels(gui);
 end
 
 guidata(gui.h0,gui);

@@ -15,13 +15,6 @@ end
 bhv = gui.annot.bhv;
 bhvStruct = struct();
 for f = fieldnames(bhv)'
-    rast    = [bhv.(f{:})(1) bhv.(f{:})(2:end)-bhv.(f{:})(1:end-1) -bhv.(f{:})(end)];
-    tOn     = find(rast==1);
-    tOff    = find(rast==-1);
-    if(~isempty(tOn)&~isempty(tOff))
-        bhvStruct.(f{:}) = [tOn' tOff'-1];
-    else
-        bhvStruct.(f{:}) = [];
-    end
+    bhvStruct.(f{:}) = convertToBouts(bhv.(f{:}));
 end
 gui.data.annot.(gui.annot.activeCh) = bhvStruct;

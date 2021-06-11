@@ -8,6 +8,7 @@ function [mask,params] = getThresholdedFeatureMask(gui,params)
 
 % create mask parameters from current plots
 if(~exist('params','var'))
+    params = [];
     for i=1:length(gui.features.feat) %iterate over all plotted features (assume we're ANDing them)
 
         ch      = gui.features.feat(i).ch;
@@ -20,14 +21,19 @@ if(~exist('params','var'))
     end
 end
 
+if(isempty(params))
+    mask = false(1,size(gui.data.tracking.features{1},1));
+    return
+end
+
 % apply parameters to tracking data
 mask = true(1,size(gui.data.tracking.features{1},1));
 for i=1:length(params)
     vals        = gui.data.tracking.features{params(i).ch}(:,params(i).featNum);
     if(params(i).limL>params(i).limU)
-        mask = mask & ((vals<=params(i).limL) & (vals>=params(i).limU));
+        mask = mask & ((vals<=params(i).limL) & (vals>=params(i).limU))';
     else
-        mask = mask & ((vals<=params(i).limL) | (vals>=params(i).limU));
+        mask = mask & ((vals<=params(i).limL) | (vals>=params(i).limU))';
     end
 end
 mask = convertToRast(floor(gui.data.trackTime(convertToBouts(mask))*gui.data.annoFR),length(gui.data.annoTime));

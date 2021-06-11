@@ -20,18 +20,22 @@ else
         [rr,cc] = identifyTrackedMovie(data);
         if(isfield(data.io.movie.reader{rr,cc},'TS'))
             data.trackTime = data.io.movie.reader{rr,cc}.TS;
-        else
-            data.trackTime = data.annoTime;
         end
+    else
+        data.trackTime = data.annoTime;
     end
 end
 
 % TODO: update this to support features from multiple tracking files in one
 % experiment
 allfeats=cell(size(data.tracking.args));
-addFeats=false(size(data.tracking.args));
-for i = 1:length(data.tracking.args)
-    addFeats(i) = isfield(data.tracking.args{i},'features') || contains(data.tracking.fun,'EMG') || contains(data.tracking.fun,'jelly');
+if(strcmpi(data.tracking.fun,'generic_timeseries'))
+    addFeats=true(size(data.tracking.args));
+else
+    addFeats=false(size(data.tracking.args));
+    for i = 1:length(data.tracking.args)
+        addFeats(i) = isfield(data.tracking.args{i},'features') || contains(data.tracking.fun,'EMG') || contains(data.tracking.fun,'jelly');
+    end
 end
 
 for i = 1:length(data.tracking.args)

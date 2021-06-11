@@ -32,19 +32,45 @@ for i=1:length(gui.features.feat)
 end
 
 if(flag) % when switching into threshold mode, also change annotation channels
-    if(~any(strcmpi(gui.annot.channels,'thresholded_features')))
-        gui = addChannel(gui, 'thresholded_features');
-        for f = fieldnames(gui.annot.bhv)' %remove the other behaviors from this channel
-            gui.annot.bhv = rmfield(gui.annot.bhv,f{:});
-            gui.data.annot.thresholded_features = rmfield(gui.data.annot.thresholded_features,f{:});
-        end
-        gui.ctrl.annot.annot.Value = 1;
-    else
-        gui.ctrl.annot.ch.Value = find(strcmpi(gui.annot.channels,'thresholded_features'));
-    end
-    gui = addLabel(gui, 'unsaved_feature');
+    
+    channels            = gui.annot.channels;
+    channels{end+1}     = strrep('thresholded_features',' ','_');
+    gui.annot.channels  = channels;
+
+    gui.annot.bhv = struct('unsaved_feature', false(size(gui.data.annoTime)));
+    gui.annot.show = struct('unsaved_feature',1);
+
+    gui.ctrl.annot.ch.String = channels;
+    gui.ctrl.annot.ch.Value  = length(channels);
+    gui.annot.activeCh       = channels{end};
+
+    gui.ctrl.annot.annot.Value = 1;
+
+    % set annotation color:
+    newColor = distinguishable_colors(1,[1 1 1; 0 0 0; .94 .94 .94])/2+.5;
+    gui.annot.cmap.unsaved_feature     = newColor;
+    gui.annot.cmapDef.unsaved_feature  = newColor;
+
+    % set hotkey:
+    gui.annot.hotkeysDef.unsaved_feature = 'z';
+    gui.annot.hotkeys.unsaved_feature = 'z';
+    
+    gui.enabled.legend       = [1 1];
+    gui.enabled.fineAnnot(1) = 1; % don't display fineAnnot by default
+    gui = redrawPanels(gui);
+    gui = redrawFeaturePlots(gui);
 else
+    %remove the temporary annotation label
     gui.annot.bhv = rmfield(gui.annot.bhv,'unsaved_feature');
+    
+    % remove the temporary channel
+    gui.data.annot = rmfield(gui.data.annot,'thresholded_features');
+    gui.annot.channels  = setdiff(gui.annot.channels,'thresholded_features');
+    gui.ctrl.annot.ch.String = gui.annot.channels;
+    gui.ctrl.annot.ch.Value  = length(gui.annot.channels);
+    gui.annot.activeCh       = [];
+    gui     = transferAnnot(gui,gui.data);
+
     guidata(gui.h0,gui);
     updateSliderAnnot(gui);
 end

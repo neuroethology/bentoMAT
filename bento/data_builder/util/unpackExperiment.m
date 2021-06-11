@@ -44,8 +44,8 @@ end
 
 %window visibility:
 enabled.movie     = any(~cellfun(@isempty,data(:,match.Behavior_movie)))*[1 1];
-enabled.annot     = any(~cellfun(@isempty,data(:,match.Annotation_file)))*[1 1];
-enabled.legend    = enabled.annot;
+enabled.annot     = [1 1];
+enabled.legend    = [1 any(~cellfun(@isempty,data(:,match.Annotation_file)))];
 enabled.traces    = any(~cellfun(@isempty,data(:,match.Calcium_imaging_file)))*[1 1];
 enabled.tracker   = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 1];
 enabled.features  = any(~cellfun(@isempty,data(:,match.Tracking)))*[1 0];
@@ -226,12 +226,12 @@ for i=1:size(data,1)
                 [~,~,ext] = fileparts(fid);
                 if(strcmpi(ext,'.mat'))
                     temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
-                    f = fieldnames(temp);
-                    if(length(f)==2) %what is this for? i forget.
-                        temp=temp.(f{2});
-                    elseif(length(f)==1)
-                        temp = temp.(f{1});
-                    end
+%                     f = fieldnames(temp);
+%                     if(length(f)==2) %what is this for? i forget.
+%                         temp=temp.(f{2});
+%                     elseif(length(f)==1)
+%                         temp = temp.(f{1});
+%                     end
                     strtemp.tracking.args{trackFile} = temp;
                     strtemp.io.feat.fid{trackFile} = fid;
                 elseif(strcmpi(ext,'.json'))
@@ -371,6 +371,7 @@ for i=1:size(data,1)
         strtemp.io.annot.fid    = [];
         strtemp.io.annot.tmin   = 1;
         strtemp.io.annot.tmax   = length(strtemp.CaTime);
+        strtemp.io.annot.FR     = strtemp.CaFR;
         strtemp.annoFR          = strtemp.CaFR;
     end
     

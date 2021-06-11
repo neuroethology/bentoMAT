@@ -55,7 +55,7 @@ switch ext
                     spikes = [];
                 end
             else
-                rast = temp.(use); %assume it's a matrix of traces
+                rast = double(temp.(use)); %assume it's a matrix of traces
                 spikes = [];
             end
             time = [];

@@ -11,6 +11,10 @@ gui     = readoutAnnot(gui);
 gui.annot.activeCh = source.String{source.Value};
 gui     = transferAnnot(gui,gui.data);
 
+if(strcmpi(gui.annot.activeCh,'thresholded_features'))
+    gui = redrawFeaturePlots(gui);
+end
+
 updateSliderAnnot(gui);
 updateLegend(gui,1);
 guidata(source,gui);

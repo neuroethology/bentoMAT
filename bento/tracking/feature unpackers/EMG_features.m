@@ -1,4 +1,4 @@
-function [data,featnames] = EMG_features(data, args)
+function [data,featnames] = EMG_features(data)
 
 if(iscell(args))
     argsStr = struct('features',[]);
