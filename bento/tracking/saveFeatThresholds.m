@@ -50,10 +50,18 @@ if(strcmpi(gui.annot.activeCh,'thresholded_features'))
     newStr  = [newStr{:}];
     newStr  = strrep(newStr,' ','_');
     
+    gui.annot.activeCh = chStr;
     gui = addLabel(gui,newStr);
+	gui.annot.activeCh = 'thresholded_features';
     gui.annot.bhv = rmfield(gui.annot.bhv,newStr);
     newStr(ismember(newStr,'?!@#$%^&*()+=-<>,./\[]}{')) = [];
+    
     gui.data.annot.(chStr).(newStr) = convertToBouts(mask);
+    
+    m = gui.data.info.mouse;
+    s = gui.data.info.session;
+    tr = gui.data.info.trial;
+    gui.allData(m).(s)(tr).annot.(chStr).(newStr) = convertToBouts(mask);
     
     gui.enabled.legend       = [1 1];
     gui.enabled.fineAnnot(1) = 1; % don't display fineAnnot by default

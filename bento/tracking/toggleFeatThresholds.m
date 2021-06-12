@@ -64,12 +64,14 @@ else
     gui.annot.bhv = rmfield(gui.annot.bhv,'unsaved_feature');
     
     % remove the temporary channel
-    gui.data.annot = rmfield(gui.data.annot,'thresholded_features');
+%     if(isfield(gui.data.annot,'thresholded_features'))
+%         gui.data.annot = rmfield(gui.data.annot,'thresholded_features');
+%     end
     gui.annot.channels  = setdiff(gui.annot.channels,'thresholded_features');
     gui.ctrl.annot.ch.String = gui.annot.channels;
     gui.ctrl.annot.ch.Value  = length(gui.annot.channels);
     gui.annot.activeCh       = [];
-    gui     = transferAnnot(gui,gui.data);
+    gui = transferAnnot(gui,gui.data);
 
     guidata(gui.h0,gui);
     updateSliderAnnot(gui);
