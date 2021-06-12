@@ -24,11 +24,13 @@ end
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'\',filesep);
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);
 pth = raw{1,1};
-if(pth(end)~=filesep)
-    if(isstr(pth))
-        pth = [pth filesep];
-    else
-        pth = [];
+if(~isempty(pth))
+    if(pth(end)~=filesep)
+        if(isstr(pth))
+            pth = [pth filesep];
+        else
+            pth = [];
+        end
     end
 end
 
