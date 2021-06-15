@@ -3,8 +3,9 @@ function [data,featnames] = EMG_filtered_features(data, args)
 if(iscell(args))
     argsStr = struct('features',[]);
     argsStr.data = args;
-    args = argsStr;
+    args = argsStr.data;
 end
+args=args.data;
 data.tracking.args{1} = args;
 
 % unpack data
