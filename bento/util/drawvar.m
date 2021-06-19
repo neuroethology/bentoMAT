@@ -17,38 +17,38 @@ end
 
     if(isnumeric(color))
         set(h([2 3]),'FaceColor',color,'FaceAlpha',0.5);
-        set(get(h(2),'children'),'facealpha',0.5)
-        set(get(h(3),'children'),'facealpha',0.5)
+        set(h(2),'facealpha',0.5)
+        set(h(3),'facealpha',0.5)
     else
         switch color
             case 'r'
                 set(h([2 3]),'FaceColor',[1 .5 .5]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
             case 'b'
                 set(h([2 3]),'FaceColor',[.5 .6 1]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
             case 'g'
                 set(h([2 3]),'FaceColor',[0 .75 1]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
             case 'c'
                 set(h([2 3]),'FaceColor',[.5 1 1]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
             case 'm'
                 set(h([2 3]),'FaceColor',[1 .5 .6]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
             case 'y'
                 set(h([2 3]),'FaceColor',[1 1 .5]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
             case 'k'
                 set(h([2 3]),'FaceColor',[.5 .5 .5]);
-                set(get(h(2),'children'),'facealpha',0.5)
-                set(get(h(3),'children'),'facealpha',0.5)
+                set(h(2),'facealpha',0.5)
+                set(h(3),'facealpha',0.5)
         end
     end
     
