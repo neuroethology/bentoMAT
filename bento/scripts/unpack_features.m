@@ -64,7 +64,7 @@ for ex = 1:length(expt)
                     for j = 1:nCh
                         count=count+1;
                         data.tracking.features{count} = squeeze(formattedFeats(j,:,:));
-                        data.tracking.featnames{count} = allfeats{i}.featnames(j,:);
+                        data.tracking.featnames{count} = cellstr(allfeats{i}.featnames);
                     end
                 end
             end
