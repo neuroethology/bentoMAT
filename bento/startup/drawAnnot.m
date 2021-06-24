@@ -12,6 +12,7 @@ annot.activeCh      = '';
 annot.activeBeh     = '';
 annot.modified      = 0;
 annot.highlighting  = 0;
+annot.saveAsTime    = false;
 annot.prev          = [];
 annot.bhv           = struct();
 annot.show          = struct();

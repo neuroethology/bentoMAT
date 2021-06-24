@@ -29,7 +29,7 @@ for i = 1:size(inds,1)
     
     dat     = data(m).(sess)(trial);
 	suggestedName = ['mouse' num2str(m) '_' sess '_' num2str(trial,'%03d') '.annot'];
-    saveAnnotSheetTxt(gui.data.io.movie.fid,dat,suggestedName);
+    saveAnnotSheetTxt(gui.data.io.movie.fid,dat,suggestedName,0,gui.annot.saveAsTime);
 end
 gui = setActiveMouse(gui,m,sess,trial,0);
 guidata(gui.h0,gui);

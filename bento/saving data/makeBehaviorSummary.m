@@ -1,12 +1,12 @@
-function [M,channelSummary] = makeBehaviorSummary(channel,tmin,tmax,FR,frameFlag)
+function [M,channelSummary] = makeBehaviorSummary(channel,tmin,tmax,FR,saveAsTime)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
 % Licensing: https://github.com/annkennedy/bento/blob/master/LICENSE.txt
 
-% set a default value of frameFlag
-if(~exist('frameFlag','var'))
-    frameFlag = false;
+% set a default value of saveAsTime
+if(~exist('saveAsTime','var'))
+    saveAsTime = false;
 end
 
 M = {};
@@ -20,12 +20,12 @@ for f = 1:length(fields)
         M{1,count*3-2} = fields{f};
         M(2,(count-1)*3+(1:3)) = {'Start','Stop','Duration'};
 
-        if(frameFlag) % save in frames
-            M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
-            delta = 1;
-        else % save in seconds (default)
+        if(saveAsTime) % save in seconds
             M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f})/FR);
             delta = 1/FR;
+        else            % save in frames (default)
+            M(2+(1:size(channel.(fields{f}),1)),count*3-[2 1]) = num2cell(channel.(fields{f}));
+            delta = 1;
         end
         delta = delta + channel.(fields{f})(:,2) - channel.(fields{f})(:,1);
         M(2+(1:size(channel.(fields{f}),1)),count*3) = num2cell(delta);

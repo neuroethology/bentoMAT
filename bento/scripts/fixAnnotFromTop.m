@@ -104,7 +104,7 @@ for f = 1:length(files)
     disp('   saving...');
     fname = strrep(fname,'.annot','_TS.annot');
     fname = strrep(fname,'.txt','_TS.annot');
-    saveAnnot(fname,annot,tmin,tmax,FR,{movieNames},stim,0);
+    saveAnnot(fname,annot,tmin,tmax,FR,{movieNames},stim,0, 1);
     disp('   done!');
 end
 

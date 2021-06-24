@@ -33,7 +33,7 @@ if(gui.annot.modified)
         case 'Yes'
             gui.allData(mOld).(sessOld)(trOld).annot = gui.data.annot;
 			suggestedName = ['mouse' num2str(mOld) '_' sessOld '_' num2str(trOld,'%03d') '.annot'];
-            saveAnnotSheetTxt(gui.data.io.movie.fid,gui.data,suggestedName);
+            saveAnnotSheetTxt(gui.data.io.movie.fid,gui.data,suggestedName,0,gui.annot.saveAsTime);
             gui.annot.modified = 0;
         case 'No'
             gui.allData(mOld).(sessOld)(trOld).annot = gui.data.annot;
