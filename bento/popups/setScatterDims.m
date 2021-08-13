@@ -15,9 +15,8 @@ for i=1:length(varlist)
 end
 varlist = varlist(keep~=0);
 
-if(isempty(varlist))
-    msgbox('No suitable projection axes found in workspace.');
-    return;
+if(isempty(varlist)) % if we don't have anything else, just let people plot dimensions against eachother.
+    varlist{1} = ['eye(' num2str(size(gui.data.rast,1)) ')'];
 end
 
 clear h;
