@@ -147,6 +147,7 @@ if(all(gui.enabled.traces))
     inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
     i=0;
     isImage = strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image');
+    isArray = strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'spatial map');
     if(any(inds))
         bump        = gui.traces.yScale;
         show        = find(gui.traces.show);
@@ -158,6 +159,14 @@ if(all(gui.enabled.traces))
             set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',imLims,'cdata',tr*256);
             set(gui.traces.axes,'ylim',axisLims);
             set(gui.traces.zeroLine,'ydata',[1 10]);
+        elseif(isArray)
+            imLims = gui.traces.win*[-1 1];
+            inds2 = (gui.data.CaTime(inds) >= time);
+            ncells = size(tr,1);
+            trArray = reshape(padarray(tr(:,find(inds2,1,'first')),ceil(sqrt(ncells)).^2-ncells,'post'),ceil(sqrt(size(tr,1))),[]);
+            set(gui.traces.tracesIm,'visible','on','xdata',imLims+[1 -1],'ydata',imLims+[1 -1],'cdata',trArray*256);
+            set(gui.traces.axes,'ylim',imLims);
+            set(gui.traces.zeroLine,'ydata',[1 1]);
         else
             set(gui.traces.tracesIm,'visible','off');
             for i = 1:length(show)
