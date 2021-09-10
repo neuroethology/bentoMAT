@@ -145,51 +145,55 @@ time = time - gui.ctrl.slider.Min; %gui.data.io.movie.tmin/gui.data.io.movie.FR;
 if(all(gui.enabled.traces))
     inds        = (gui.data.CaTime>=(time-gui.traces.win)) & (gui.data.CaTime<=(time+gui.traces.win));
     inds        = inds | [false inds(1:end-1)] | [inds(2:end) false];
-    bump        = gui.traces.yScale;
-    
-    show        = find(gui.traces.show);
-    [tr,lims,gui] = getFormattedTraces(gui,inds);
-    
+    i=0;
     isImage = strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'image');
-    if(isImage)
-        imLims = [2 10-.5/length(show)*8];
-        axisLims = [1 10+.5/length(show)];
-        set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',imLims,'cdata',tr*256);
-        set(gui.traces.axes,'ylim',axisLims);
-        set(gui.traces.zeroLine,'ydata',[1 10]);
-    else
-        set(gui.traces.tracesIm,'visible','off');
-        for i = 1:length(show)
-            lineColors = jet(length(show));
-            if(i<=length(gui.traces.traces))
-                if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
-                set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
-                                         'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+    if(any(inds))
+        bump        = gui.traces.yScale;
+        show        = find(gui.traces.show);
+        [tr,lims,gui] = getFormattedTraces(gui,inds);
+
+        if(isImage)
+            imLims = [2 10-.5/length(show)*8];
+            axisLims = [1 10+.5/length(show)];
+            set(gui.traces.tracesIm,'visible','on','xdata',gui.data.CaTime(inds) - time,'ydata',imLims,'cdata',tr*256);
+            set(gui.traces.axes,'ylim',axisLims);
+            set(gui.traces.zeroLine,'ydata',[1 10]);
+        else
+            set(gui.traces.tracesIm,'visible','off');
+            for i = 1:length(show)
+                lineColors = jet(length(show));
+                if(i<=length(gui.traces.traces))
+                    if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
+                    set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
+                                             'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+                    else
+                    set(gui.traces.traces(i),'xdata',[min(gui.data.CaTime(inds(2:end))-time) gui.data.CaTime(inds)-time max(gui.data.CaTime(inds(2:end))-time)*1.1*[1 1]],...
+                                             'ydata',([0 0 tr(i,2:end) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
+                    end
                 else
-                set(gui.traces.traces(i),'xdata',[min(gui.data.CaTime(inds(2:end))-time) gui.data.CaTime(inds)-time max(gui.data.CaTime(inds(2:end))-time)*1.1*[1 1]],...
-                                         'ydata',([0 0 tr(i,2:end) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);
-                end
-            else
-                if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
-                    gui.traces.traces(i) = plot(gui.traces.axes, gui.data.CaTime(inds) - time,...
-                                                     (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
-                                                     'color',[.1 .1 .1],'hittest','off');
-                else
-                    gui.traces.traces(i) = patch(gui.traces.axes, [min(gui.data.CaTime(inds)-time) gui.data.CaTime(inds)-time max(gui.data.CaTime(inds)-time)*1.1*[1 1]],...
-                                                     ([0 0 tr(i,2:end) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
-                                                     lineColors(i,:),'hittest','off','FaceAlpha',0.5);
+                    if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
+                        gui.traces.traces(i) = plot(gui.traces.axes, gui.data.CaTime(inds) - time,...
+                                                         (tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
+                                                         'color',[.1 .1 .1],'hittest','off');
+                    else
+                        gui.traces.traces(i) = patch(gui.traces.axes, [min(gui.data.CaTime(inds)-time) gui.data.CaTime(inds)-time max(gui.data.CaTime(inds)-time)*1.1*[1 1]],...
+                                                         ([0 0 tr(i,2:end) tr(i,end) 0] - lims(1) + i*bump)/(length(show)*bump + lims(2))*10,...
+                                                         lineColors(i,:),'hittest','off','FaceAlpha',0.5);
+                    end
                 end
             end
+            sc = (-lims(1)+bump)/(length(show)*bump+lims(2));
+            axisLims = 10*[sc-0.025*(1-sc) 1+0.025*(1-sc)];
+            imLims = axisLims;
+            set(gui.traces.axes,'ylim',axisLims);
+            set(gui.traces.zeroLine,'ydata',axisLims);
+            uistack(gui.traces.traces,'top');
         end
+    end
+    if(~isImage)
         if(isempty(i)) i = 0; end
         delete(gui.traces.traces(i+1:end));
         gui.traces.traces(i+1:end) = [];
-        sc = (-lims(1)+bump)/(length(show)*bump+lims(2));
-        axisLims = 10*[sc-0.025*(1-sc) 1+0.025*(1-sc)];
-        imLims = axisLims;
-        set(gui.traces.axes,'ylim',axisLims);
-        set(gui.traces.zeroLine,'ydata',axisLims);
-        uistack(gui.traces.traces,'top');
     end
     
     % show group divisions

@@ -32,6 +32,9 @@ else
     [rr,cc]=deal(1);
     if(isfield(gui.data,'trackTime') && ~isempty(gui.data.trackTime))
         frnum = find(gui.data.trackTime>time,1,'first');
+        if(isempty(frnum))
+            frnum = length(gui.data.trackTime);
+        end
     else
         % problem!!! the annotation timestamps aren't necessarily the same as
         % the pose estimation timestamps! default to assuming video was 30hz.
