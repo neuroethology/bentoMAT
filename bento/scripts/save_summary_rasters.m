@@ -69,9 +69,11 @@ disp('Please do not resize/close figure while summary images are being generated
 img = [];
 h   = figure(2);clf;
 for f = 1:length(files)
-    disp([num2str(f) '/' num2str(length(files))]);
+%     disp([num2str(f) '/' num2str(length(files))]);
     clf;
     fname           = files(f).name;
+    [~,name,~] = fileparts(fname);
+    disp(name)
     [annot,maxTime] = loadAnyAnnot(fname);
 
     if(~isempty(annot))

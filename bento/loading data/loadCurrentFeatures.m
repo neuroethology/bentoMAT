@@ -22,7 +22,7 @@ else
             data.trackTime = data.io.movie.reader{rr,cc}.TS;
         end
     else
-        data.trackTime = data.annoTime;
+%         data.trackTime = data.annoTime;
     end
 end
 
