@@ -328,7 +328,7 @@ for i=1:size(data,1)
     % load annotations-----------------------------------------------------
     if(~isempty(data{i,match.Annotation_file}))
         [annot, tmin, tmax, allFR, strtemp.io.annot.fid, strtemp.io.annot.fidSave] = ...
-            unpackAnnotFromLoader(pth, data{i,match.Annotation_file},data{i,match.Start_Anno},data{i,match.Stop_Anno},raw{1,9});
+            unpackAnnotFromLoader(pth, data{i,match.Annotation_file}, strtemp.annoFR, data{i,match.Start_Anno},data{i,match.Stop_Anno},raw{1,9});
         
         strtemp.annot           = orderfields(annot);
         tmin                    = min(tmin);

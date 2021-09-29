@@ -1,4 +1,4 @@
-function [annot, tmin, tmax, allFR, fid, fidSave] = unpackAnnotFromLoader(pth, annoList,startAnno,stopAnno,subFrames)
+function [annot, tmin, tmax, allFR, fid, fidSave] = unpackAnnotFromLoader(pth, annoList, defaultFR, startAnno,stopAnno,subFrames)
 % annoList   -> data{i,match.Annotation_file}
 % startAnno  -> data{i,match.Start_Anno}
 % stopAnno   -> data{i,match.Stop_Anno}
@@ -28,10 +28,10 @@ for j = 1:length(annoList)
 
     % unpack the annotations
     if(subFrames)
-        [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}],startAnno,stopAnno);
+        [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}], defaultFR, startAnno,stopAnno);
     else
         try
-            [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}]);
+            [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}], defaultFR);
         catch
             disp(['Couldn''t load annotations at ' pth annoList{j}]);
             keyboard

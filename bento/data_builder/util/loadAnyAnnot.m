@@ -1,4 +1,4 @@
-function [annotations,tmax,tmin,FR,fid,hotkeys] = loadAnyAnnot(filename,tmin,tmax)
+function [annotations,tmax,tmin,FR,fid,hotkeys] = loadAnyAnnot(filename,defaultFR, tmin,tmax)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -34,7 +34,6 @@ switch ext
             errordlg(['Couldn''t load annotation file at ' filename]);
         end
     end
-    
 %     case 'csv' %temporary MUPET support
 %         fid = filename;
 %         M = dlmread(filename,',',1,0);
@@ -46,12 +45,11 @@ switch ext
     case '.txt' %load data in the old format, OR ETHOVISION, prepare to convert to sheet format when saved
     fid = filename;
     if(loadRange)
-        [annotations,~,hotkeys]    = loadAnnotFile(filename,tmin,tmax);
+        [annotations,~,hotkeys,FR]    = loadAnnotFile(filename,defaultFR, tmin,tmax);
     else
-        [annotations,tmax,hotkeys] = loadAnnotFile(filename);
+        [annotations,tmax,hotkeys,FR] = loadAnnotFile(filename, defaultFR);
         tmin = 1;
     end
-    FR = nan; %framerate not specified in file- trust user input to gui
     otherwise
         [annotations,tmax,tmin,fid,hotkeys] = deal([]);
 end
