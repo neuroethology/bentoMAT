@@ -354,6 +354,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmin   = strtemp.io.movie.tmin;
         strtemp.io.annot.tmax   = ceil(strtemp.io.movie.tmax * strtemp.annoFR/strtemp.io.movie.FR);
         strtemp.io.annot.FR     = strtemp.io.movie.FR;
+        strtemp.annoFR          = strtemp.io.movieFR; % change default annotation framerate to match the movie
         strtemp.annot           = struct();
         strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annot.FR;
         
@@ -362,7 +363,8 @@ for i=1:size(data,1)
         strtemp.io.annot.fid    = [];
         strtemp.io.annot.tmin   = strtemp.audio.tmin;
         strtemp.io.annot.tmax   = ceil(strtemp.audio.tmax * strtemp.annoFR/strtemp.audio.FR);
-        strtemp.annot.FR        = strtemp.audio.FR;
+        strtemp.io.annot.FR     = strtemp.audio.FR;
+        strtemp.annoFR          = strtemp.io.movieFR; % change default annotation framerate to match the audio
         strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
         strtemp.annot           = struct();
    
