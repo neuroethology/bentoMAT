@@ -1,5 +1,5 @@
 function [annot,tmax] = loadAnnotSheet(fname,tmin,tmax)
-% still need to add support for multiple annotations for file
+% script to load bento .annot files into a struct "annot" in matlab.
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
