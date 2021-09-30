@@ -11,6 +11,7 @@ for f = fieldnames(annot)'
     for beh = fieldnames(annot.(f{:}))'
         if(isempty(annot.(f{:}).(beh{:}))), continue; end
         annot.(f{:}).(beh{:}) = max(annot.(f{:}).(beh{:}) - tmin,1);
+        annot.(f{:}).(beh{:})(annot.(f{:}).(beh{:})(:,2)>(tmax-tmin+1),2) = tmax-tmin+1; % don't let annotations extent past end
         annot.(f{:}).(beh{:})(annot.(f{:}).(beh{:})(:,2)==1,:) = [];
         annot.(f{:}).(beh{:})(annot.(f{:}).(beh{:})(:,1)>(tmax-tmin+1),:) = [];
     end
