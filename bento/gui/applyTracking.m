@@ -43,11 +43,11 @@ else
 end
 
 for trackFile = 1:length(gui.data.tracking.args)
-    try
+%     try
     eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args{trackFile}, ' num2str(frnum) ' );']);
-    catch
-        keyboard
-    end
+%     catch
+%         keyboard
+%     end
     if(isstruct(pts))
         color = pts.color;
         pts = pts.pts;
