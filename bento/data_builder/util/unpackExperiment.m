@@ -226,6 +226,7 @@ for i=1:size(data,1)
             for trackFile = 1:length(trackList)
                 fid = [pth strip(strip(trackList{trackFile},'left','.'),'left',filesep)];
                 [~,~,ext] = fileparts(fid);
+                
                 if(strcmpi(ext,'.mat'))
                     temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
 %                     f = fieldnames(temp);
@@ -236,6 +237,7 @@ for i=1:size(data,1)
 %                     end
                     strtemp.tracking.args{trackFile} = temp;
                     strtemp.io.feat.fid{trackFile} = fid;
+                    
                 elseif(strcmpi(ext,'.json'))
                     if(exist('jsondecode','builtin'))
                         disp('loading tracking data');
@@ -248,9 +250,20 @@ for i=1:size(data,1)
                         strtemp.tracking.args{trackFile} = [];
                     end
                     strtemp.io.feat.fid{trackFile} = fid;
-                elseif(strcmpi(ext,'.h5')) %DeepLabCut output
-                    args = h5read(fid,'/df_with_missing/table');
-                    strtemp.tracking.args{trackFile} = args.values_block_0;
+                    
+                elseif(strcmpi(ext,'.h5')) %DeepLabCut or JAX output
+                    trackType = promptTrackType({'JAX','DLC'});
+                    strtemp.tracking.fun = trackType;
+                    if contains(trackType,'DLC')
+                        args = h5read(fid,'/df_with_missing/table');
+                        strtemp.tracking.args{trackFile} = args.values_block_0;
+                    elseif contains(trackType,'JAX')
+                        args = struct();
+                        args.points = h5read(fid,'/poseest/points');
+                        args.ids = h5read(fid,'/poseest/instance_track_id');
+                        strtemp.tracking.args{trackFile} = args;
+                    end
+                    
                 elseif(strcmpi(ext,'.csv')) %also DeepLabCut output
                     args = xlsread(fid);
                     strtemp.tracking.args{trackFile} = args';

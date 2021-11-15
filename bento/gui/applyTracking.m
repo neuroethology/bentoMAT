@@ -52,7 +52,7 @@ for trackFile = 1:length(gui.data.tracking.args)
         color = pts.color;
         pts = pts.pts;
     else
-        color = {'green','blue','red','magenta'};
+        color = {'green','blue','red','magenta','yellow','cyan'};
     end
     if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
         dims = [gui.data.io.movie.reader{1}.width];
@@ -71,7 +71,7 @@ for trackFile = 1:length(gui.data.tracking.args)
         else
             scale = [1 1 1 1];
         end
-        if(isnumeric(color)), c = color(mod(j,4)+1,:); else, c = color{mod(j,4)+1}; end
+        if(isnumeric(color)), c = color(mod(pts{j}(1),length(color))+1,:); else, c = color{mod(pts{j}(1),length(color))+1}; end
         
         pts{j} = double(pts{j});
         if(length(pts{j})>3) % if it's a pose and not a single point
@@ -84,7 +84,9 @@ for trackFile = 1:length(gui.data.tracking.args)
 
             end
             if(any(isnan(pts{j}(i:i+1)))), continue; end
-            movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) gui.config.ptSize],'color',c);
+            if(~(isnan(pts{j}(length(pts{j})-1)) & isnan(pts{j}(length(pts{j})))))
+                movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) gui.config.ptSize],'color',c);
+            end
         end
         
         if(any(isnan(pts{j}(1:2)))), continue; end
