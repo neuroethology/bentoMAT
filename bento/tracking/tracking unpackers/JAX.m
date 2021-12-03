@@ -1,7 +1,7 @@
 function pts = JAX(data,fr)
 
     fr = min(fr,size(data.points,4));
-    nMice = size(data.points,3);
+    nMice = size(data.ids,1);
     order = [1 2 4 3 1 3 4 7 10 11 12 13 5 6 9 10 8 5];
 
     for j = 1:nMice
