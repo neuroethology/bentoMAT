@@ -171,7 +171,7 @@ if(all(gui.enabled.traces))
             set(gui.traces.tracesIm,'visible','off');
             for i = 1:length(show)
                 lineColors = jet(length(show));
-                if(i<=length(gui.traces.traces))
+                if(i<=length(gui.traces.traces) && isgraphics(gui.traces.traces(i)))
                     if(strcmpi(gui.ctrl.track.plotType.display.String{gui.ctrl.track.plotType.display.Value},'lines'))
                     set(gui.traces.traces(i),'xdata',gui.data.CaTime(inds) - time,...
                                              'ydata',(tr(i,:) - lims(1) + i*bump)/(length(show)*bump + lims(2))*10);

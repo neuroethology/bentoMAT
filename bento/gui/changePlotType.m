@@ -22,11 +22,13 @@ function changePlotType(source,~)
             if(strcmpi(oldPlot,'PCA')||strcmpi(oldPlot,'ctrs'))
                 gui.traces.show = true(size(gui.data.rast,1),1);
             end
+            guidata(gui.h0,gui);
         case 'd/dt'
             gui.traces.toPlot = 'ddt';
             if(strcmpi(oldPlot,'PCA')||strcmpi(oldPlot,'ctrs'))
                 gui.traces.show = true(size(gui.data.rast,1),1);
             end
+            guidata(gui.h0,gui);
         case 'smoothed'
             gui.traces.toPlot = 'sm_rast';
             gui.data.sm_rast = gui.data.rast;
@@ -34,6 +36,7 @@ function changePlotType(source,~)
             if(strcmpi(oldPlot,'PCA')||strcmpi(oldPlot,'ctrs'))
                 gui.traces.show = true(size(gui.data.rast,1),1);
             end
+            guidata(gui.h0,gui);
         case 'PCs'
             gui.traces.toPlot = 'PCA';
             gui.data.PCA = ones(size(gui.data.rast,1),1);
@@ -45,7 +48,9 @@ function changePlotType(source,~)
         case 'clusters'
             gui.traces.toPlot = 'ctrs';
             gui.traces.show = true(10,1);
+            guidata(gui.h0,gui);
     end
+    gui=guidata(source);
     gui.data.([gui.traces.toPlot '_formatted']) = applyScale(gui);
 
     if(~any(strcmpi(source.String{source.Value},{'PCs','NMF'})))
