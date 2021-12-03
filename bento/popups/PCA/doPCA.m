@@ -9,7 +9,10 @@ function doPCA(source,~,parent,h,trials,nPCs,gui,m,sess,trList,type)
 source.String = 'Computing...';
 drawnow;
 
-rast    = [gui.allData(m).(sess)(trList(setdiff(1:length(trList),trials.Value))).rast(:,2:end-1)];
+rast = [];
+for i = trList(setdiff(1:length(trList),trials.Value))
+    rast    = [rast gui.allData(m).(sess)(i).rast];
+end
 nPCs    = min(str2num(nPCs.String),size(rast,1));
 switch type
     case 'PCA'
@@ -21,6 +24,7 @@ switch type
 end
         
 gui.traces.show = true(nPCs,1);
+gui.data.([gui.traces.toPlot '_formatted']) = applyScale(gui);
 close(h);
 
 guidata(parent,gui);

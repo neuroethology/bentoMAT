@@ -18,8 +18,8 @@ switch type
             Fr = info.reader{1,1}.FrameRate;
             tMax = info.reader{1,1}.Duration;
         end
-        maxVal = min(tMax,info.tmax/Fr);
-        minVal = max(1/Fr,info.tmin/Fr);
+        maxVal = min(tMax,info.tmax/info.FR);
+        minVal = max(1/Fr,info.tmin/info.FR);
     case 'Ca'
         minVal  = 0;
         maxVal  = info.annoTime(end);

@@ -11,6 +11,8 @@ if(gui.enabled.annot(2))
         time 	= round((gui.data.annoTime(end)-gui.data.annoTime(1))*gui.data.annoFR);
     elseif(all(gui.enabled.traces))
         time = round(gui.data.CaTime(end) - gui.data.CaTime(1)*gui.data.CaFR);
+    elseif(isfield(gui.data,'trackTime'))
+        time = round(gui.data.trackTime(end) - gui.data.trackTime(1)/(gui.data.trackTime(2)-gui.data.trackTime(1)));
     end
 
     offset = gui.data.io.annot.tmin/gui.data.annoFR;

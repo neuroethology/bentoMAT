@@ -262,6 +262,7 @@ for i=1:size(data,1)
                         args.points = h5read(fid,'/poseest/points');
                         args.ids = h5read(fid,'/poseest/instance_track_id');
                         strtemp.tracking.args{trackFile} = args;
+                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.ids))/30;
                     end
                     
                 elseif(strcmpi(ext,'.csv')) %also DeepLabCut output
@@ -380,7 +381,16 @@ for i=1:size(data,1)
         strtemp.annoFR          = strtemp.io.movie.FR; % change default annotation framerate to match the audio
         strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
         strtemp.annot           = struct();
-   
+           
+    elseif(~isempty(data{i,match.Tracking}))
+        strtemp.io.annot        = struct();
+        strtemp.io.annot.fid    = [];
+        strtemp.io.annot.tmin   = 1;
+        strtemp.io.annot.tmax   = length(strtemp.trackTime);
+        strtemp.io.annot.FR     = 1/(strtemp.trackTime(2)-strtemp.trackTime(1));
+        strtemp.annoFR          = 1/(strtemp.trackTime(2)-strtemp.trackTime(1));
+        strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
+        strtemp.annot           = struct();
     else
         strtemp.annot           = struct();
         strtemp.annoTime        = strtemp.CaTime;
