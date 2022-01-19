@@ -22,6 +22,10 @@ You may also wish to install:
 <br>
 <p><img src='https://github.com/annkennedy/bento/blob/master/docs/annotation_demo.gif?raw=true' width='48%'> <img src='https://github.com/annkennedy/bento/blob/master/docs/features_demo.gif?raw=true' width='48%'></p>
 
+## Citation
+If you use Bento for your research, please cite:
+> Segalin, Cristina, Jalani Williams, Tomomi Karigo, May Hui, Moriel Zelikowsky, Jennifer J. Sun, Pietro Perona, David J. Anderson, and Ann Kennedy. "The Mouse Action Recognition System (MARS) software pipeline for automated analysis of social behaviors in mice." Elife 10 (2021): e63720.
+
 ## Code Contributors
 Bento was created by [Ann Kennedy](https://annkennedy.github.io/), but has benefitted from the suggestions of several members of the [David J Anderson lab](https://davidandersonlab.caltech.edu) at Caltech, including Tomomi Karigo, Bin Yang, and Jalani Williams.
 
@@ -29,7 +33,7 @@ MARS, a pose estimation and behavior classification system that can be integrate
 
 Bento is an actively developed package, and we welcome community involvement. For questions about Bento, consult the project [Wiki](https://github.com/annkennedy/bento/wiki).
 
-If you wish to contribute to Bento, or your question was not answered by the [Wiki](https://github.com/annkennedy/bento/wiki), please contact <a class="u-email" href="mailto:&#x6b;&#x65;&#x6e;&#x6e;&#x65;&#x64;&#x79;&#x61;&#x40;&#x63;&#x61;&#x6c;&#x74;&#x65;&#x63;&#x68;&#x2e;&#x65;&#x64;&#x75;">&#x6b;&#x65;&#x6e;&#x6e;&#x65;&#x64;&#x79;&#x61;&#x40;&#x63;&#x61;&#x6c;&#x74;&#x65;&#x63;&#x68;&#x2e;&#x65;&#x64;&#x75;</a>.
+If you wish to contribute to Bento, or your question was not answered by the [Wiki](https://github.com/annkennedy/bento/wiki), please contact <A HREF="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#110;&#110;&#46;&#107;&#101;&#110;&#110;&#101;&#100;&#121;&#64;&#110;&#111;&#114;&#116;&#104;&#119;&#101;&#115;&#116;&#101;&#114;&#110;&#46;&#101;&#100;&#117;">&#97;&#110;&#110;&#46;&#107;&#101;&#110;&#110;&#101;&#100;&#121;&#64;&#110;&#111;&#114;&#116;&#104;&#119;&#101;&#115;&#116;&#101;&#114;&#110;&#46;&#101;&#100;&#117;</A>.
 
 <br>
 <p><img src='https://github.com/annkennedy/bento/blob/master/docs/panels_demo.gif?raw=true' width='48%'> <img src='https://github.com/annkennedy/bento/blob/master/docs/PCA_demo.gif?raw=true' width='48%'></p>
