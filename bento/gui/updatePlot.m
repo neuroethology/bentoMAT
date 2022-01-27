@@ -219,7 +219,7 @@ if(all(gui.enabled.traces))
         bounds  = unique(ceil(order))';
         i=[];
         for i = bounds(1:end-1)
-            if((i-1)<=length(gui.traces.groupLines))
+            if((i-1)<=length(gui.traces.groupLines) & isgraphics(gui.traces.groupLines(i-1)))
                 set(gui.traces.groupLines(i-1),'xdata',gui.data.CaTime([1 end]) - time,...
                     'ydata',(sum(order<=i))*sc*[1 1] + groupShift,'visible','on');
             else
