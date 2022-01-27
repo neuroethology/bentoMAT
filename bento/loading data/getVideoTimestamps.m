@@ -1,8 +1,9 @@
 function timestamps = getVideoTimestamps(video)
 
     timestamps = [];
+    [pth,fid,~] = fileparts(video);
     
-    camfile = fullfile(fileparts(video),'cam_0_logfile.txt');
+    camfile = fullfile(pth,[fid '_logfile.txt']);
     if exist(camfile,'file')
         timestamps = fileread(camfile);
         timestamps = split(convertCharsToStrings(timestamps));
