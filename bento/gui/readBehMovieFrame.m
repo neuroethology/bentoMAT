@@ -26,9 +26,14 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
                 movies{col,i} = reader{col,i}.reader.getframe();
                 frnum = frnum - (find(reader{col,i}.TS > movie.tmin/movie.FR,1,'first')-1);
             otherwise
-                tMax    = reader{col,i}.Duration - 1/reader{col,i}.FrameRate;
-                time    = min(time, tMax);
-                frnum = round(time*reader{col,i}.FrameRate);
+                if(reader{col,i}.TS)
+                    frnum   = find(reader{col,i}.TS>time,1,'first')-2;
+                    frnum   = min([reader{col,i}.numFrames frnum]);
+                else
+                    tMax    = reader{col,i}.Duration - 1/reader{col,i}.FrameRate;
+                    time    = min(time, tMax);
+                    frnum = round(time*reader{col,i}.FrameRate);
+                end
                 reader{col,i}.currentTime = min(time + 1/reader{col,i}.FrameRate, ...
                                                 (reader{col,i}.NumFrames - 1)/reader{col,i}.FrameRate);
                 movies{col,i} = readFrame(reader{col,i});

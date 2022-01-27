@@ -205,9 +205,14 @@ for i=1:size(data,1)
                             try
                             info = VideoReader(strtemp.io.movie.fid{j});
                             catch
-                                keyboard
+                                error(['I wasn''t able to find/load a video at: ' strtemp.io.movie.fid{j}]);
                             end
-                            tmax = min([tmax round(info.Duration*info.FrameRate)]);
+                            timestamps = getVideoTimestamps(fileparts(strtemp.io.movie.fid{j}));
+                            if timestamps % check for timestamp files
+                                tmax = min([tmax timestamps(end)]);
+                            else
+                                tmax = min([tmax round(info.Duration*info.FrameRate)]);
+                            end
                         end
                 end
                 strtemp.io.movie.tmax = tmax;

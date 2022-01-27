@@ -35,6 +35,14 @@ for col = 1:size(data.io.movie.fid,1)
                 reader{col,i}.CurrentTime = 0;
                 Fr              = reader{col,i}.FrameRate;
                 tMax            = reader{col,i}.Duration;
+                
+                timestamps = getVideoTimestamps(data.io.movie.fid{col,i});
+                if timestamps
+                    tMax = timestamps(end);
+                    reader{col,i}.TS = timestamps;
+                else
+                    reader{col,i}.TS = [];
+                end
         end
     end
 end
