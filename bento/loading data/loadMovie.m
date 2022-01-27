@@ -39,6 +39,7 @@ for col = 1:size(data.io.movie.fid,1)
                 timestamps = getVideoTimestamps(data.io.movie.fid{col,i});
                 if timestamps
                     tMax = timestamps(end);
+                    Fr = 1/median(timestamps(2:end)-timestamps(1:end-1));
                     reader{col,i}.TS = timestamps;
                 else
                     reader{col,i}.TS = [];
