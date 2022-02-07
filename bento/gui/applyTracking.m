@@ -23,7 +23,7 @@ if(gui.enabled.movie(1))
             info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
             frnum = info.curFrame+1;
         case 'vid'
-            frnum = round(time * gui.data.io.movie.reader{rr,cc}.FrameRate);
+            frnum = round(time * gui.data.io.movie.reader{rr,cc}.reader.FrameRate);
     end
     if(frnum<2)
         return;
@@ -55,7 +55,7 @@ for trackFile = 1:length(gui.data.tracking.args)
         color = {'green','blue','red','magenta','yellow','cyan'};
     end
     if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
-        dims = [gui.data.io.movie.reader{1}.width];
+        dims = [gui.data.io.movie.reader{1}.reader.width];
         if(dims(1)~=max(dims))
             pad = (max(dims)-dims(1))/2;
             for i=1:length(pts)
