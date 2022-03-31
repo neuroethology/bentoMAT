@@ -22,11 +22,16 @@ switch ext
 %             rast(i+1,temp{5}(temp{1}==i)==0)=nan;
 %         end
         temp = csvread(pth);
-        time = temp(:,1)';
-        rast = temp(:,5)';
-        % get rid of artifacts
-        rast((1:500))    = nan;
-        rast(end-119:end) = nan;
+        keyboard
+        if(size(temp,2)==5)
+            time = temp(:,1)';
+            rast = temp(:,5)';
+            % get rid of artifacts
+            rast((1:500))    = nan;
+            rast(end-119:end) = nan;
+        else
+            
+        end
         spikes=[];
 
     case '.mat'
@@ -63,6 +68,10 @@ switch ext
             rast = temp.(f{~strcmpi(f,'time')});
             spikes = [];
             time = temp.(f{strcpmi(f,'time')});
+        elseif any(strcmpi(f,'C')) && isstruct(temp.C) && isfield(temp.C,'data') % it's probably minian output
+            rast = temp.C.data;
+            spikes = [];
+            time = [];
         else
             disp(['unsure which variable to read in ' fname]);
             rast = []; spikes=[];
