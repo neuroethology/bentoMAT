@@ -21,16 +21,17 @@ switch ext
 %             rast(i+1,:) = temp{6}(temp{1}==i);
 %             rast(i+1,temp{5}(temp{1}==i)==0)=nan;
 %         end
-        temp = csvread(pth);
-        keyboard
-        if(size(temp,2)==5)
+        temp = readtable(pth);
+        if(size(temp,2)==5) % it's an Anderson lab miniscope file
             time = temp(:,1)';
             rast = temp(:,5)';
             % get rid of artifacts
             rast((1:500))    = nan;
             rast(end-119:end) = nan;
-        else
-            
+        else % it's probably an inscopix csv
+            rast = table2array(temp)';
+            time = (rast(1,:)+rast(1,2));
+            rast = rast(2:end,:);
         end
         spikes=[];
 
@@ -71,7 +72,7 @@ switch ext
         elseif any(strcmpi(f,'C')) && isstruct(temp.C) && isfield(temp.C,'data') % it's probably minian output
             rast = temp.C.data;
             spikes = [];
-            time = [];
+            time = []; %look for miniscope_timeStamps.csv in same folder, and video_timeStamps.csv for behavior video
         else
             disp(['unsure which variable to read in ' fname]);
             rast = []; spikes=[];
