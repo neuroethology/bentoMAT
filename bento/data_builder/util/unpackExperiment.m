@@ -277,22 +277,40 @@ for i=1:size(data,1)
             end
             % everything that follows is shameful hacks!
             % we need a better way to get timestamps for the tracking data...
-            if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
-                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/strtemp.tracking.args{1}.fps;
+            if(isfield(strtemp,'tracking'))
+                if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
+                    strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/strtemp.tracking.args{1}.fps;
 
-            elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
-                strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
+                elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
+                    strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
 
-            elseif isfield(strtemp.tracking.args{1},'fps') && length(fieldnames(strtemp.trackings.args{1}))==2
-                datafield = setdiff(fieldnames(strtemp.tracking.args{1}),'fps');
-                strtemp.trackTime = (1:length(strtemp.tracking.args{1}(datafield)))/strtemp.tracking.args{1}.fps;
-            
-            elseif length(fieldnames(strtemp.tracking.args{1}))==1
-                % I give up, let's just ask the user
-                f = fieldnames(strtemp.tracking.args{1});
-                ans = inputdlg('What''s the framerate of the tracking data?');
-                fps = str2num(ans{:});
-                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(f{:})))/fps;
+                elseif isfield(strtemp.tracking.args{1},'fps')
+                    if length(fieldnames(strtemp.tracking.args{1}))==2
+                        datafield = setdiff(fieldnames(strtemp.tracking.args{1}),'fps');
+                    elseif isfield(strtemp.tracking.args{1},'data') 
+                        datafield = 'data';
+                    elseif isfield(strtemp.tracking.args{1},'data_smooth')
+                        datafield = 'data_smooth';
+                    else
+                        f = fieldnames(strtemp.tracking.args{1});
+                        ans = inputdlg('Which field holds the tracking data?');
+                        if isfield(strtemp.tracking.args{1},ans{:})
+                            datafield = ans{:};
+                        else
+                            datafield = [];
+                        end
+                    end
+                    if datafield
+                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(datafield)))/double(strtemp.tracking.args{1}.fps);
+                    end
+
+                elseif length(fieldnames(strtemp.tracking.args{1}))==1
+                    % I give up, let's just ask the user
+                    f = fieldnames(strtemp.tracking.args{1});
+                    ans = inputdlg('What''s the framerate of the tracking data?');
+                    fps = str2num(ans{:});
+                    strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(f{:})))/fps;
+                end
             end
         else
             strtemp.tracking.args = [];
@@ -384,6 +402,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = ceil(strtemp.io.movie.tmax * strtemp.annoFR/strtemp.io.movie.FR);
         strtemp.io.annot.FR     = strtemp.io.movie.FR;
         strtemp.annoFR          = strtemp.io.movie.FR; % change default annotation framerate to match the movie
+        strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annot           = struct();
         strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annot.FR;
         
@@ -394,6 +413,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = ceil(strtemp.audio.tmax * strtemp.annoFR/strtemp.audio.FR);
         strtemp.io.annot.FR     = strtemp.audio.FR;
         strtemp.annoFR          = strtemp.io.movie.FR; % change default annotation framerate to match the audio
+        strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
         strtemp.annot           = struct();
            
@@ -404,6 +424,7 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = length(strtemp.trackTime);
         strtemp.io.annot.FR     = 1/(strtemp.trackTime(2)-strtemp.trackTime(1));
         strtemp.annoFR          = 1/(strtemp.trackTime(2)-strtemp.trackTime(1));
+        strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
         strtemp.annot           = struct();
     else
@@ -415,7 +436,12 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = length(strtemp.CaTime);
         strtemp.io.annot.FR     = strtemp.CaFR;
         strtemp.annoFR          = strtemp.CaFR;
+        strtemp.annoFR_source = strtemp.annoFR;
     end
     
+    try
     mouse(data{i,match.Mouse}).(['session' num2str(data{i,match.Sessn})])(data{i,match.Trial}) = strtemp;
+    catch
+        keyboard
+    end
 end

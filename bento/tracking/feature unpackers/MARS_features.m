@@ -1,4 +1,8 @@
 function [feats,names] = MARS_features(data)
 
-feats = data.data_smooth;
+if(isfield(data,'data_smooth'))
+    feats = double(data.data_smooth);
+else
+    feats = double(data.data);
+end
 names = data.features;

@@ -21,8 +21,10 @@ else
         if(isfield(data.io.movie.reader{rr,cc},'TS'))
             data.trackTime = data.io.movie.reader{rr,cc}.TS;
         end
+    elseif(~isempty(data.annot))
+        data.trackTime = data.annoTime;
     else
-%         data.trackTime = data.annoTime;
+        data.trackTime = [];
     end
 end
 
