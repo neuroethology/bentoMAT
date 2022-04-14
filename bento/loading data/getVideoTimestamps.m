@@ -14,6 +14,21 @@ function timestamps = getVideoTimestamps(video)
 
             dt = median(timestamps(2:end)-timestamps(1:end-1));
             timestamps = timestamps - timestamps(1) + dt;
-            break
+            return
+        end
+    end
+    
+    camfile_formats = {fullfile(pth2,[fid2 '_logfile.csv']), fullfile(pth,[fid '_logfile.csv']), strrep(video,ext,'.csv')};
+    for camfile = camfile_formats
+        if exist(camfile{:},'file')
+            Tbl = readtable(camfile{:});
+            if ~any(strcmpi(Tbl.Properties.VariableNames,'TimeStamp_ms_'))
+                continue;
+            end
+            timestamps = Tbl.TimeStamp_ms_/1000;
+
+            dt = median(timestamps(2:end)-timestamps(1:end-1));
+%             timestamps = timestamps - timestamps(1) + dt;
+            return
         end
     end
