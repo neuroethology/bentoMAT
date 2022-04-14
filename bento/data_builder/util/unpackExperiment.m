@@ -207,7 +207,7 @@ for i=1:size(data,1)
                             catch
                                 error(['I wasn''t able to find/load a video at: ' strtemp.io.movie.fid{j}]);
                             end
-                            timestamps = getVideoTimestamps(fileparts(strtemp.io.movie.fid{j}));
+                            timestamps = getVideoTimestamps(strtemp.io.movie.fid{j});
                             if timestamps % check for timestamp files
                                 tmax = min([tmax timestamps(end)]);
                             else
@@ -273,6 +273,8 @@ for i=1:size(data,1)
                 elseif(strcmpi(ext,'.csv')) %also DeepLabCut output
                     args = xlsread(fid);
                     strtemp.tracking.args{trackFile} = args';
+                else % I couldn't unpack the tracking data :[
+                    strtemp.tracking.args={[]};
                 end
             end
             % everything that follows is shameful hacks!
@@ -286,7 +288,7 @@ for i=1:size(data,1)
             elseif isfield(strtemp.tracking.args{1},'fps') && length(fieldnames(strtemp.trackings.args{1}))==2
                 datafield = setdiff(fieldnames(strtemp.tracking.args{1}),'fps');
                 strtemp.trackTime = (1:length(strtemp.tracking.args{1}(datafield)))/strtemp.tracking.args{1}.fps;
-            
+
             elseif length(fieldnames(strtemp.tracking.args{1}))==1
                 % I give up, let's just ask the user
                 f = fieldnames(strtemp.tracking.args{1});
