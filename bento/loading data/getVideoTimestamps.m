@@ -1,5 +1,8 @@
-function timestamps = getVideoTimestamps(video)
+function timestamps = getVideoTimestamps(video, suffix)
 
+    if ~exist('suffix','var')
+        suffix = '';
+    end
     timestamps = [];
     [pth,fid,ext] = fileparts(video);
     [pth2,fid2,~] = fileparts(pth);
