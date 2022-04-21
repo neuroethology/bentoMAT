@@ -209,7 +209,7 @@ for i=1:size(data,1)
                             end
                             timestamps = getVideoTimestamps(strtemp.io.movie.fid{j});
                             if timestamps % check for timestamp files
-                                tmax = min([tmax timestamps(end)]);
+                                tmax = min([tmax length(timestamps)]);
                             else
                                 tmax = min([tmax round(info.Duration*info.FrameRate)]);
                             end
