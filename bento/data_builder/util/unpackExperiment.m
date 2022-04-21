@@ -208,10 +208,18 @@ for i=1:size(data,1)
                                 error(['I wasn''t able to find/load a video at: ' strtemp.io.movie.fid{j}]);
                             end
                             timestamps = getVideoTimestamps(strtemp.io.movie.fid{j});
-                            if timestamps % check for timestamp files
+                            if timestamps % check for timestamp files, update movie data accordingly
                                 tmax = min([tmax length(timestamps)]);
+                                strtemp.io.movie.FR = 1/mean(timestamps(2:end)-timestamps(1:end-1));
                             else
                                 tmax = min([tmax round(info.Duration*info.FrameRate)]);
+                            end
+                            if(~isempty(data{i,match.Calcium_imaging_file})) % hack to check for accompanying Ca timestamps :[
+                                timestamps = getVideoTimestamps(strtemp.io.movie.fid{j},'_Ca');
+                                if timestamps
+                                    strtemp.CaTime = timestamps(1:length(strtemp.rast))';
+                                    strtemp.CaFR = 1/mean(timestamps(2:end)-timestamps(1:end-1));
+                                end
                             end
                         end
                 end

@@ -4,7 +4,8 @@ function timestamps = getVideoTimestamps(video)
     [pth,fid,ext] = fileparts(video);
     [pth2,fid2,~] = fileparts(pth);
     
-    camfile_formats = {fullfile(pth2,[fid2 '_logfile.txt']), fullfile(pth,[fid '_logfile.txt']), strrep(video,ext,'.txt')};
+    camfile_formats = {fullfile(pth2,[fid2 '_logfile.txt']), fullfile(pth,[fid '_logfile.txt']), ...
+                       fullfile(pth2,[fid2 suffix '.txt']), fullfile(pth,[fid suffix '.txt']), strrep(video,ext,'.txt')};
     for camfile = camfile_formats
         if exist(camfile{:},'file')
             timestamps = fileread(camfile{:});
@@ -18,7 +19,8 @@ function timestamps = getVideoTimestamps(video)
         end
     end
     
-    camfile_formats = {fullfile(pth2,[fid2 '_logfile.csv']), fullfile(pth,[fid '_logfile.csv']), strrep(video,ext,'.csv')};
+    camfile_formats = {fullfile(pth2,[fid2 '_logfile.csv']), fullfile(pth,[fid '_logfile.csv']), ...
+                       fullfile(pth2,[fid2 suffix '.csv']), fullfile(pth,[fid suffix '.csv']), strrep(video,ext,'.csv')};
     for camfile = camfile_formats
         if exist(camfile{:},'file')
             Tbl = readtable(camfile{:});
