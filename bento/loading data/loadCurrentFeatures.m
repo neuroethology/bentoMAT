@@ -14,14 +14,17 @@ if(isfield(gui,'data'))
     end
 else
     data.tracking.fun = promptTrackType();
+    if(~isfield(data,'trackTime'))
+        data.trackTime=[];
+    end
     if(isempty(data.tracking.fun))
         gui.enabled.tracker = [0 0];
     elseif(isfield(data.io.movie,'reader'))
         [rr,cc] = identifyTrackedMovie(data);
-        if(isfield(data.io.movie.reader{rr,cc},'TS'))
+        if(isfield(data.io.movie.reader{rr,cc},'TS') && isempty(data.trackTime))
             data.trackTime = data.io.movie.reader{rr,cc}.TS;
         end
-    elseif(~isempty(data.annot))
+    elseif(~isempty(data.annot) && isempty(data.trackTime))
         data.trackTime = data.annoTime;
     else
         data.trackTime = [];

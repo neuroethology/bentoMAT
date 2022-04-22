@@ -289,7 +289,7 @@ for i=1:size(data,1)
             % we need a better way to get timestamps for the tracking data...
             if(isfield(strtemp,'tracking'))
                 if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
-                    strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/strtemp.tracking.args{1}.fps;
+                    strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/double(strtemp.tracking.args{1}.fps);
 
                 elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
                     strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
