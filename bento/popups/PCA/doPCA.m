@@ -16,10 +16,11 @@ end
 nPCs    = min(str2num(nPCs.String),size(rast,1));
 switch type
     case 'PCA'
-        [e,~]           = eig(rast*rast');
+        [e,~]           = eig(cov(rast','omitrows'));
         gui.data.PCA    = fliplr(e(:,end-nPCs+1:end));
     case 'NMF'
-        [weights,~]     = nnmf(rast,nPCs);
+        drop = any(isnan(rast));
+        [weights,~]     = nnmf(rast(:,~drop),nPCs);
         gui.data.PCA    = weights;
 end
         
