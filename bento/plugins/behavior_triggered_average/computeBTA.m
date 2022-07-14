@@ -76,6 +76,9 @@ for ii = 1:length(m)
                 sig = zeros(1,length(gui.data.trackTime));
             end
     end
+    if(size(sig,2)==1)
+        sig=sig';
+    end
 
     win  = round(-str2double(h.pre.String)*useFR):round(str2double(h.post.String)*useFR);
     winB = round(-str2double(h.pre.String)*gui.data.annoFR):round(str2double(h.post.String)*gui.data.annoFR);
@@ -193,7 +196,7 @@ time = win/useFR;
 if(size(BTA,1)>1)
     drawvar(time,BTA,usecolor,SEM);
     p(1) = min(min(nanmean(BTA) - nanstd(BTA)*SEM),0);
-    p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM)*1.05 + eps;
+    p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM) + abs(nanstd(BTA)*SEM)*0.1 + eps;
 else
     plot(time,BTA,'color',usecolor);
     p(1) = min([BTA 0]);
