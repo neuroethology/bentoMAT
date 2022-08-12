@@ -39,7 +39,10 @@ if(strcmpi(data.tracking.fun,'generic_timeseries'))
 else
     addFeats=false(size(data.tracking.args));
     for i = 1:length(data.tracking.args)
-        addFeats(i) = isfield(data.tracking.args{i},'features') || contains(data.tracking.fun,'EMG') || contains(data.tracking.fun,'jelly');
+        addFeats(i) = isfield(data.tracking.args{i},'features') ...
+                        || contains(data.tracking.fun,'EMG') ...
+                        || contains(data.tracking.fun,'jelly') ...
+                        || contains(data.tracking.fun,'SimBA');
     end
 end
 

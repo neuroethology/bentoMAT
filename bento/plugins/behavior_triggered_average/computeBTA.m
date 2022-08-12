@@ -196,7 +196,7 @@ time = win/useFR;
 if(size(BTA,1)>1)
     drawvar(time,BTA,usecolor,SEM);
     p(1) = min(min(nanmean(BTA) - nanstd(BTA)*SEM),0);
-    p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM) + abs(nanstd(BTA)*SEM)*0.1 + eps;
+    p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM) + max(abs(nanstd(BTA)*SEM))*0.1 + eps;
 else
     plot(time,BTA,'color',usecolor);
     p(1) = min([BTA 0]);
