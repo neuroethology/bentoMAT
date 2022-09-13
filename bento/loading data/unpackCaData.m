@@ -86,4 +86,8 @@ switch ext
         spikes=[];
 end
 
+if isempty(time)
+    time = getVideoTimestamps(pth);
+end
+
 disp('done');

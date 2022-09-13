@@ -37,3 +37,15 @@ function timestamps = getVideoTimestamps(video, suffix)
             return
         end
     end
+    
+    camfile_formats = {fullfile(pth,'timeStamps.csv')};
+    for camfile = camfile_formats
+        if exist(camfile{:},'file')
+            Tbl = readtable(camfile{:});
+            if ~any(strcmpi(Tbl.Properties.VariableNames,'TimeStamp_ms_'))
+                continue;
+            end
+            timestamps = Tbl.TimeStamp_ms_/1000;
+            return
+        end
+    end
