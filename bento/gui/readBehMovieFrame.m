@@ -27,16 +27,16 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
                 frnum = frnum - (find(reader{col,i}.TS > movie.tmin/movie.FR,1,'first')-1);
             otherwise
                 if(isfield(reader{col,i},'TS') & reader{col,i}.TS)
+                    time    = min(time, reader{col,i}.TS(end));
                     frnum   = find(reader{col,i}.TS>time,1,'first')-2;
                     frnum   = min([ceil(reader{col,i}.reader.FrameRate*reader{col,i}.reader.Duration) frnum]);
-                    time    = frnum/reader{col,i}.reader.FrameRate;
+                    time    = frnum/length(reader{col,i}.TS) * reader{col,i}.reader.Duration;
                 else
                     tMax    = reader{col,i}.reader.Duration - 1/reader{col,i}.reader.FrameRate;
                     time    = min(time, tMax);
                     frnum = round(time*reader{col,i}.reader.FrameRate);
                 end
-                reader{col,i}.reader.currentTime = min(time + 1/reader{col,i}.reader.FrameRate, ...
-                                                (ceil(reader{col,i}.reader.FrameRate*reader{col,i}.reader.Duration) - 1)/reader{col,i}.reader.FrameRate);
+                reader{col,i}.reader.currentTime = min(time, reader{col,i}.reader.Duration - 1/reader{col,i}.reader.FrameRate);
                 movies{col,i} = readFrame(reader{col,i}.reader);
 %                 movies{col,i} = read(reader{col,i},frnum);
 

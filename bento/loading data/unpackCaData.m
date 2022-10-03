@@ -88,6 +88,11 @@ end
 
 if isempty(time)
     time = getVideoTimestamps(pth);
+    if(time)
+        if(size(time,2)==1)
+            time=time';
+        end
+    end
 end
 
 disp('done');

@@ -214,7 +214,7 @@ for i=1:size(data,1)
                             else
                                 tmax = min([tmax round(info.Duration*info.FrameRate)]);
                             end
-                            if(~isempty(data{i,match.Calcium_imaging_file})) % hack to check for accompanying Ca timestamps :[
+                            if(~isempty(data{i,match.Calcium_imaging_file}) && isempty(strtemp.CaTime)) % hack to check for accompanying Ca timestamps :[
                                 timestamps = getVideoTimestamps(strtemp.io.movie.fid{j},'_Ca');
                                 if timestamps
                                     strtemp.CaTime = timestamps(1:length(strtemp.rast))';
@@ -452,9 +452,9 @@ for i=1:size(data,1)
         strtemp.io.annot        = struct();
         strtemp.io.annot.fid    = [];
         strtemp.io.annot.tmin   = strtemp.io.movie.tmin;
-        strtemp.io.annot.tmax   = ceil(strtemp.io.movie.tmax * strtemp.annoFR/strtemp.io.movie.FR);
         strtemp.io.annot.FR     = strtemp.io.movie.FR;
         strtemp.annoFR          = strtemp.io.movie.FR; % change default annotation framerate to match the movie
+        strtemp.io.annot.tmax   = ceil(strtemp.io.movie.tmax * strtemp.annoFR/strtemp.io.movie.FR);
         strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annot           = struct();
         strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annot.FR;
