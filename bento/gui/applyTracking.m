@@ -14,7 +14,7 @@ else
 end
 
 
-if(gui.enabled.movie(1))
+if(gui.enabled.movie(2))
     % check which movie we're plotting tracking on
     [rr,cc] = identifyTrackedMovie(gui.data);
     

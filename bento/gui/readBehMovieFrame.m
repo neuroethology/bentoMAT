@@ -30,7 +30,7 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
                     time    = min(time, reader{col,i}.TS(end));
                     frnum   = find(reader{col,i}.TS>time,1,'first')-2;
                     frnum   = min([ceil(reader{col,i}.reader.FrameRate*reader{col,i}.reader.Duration) frnum]);
-                    time    = frnum/length(reader{col,i}.TS) * reader{col,i}.reader.Duration;
+                    time    = frnum/length(reader{col,i}.TS) * reader{col,i}.reader.Duration; % sometimes the reader object itself has incorrect info
                 else
                     tMax    = reader{col,i}.reader.Duration - 1/reader{col,i}.reader.FrameRate;
                     time    = min(time, tMax);

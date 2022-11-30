@@ -29,18 +29,26 @@ for ii = 1:length(m)
             usecolor = 'k';
             sig     = nanmean(data.rast);
             sig     = nan_fill(sig);
-            useFR = min(useFR,gui.data.CaFR);
-            h.bin.String = num2str(1/useFR);
-            [p,q]   = rat(useFR/gui.data.CaFR);
+            if useFR >= gui.data.CaFR*.999
+                useFR = min(useFR,gui.data.CaFR);
+                h.bin.String = num2str(1/useFR);
+                p=1;q=1;
+            else
+                [p,q]   = rat(useFR/gui.data.CaFR);
+            end
             sig     = resample(sig,p,q);
 
         case 'u' % unit: across trials no, across channels no
             usecolor = 'k';
             sig     = data.rast(h.unit.Value - 1,:);
             sig     = nan_fill(sig);
-            useFR = min(useFR,gui.data.CaFR);
-            h.bin.String = num2str(1/useFR);
-            [p,q]   = rat(useFR/gui.data.CaFR);
+            if useFR >= gui.data.CaFR*.999
+                useFR = min(useFR,gui.data.CaFR);
+                h.bin.String = num2str(1/useFR);
+                p=1;q=1;
+            else
+                [p,q]   = rat(useFR/gui.data.CaFR);
+            end
             sig     = resample(sig,p,q);
 
         case 'b' % behavior: across trials yes, across channels yes
@@ -68,9 +76,13 @@ for ii = 1:length(m)
                 [gui,data] = loadCurrentFeatures(gui,data);
                 sig     = squeeze(data.tracking.features{chnum}(:,featnum));
                 trackFR = 1/(gui.data.trackTime(2) - gui.data.trackTime(1));
-                useFR = min(useFR,trackFR);
+            if useFR >= gui.data.CaFR*.999
+                useFR = min(useFR,gui.data.CaFR);
                 h.bin.String = num2str(1/useFR);
-                [p,q]   = rat(useFR/trackFR);
+                p=1;q=1;
+            else
+                [p,q]   = rat(useFR/gui.data.CaFR);
+            end
                 sig     = resample(sig,p,q);
             else
                 sig = zeros(1,length(gui.data.trackTime));
@@ -195,10 +207,12 @@ SEM  = 1/sqrt(max(length(use),1));
 time = win/useFR;
 if(size(BTA,1)>1)
     drawvar(time,BTA,usecolor,SEM);
+    xlim(time([1 end]))
     p(1) = min(min(nanmean(BTA) - nanstd(BTA)*SEM),0);
     p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM) + max(abs(nanstd(BTA)*SEM))*0.1 + eps;
 else
     plot(time,BTA,'color',usecolor);
+    xlim(time([1 end]))
     p(1) = min([BTA 0]);
     p(2) = max(BTA)+eps;
 end

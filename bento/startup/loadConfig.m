@@ -20,4 +20,4 @@ config.path_to_MARS = '';
 
 config.trackingText = false; % set to true to display a number next to each tracked object
 config.openCircles = false;  % set to true to use open circles for tracked keypoints
-config.ptSize = 4; % size of tracker point in pixels
+config.ptSize = 2; % size of tracker point in pixels
