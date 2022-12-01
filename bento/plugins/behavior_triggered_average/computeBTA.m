@@ -118,14 +118,21 @@ for ii = 1:length(m)
     teB     = find(dt==-1);
 
     % find the trigger frames for the plotted trace
-    tb      = round(tbB*useFR/data.annoFR);
-    te      = round(teB*useFR/data.annoFR);
+    tb      = round(tbB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR); % resample and apply any offset between bhvr and neural data
+    te      = round(teB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR);
     if(isempty(tb)), continue; end
 
     if(te(1)<tb(1)), te(1) = []; end
     if(length(te)<length(tb)), tb(end) = []; end
     if(teB(1)<tbB(1)), teB(1) = []; end
     if(length(teB)<length(tbB)), tbB(end) = []; end
+    
+    % drop bouts that happen before the recording
+    drop = find(tb<0 | te<0);
+    tb(drop)=[];
+    te(drop)=[];
+    tbB(drop)=[];
+    teB(drop)=[];
 
     % merge bouts that are close together
     drop = find((tb(2:end)-te(1:end-1)) < merge);
