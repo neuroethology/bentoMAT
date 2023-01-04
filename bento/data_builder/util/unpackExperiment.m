@@ -237,134 +237,74 @@ for i=1:size(data,1)
         if(~isempty(data{i,match.Tracking}))
             trackList = strsplit(data{i,match.Tracking},';');
             for trackFile = 1:length(trackList)
-                fid = [pth strip(strip(trackList{trackFile},'left','.'),'left',filesep)];
-                [~,~,ext] = fileparts(fid);
-                
-                if(strcmpi(ext,'.mat'))
-                    temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
-%                     f = fieldnames(temp);
-%                     if(length(f)==2) %what is this for? i forget.
-%                         temp=temp.(f{2});
-%                     elseif(length(f)==1)
-%                         temp = temp.(f{1});
-%                     end
-                    strtemp.tracking.args{trackFile} = temp;
-                    strtemp.io.feat.fid{trackFile} = fid;
-                    
-                elseif(strcmpi(ext,'.json'))
-                    if(exist('jsondecode','builtin'))
-                        disp('loading tracking data');
-                        strtemp.tracking.args{trackFile} = jsondecode(fileread(fid));
-                    elseif(exist('loadjson','file'))
-                        disp('Using loadjson.')
-                        strtemp.tracking.args{trackFile} = loadjson(fid);
-                    else
-                        disp('Please download jsonlab (https://github.com/fangq/jsonlab) or upgrade to Matlab 2016b or later.')
-                        strtemp.tracking.args{trackFile} = [];
-                    end
-                    strtemp.io.feat.fid{trackFile} = fid;
-                    
-                elseif(strcmpi(ext,'.h5')) %DeepLabCut or JAX output
-                    trackType = promptTrackType({'JAX','DLC'},trackList{trackFile});
-                    strtemp.tracking.fun = trackType;
-                    if contains(trackType,'DLC')
-                        args = h5read(fid,'/df_with_missing/table');
-                        strtemp.tracking.args{trackFile} = args.values_block_0;
-                    elseif contains(trackType,'JAX')
-                        args = struct();
-                        args.points = h5read(fid,'/poseest/points');
-                        args.ids = h5read(fid,'/poseest/instance_track_id');
-                        strtemp.tracking.args{trackFile} = args;
-                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.ids))/30;
-                    end
-                    
-                elseif(strcmpi(ext,'.csv')) %either DeepLabCut output or SimBA features
-                    trackType = promptTrackType({'DLC','SimBA features'},trackList{trackFile});
-                    if contains(trackType,'DLC')
-                        [numvals,textfields] = xlsread(fid);
-                        args.data = numvals';
-                        args.ids = string(textfields(:,2)) + '_' + string(textfields(:,3));
-                    else
-                        fh = fopen(fid);
-                        headers = strsplit(fgetl(fh),',');
-                        fclose(fh);
-                        ncol = length(headers);
-                        fh = fopen(fid);
-                        C = textscan(fh,'%f','headerlines',1,'Delimiter',',');
-                        fclose(fh);
-                        C = reshape(C{1},ncol,[]);
-                        args.data = C(2:end,:);
-                        args.ids = char(headers(2:end));
-                    end
-                    strtemp.tracking.args{trackFile} = args;
-                else % I couldn't unpack the tracking data :[
-                    strtemp.tracking.args={[]};
-                end
-            end
-            % everything that follows is shameful hacks!
-            % we need a better way to get timestamps for the tracking data...
-            if(isfield(strtemp,'tracking'))
-                if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
-                    strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/double(strtemp.tracking.args{1}.fps);
+                strtemp = unpackTracking(pth, strtemp, trackList, trackFile);
+            
+                % everything that follows is shameful hacks!
+                % we need a better way to get timestamps for the tracking data...
+                if(isfield(strtemp,'tracking'))
+                    if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
+                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/double(strtemp.tracking.args{1}.fps);
 
-                elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
-                    strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
+                    elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
+                        strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
 
-                elseif isfield(strtemp.tracking.args{1},'fps')
-                    if length(fieldnames(strtemp.tracking.args{1}))==2
-                        datafield = setdiff(fieldnames(strtemp.tracking.args{1}),'fps');
-                    elseif isfield(strtemp.tracking.args{1},'data') 
-                        datafield = 'data';
-                    elseif isfield(strtemp.tracking.args{1},'data_smooth')
-                        datafield = 'data_smooth';
-                    else
-                        f = fieldnames(strtemp.tracking.args{1});
-                        ans = inputdlg('Which field holds the tracking data?');
-                        if isfield(strtemp.tracking.args{1},ans{:})
-                            datafield = ans{:};
-                        else
-                            datafield = [];
-                        end
-                    end
-                    if datafield
-                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(datafield)))/double(strtemp.tracking.args{1}.fps);
-                    end
-
-                else
-                    if(~isempty(data{i,match.Behavior_movie}) && length(strtemp.io.movie.fid)==1)
-                        if(~strcmpi(strtemp.io.movie.fid{1}(end-2:end),'seq'))
-                            timestamps = getVideoTimestamps(strtemp.io.movie.fid{1});
-                        else
-                            temp         	= seqIo(data.io.movie.fid{1},'reader');
-                            disp('getting timestamps...');
-                            timestamps = getSeqTimestamps(data.io.movie.fid{1},temp);
-                        end
-                        if(timestamps)
-                            strtemp.trackTime = timestamps;
-                            continue;
-                        end
-                    end
-                    
-                    % I give up, let's just ask the user
-                    ans = inputdlg('What''s the framerate of the tracking data?');
-                    fps = str2num(ans{:});
-                    
-                    if isnumeric(strtemp.tracking.args{1})
-                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}))/fps;
-                    elseif length(fieldnames(strtemp.tracking.args{1}))==1
-                        f = fieldnames(strtemp.tracking.args{1});
-                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(f{:})))/fps;
-                    elseif length(fieldnames(strtemp.tracking.args{1}))==2
-                        if isfield(strtemp.tracking.args{1},'data')
-                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.data))/fps;
+                    elseif isfield(strtemp.tracking.args{1},'fps')
+                        if length(fieldnames(strtemp.tracking.args{1}))==2
+                            datafield = setdiff(fieldnames(strtemp.tracking.args{1}),'fps');
+                        elseif isfield(strtemp.tracking.args{1},'data') 
+                            datafield = 'data';
                         elseif isfield(strtemp.tracking.args{1},'data_smooth')
-                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.data_smooth))/fps;
-                        elseif isfield(strtemp.tracking.args{1},'features')
-                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.features))/fps;
+                            datafield = 'data_smooth';
+                        else
+                            f = fieldnames(strtemp.tracking.args{1});
+                            ans = inputdlg('Which field holds the tracking data?');
+                            if isfield(strtemp.tracking.args{1},ans{:})
+                                datafield = ans{:};
+                            else
+                                datafield = [];
+                            end
+                        end
+                        if datafield
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(datafield)))/double(strtemp.tracking.args{1}.fps);
+                        end
+
+                    else
+                        if(~isempty(data{i,match.Behavior_movie}) && length(strtemp.io.movie.fid)==1)
+                            if(~strcmpi(strtemp.io.movie.fid{1}(end-2:end),'seq'))
+                                timestamps = getVideoTimestamps(strtemp.io.movie.fid{1});
+                            else
+                                temp         	= seqIo(strtemp.io.movie.fid{1},'reader');
+                                disp('getting timestamps...');
+                                timestamps = getSeqTimestamps(strtemp.io.movie.fid{1},temp);
+                            end
+                            if(timestamps)
+                                strtemp.trackTime = timestamps;
+                                continue;
+                            end
+                        end
+
+                        % I give up, let's just ask the user
+                        ans = inputdlg('What''s the framerate of the tracking data?');
+                        fps = str2num(ans{:});
+
+                        if isnumeric(strtemp.tracking.args{1})
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}))/fps;
+                        elseif length(fieldnames(strtemp.tracking.args{1}))==1
+                            f = fieldnames(strtemp.tracking.args{1});
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(f{:})))/fps;
+                        elseif length(fieldnames(strtemp.tracking.args{1}))==2
+                            if isfield(strtemp.tracking.args{1},'data')
+                                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.data))/fps;
+                            elseif isfield(strtemp.tracking.args{1},'data_smooth')
+                                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.data_smooth))/fps;
+                            elseif isfield(strtemp.tracking.args{1},'features')
+                                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.features))/fps;
+                            end
                         end
                     end
                 end
             end
+            
         else
             strtemp.tracking.args = [];
         end

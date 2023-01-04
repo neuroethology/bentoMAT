@@ -55,6 +55,11 @@ h.K     = uicontrol('Parent',h.ctrls,'Style','popup',...
             'fontsize',10);
         
 visBhv = ~isempty(gui.annot.channels); % if there are annotations
+if visBhv
+    visBhv = 'on';
+else
+    visBhv = 'off';
+end
 %prompt whether to filter by behavior:
 uicontrol('Parent',h.ctrls,'Style','text','horizontalalign','right',...
             'String','Use subset of frames:',...

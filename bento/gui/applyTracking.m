@@ -84,13 +84,17 @@ for trackFile = 1:length(gui.data.tracking.args)
 
             end
             if(any(isnan(pts{j}(i:i+1)))), continue; end
-            if(~(isnan(pts{j}(length(pts{j})-1)) & isnan(pts{j}(length(pts{j})))))
+            if(~(isnan(pts{j}(length(pts{j})-1)) && isnan(pts{j}(length(pts{j})))))
                 movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) gui.config.ptSize],'color',c);
             end
         end
-        
+    end
+    
+    for j=1:length(pts)    
         if(any(isnan(pts{j}(1:2)))), continue; end
-        movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize],'color','red','opacity',1);
+        if j==1 || pts{j}(1)~=pts{j-1}(1)
+            movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize*2],'color','red','opacity',1);
+        end
         
         if(gui.config.trackingText)
             textPos  = [pts{j}(2:3).*scale(1:2)] + .005*size(movies{rr,cc},1)*[1 1];

@@ -13,7 +13,9 @@ if(isfield(gui,'data'))
         end
     end
 else
-    data.tracking.fun = promptTrackType();
+    if ~isfield(data.tracking,'fun') || isempty(data.tracking.fun)
+        data.tracking.fun = promptTrackType();
+    end
     if(~isfield(data,'trackTime'))
         data.trackTime=[];
     end
