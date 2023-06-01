@@ -36,7 +36,7 @@ for ii = 1:length(m)
             else
                 [p,q]   = rat(useFR/gui.data.CaFR);
             end
-            sig     = resample(sig,p,q);
+            sig     = my_resample(sig,p,q);
 
         case 'u' % unit: across trials no, across channels no
             usecolor = 'k';
@@ -49,7 +49,7 @@ for ii = 1:length(m)
             else
                 [p,q]   = rat(useFR/gui.data.CaFR);
             end
-            sig     = resample(sig,p,q);
+            sig     = my_resample(sig,p,q);
 
         case 'b' % behavior: across trials yes, across channels yes
             plotTraces = 0;
@@ -83,7 +83,7 @@ for ii = 1:length(m)
             else
                 [p,q]   = rat(useFR/gui.data.CaFR);
             end
-                sig     = resample(sig,p,q);
+                sig     = my_resample(sig,p,q);
             else
                 sig = zeros(1,length(gui.data.trackTime));
             end
