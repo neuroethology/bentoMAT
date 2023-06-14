@@ -77,11 +77,11 @@ for ii = 1:length(m)
                 sig     = squeeze(data.tracking.features{chnum}(:,featnum));
                 trackFR = 1/(gui.data.trackTime(2) - gui.data.trackTime(1));
             if useFR >= gui.data.CaFR*.999
-                useFR = min(useFR,gui.data.CaFR);
+                useFR = min(useFR,trackFR);
                 h.bin.String = num2str(1/useFR);
                 p=1;q=1;
             else
-                [p,q]   = rat(useFR/gui.data.CaFR);
+                [p,q]   = rat(useFR/trackFR);
             end
                 sig     = my_resample(sig,p,q);
             else
@@ -118,8 +118,14 @@ for ii = 1:length(m)
     teB     = find(dt==-1);
 
     % find the trigger frames for the plotted trace
-    tb      = round(tbB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR); % resample and apply any offset between bhvr and neural data
-    te      = round(teB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR);
+    if isempty(data.CaTime)
+        tb      = round(tbB*useFR/data.annoFR); 
+        te      = round(teB*useFR/data.annoFR);
+    else
+        tb      = round(tbB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR); % resample and apply any offset between bhvr and neural data
+        te      = round(teB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR);
+    end
+
     if(isempty(tb)), continue; end
 
     if(te(1)<tb(1)), te(1) = []; end
