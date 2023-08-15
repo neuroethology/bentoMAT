@@ -9,7 +9,7 @@ function [rast,time,spikes,ROIs] = unpackCaData(pth)
 [~,fname,ext] = fileparts(pth);
 disp(['Loading Ca file ' fname '...']);
 
-[rast,time,ROIs]=deal([]);
+[rast,time,ROIs,spikes]=deal([]);
 % add cases to this switch statement for other data types~?
 switch ext
     case '.csv'
@@ -21,13 +21,19 @@ switch ext
 %             rast(i+1,:) = temp{6}(temp{1}==i);
 %             rast(i+1,temp{5}(temp{1}==i)==0)=nan;
 %         end
-        temp = csvread(pth);
+%
+% prabhat FP:
+%         temp = csvread(pth);
+%         time = temp(:,1)';
+%         rast = temp(:,5)';
+%         % get rid of artifacts
+%         rast((1:500))    = nan;
+%         rast(end-119:end) = nan;
+%         spikes=[];
+    
+        temp = csvread(pth,2,0);
         time = temp(:,1)';
-        rast = temp(:,5)';
-        % get rid of artifacts
-        rast((1:500))    = nan;
-        rast(end-119:end) = nan;
-        spikes=[];
+        rast = temp(:,2:end)';
 
     case '.mat'
         temp = load(pth);

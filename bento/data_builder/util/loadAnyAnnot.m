@@ -11,29 +11,26 @@ loadRange = exist('tmin','var');
 hotkeys = struct();
 
 switch ext
-    case '.xls' %old .annot format
-    fid     = filename;
-    if(loadRange)
-        [annotations,~] = loadAnnotSheet(filename,tmin,tmax);
-    else
-        [annotations,tmax] = loadAnnotSheet(filename);
-        tmin = 1;
-    end
-    FR = nan; %framerate not specified in file- trust user input to gui
-    
     case '.annot' %new .annot format
-    fid = filename;
-    if(loadRange)
-        [annotations,~,~,FR] = loadAnnotSheetTxt(filename,tmin,tmax);
-    else
-        try
-        [annotations,tmin,tmax,FR] = loadAnnotSheetTxt(filename);
-        catch
-            keyboard
-            [annotations,tmax,tmin,fid,hotkeys] = deal([]);
-            errordlg(['Couldn''t load annotation file at ' filename]);
+        fid = filename;
+        if(loadRange)
+            [annotations,~,~,FR] = loadAnnotSheetTxt(filename,tmin,tmax);
+        else
+            try
+            [annotations,tmin,tmax,FR] = loadAnnotSheetTxt(filename);
+            catch
+                [annotations,tmax,tmin,fid,hotkeys] = deal([]);
+                errordlg(['Couldn''t load annotation file at ' filename]);
+            end
         end
-    end
+    case {'.xls', '.xlsx'}
+        fid     = filename;
+        if(loadRange)
+            [annotations, ~, hotkeys, FR] = loadAnnotFileXls(filename, defaultFR, tmin, tmax);
+        else
+            [annotations,tmax,hotkeys,FR] = loadAnnotFileXls(filename, defaultFR);
+            tmin = 1;
+        end
 %     case 'csv' %temporary MUPET support
 %         fid = filename;
 %         M = dlmread(filename,',',1,0);
@@ -42,7 +39,7 @@ switch ext
 %         tmin = 1;
 %         tmax = length(strtemp.audio.t);
     
-    case '.txt' %load data in the old format, OR ETHOVISION, prepare to convert to sheet format when saved
+    case '.txt'
     fid = filename;
     if(loadRange)
         [annotations,~,hotkeys,FR]    = loadAnnotFile(filename,defaultFR, tmin,tmax);
@@ -52,4 +49,5 @@ switch ext
     end
     otherwise
         [annotations,tmax,tmin,fid,hotkeys] = deal([]);
+        errordlg(['Unrecognized extension for annotation file ' filename]);
 end
