@@ -31,6 +31,18 @@ switch ext
             [annotations,tmax,hotkeys,FR] = loadAnnotFileXls(filename, defaultFR);
             tmin = 1;
         end
+    case '.csv'  % Erin's grouped sequences
+        fid = filename;
+        M = dlmread(filename,',',1,0);
+        FR = 1024;  % 1024 is the framerate I use for deepsqueak
+        t_start = ceil(M(:,3)*FR);
+        t_stop = ceil(M(:,4)*FR);
+        drop = M(:,6)<3;
+        t_start(drop)=[];
+        t_stop(drop)=[];
+        tmin = 1;
+        tmax = t_stop(end);
+        annotations.USV_clusters.bouts = [t_start t_stop];
 %     case 'csv' %temporary MUPET support
 %         fid = filename;
 %         M = dlmread(filename,',',1,0);
