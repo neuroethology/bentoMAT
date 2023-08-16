@@ -103,6 +103,15 @@ for i = 1:length(data.tracking.args)
         end
     end
 end
+if(isempty(data.trackTime))
+    if(any(contains(fieldnames(data.tracking.args{1}),'fps')))
+        fps = double(data.tracking.args{1}.fps);
+        data.trackTime = (1:length(data.tracking.features{1}))/fps;
+    else
+        FR = inputdlg('Enter tracking framerate in Hz:');
+        data.trackTime = (1:length(data.tracking.features{1}))/FR;
+    end
+end
 
 if(count>0)
     gui.features.channels.String    = cellstr(strcat('Ch',num2str((1:length(data.tracking.features))')));
