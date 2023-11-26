@@ -22,6 +22,11 @@ for i = 1:nfeat
     
     lim = [min(reshape(gui.data.tracking.features{gui.features.feat(i).ch}(:,gui.features.feat(i).featNum),1,[])) ...
             max(reshape(gui.data.tracking.features{gui.features.feat(i).ch}(:,gui.features.feat(i).featNum),1,[]))];
+    if (lim(2)-lim(1))==0
+        lim = lim + mean(abs(lim))*[-1 1]/100;
+    else
+        lim = lim + range(lim)*[-1 1]/100;
+    end
     set(gui.features.feat(i).axes,'ylim',lim);
     set(gui.features.feat(i).zeroLine,'ydata',lim);
 

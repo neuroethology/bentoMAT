@@ -14,7 +14,7 @@ else
 end
 
 
-if(gui.enabled.movie(1))
+if(gui.enabled.movie(2))
     % check which movie we're plotting tracking on
     [rr,cc] = identifyTrackedMovie(gui.data);
     
@@ -23,7 +23,7 @@ if(gui.enabled.movie(1))
             info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
             frnum = info.curFrame+1;
         case 'vid'
-            frnum = round(time * gui.data.io.movie.reader{rr,cc}.FrameRate);
+            frnum = round(time * gui.data.io.movie.reader{rr,cc}.reader.FrameRate)+1;
     end
     if(frnum<2)
         return;
@@ -55,7 +55,7 @@ for trackFile = 1:length(gui.data.tracking.args)
         color = {'green','blue','red','magenta','yellow','cyan'};
     end
     if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
-        dims = [gui.data.io.movie.reader{1}.width];
+        dims = [gui.data.io.movie.reader{1}.reader.width];
         if(dims(1)~=max(dims))
             pad = (max(dims)-dims(1))/2;
             for i=1:length(pts)
@@ -84,13 +84,17 @@ for trackFile = 1:length(gui.data.tracking.args)
 
             end
             if(any(isnan(pts{j}(i:i+1)))), continue; end
-            if(~(isnan(pts{j}(length(pts{j})-1)) & isnan(pts{j}(length(pts{j})))))
+            if(~(isnan(pts{j}(length(pts{j})-1)) && isnan(pts{j}(length(pts{j})))))
                 movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(length(pts{j})-1:length(pts{j})).*scale(1:2) gui.config.ptSize],'color',c);
             end
         end
-        
+    end
+    
+    for j=1:length(pts)    
         if(any(isnan(pts{j}(1:2)))), continue; end
-        movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize],'color','red','opacity',1);
+        if j==1 || pts{j}(1)~=pts{j-1}(1)
+            movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize*2],'color','red','opacity',1);
+        end
         
         if(gui.config.trackingText)
             textPos  = [pts{j}(2:3).*scale(1:2)] + .005*size(movies{rr,cc},1)*[1 1];

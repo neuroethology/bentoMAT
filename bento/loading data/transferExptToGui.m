@@ -15,7 +15,13 @@ if(iscell(data))
         raw{1,1} = uigetdir(pwd,'Please provide the path to your data''s parent directory!');
     end
 else
-    [~,~,raw]   = xlsread(data,'Sheet1');
+    if ismac | isunix
+        raw   = readcell(data);
+        raw(cellfun(@(x) any(ismissing(x)), raw)) = {NaN};
+    elseif ispc
+        [~,~,raw]   = xlsread(data,'Sheet 1');
+    end
+    
     if(isempty(raw{1,1})|isnan(raw{1,1}))
         pth = fileparts(data);
         raw{1,1} = [pth filesep]; %blank path means read from the directory the sheet is in

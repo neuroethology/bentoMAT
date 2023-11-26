@@ -86,7 +86,11 @@ if(all(gui.enabled.movie)||all(gui.enabled.tracker))
         mov = combineBehMovieFrames(gui,mov,time);
     else
         if(gui.enabled.movie(1))
-            mov = ones(gui.data.io.movie.reader{1,1}.width,gui.data.io.movie.reader{1,1}.height,'uint8')*255;
+            if strcmpi(gui.data.io.movie.readertype{1},'seq')
+                mov = ones(gui.data.io.movie.reader{1,1}.reader.getinfo().height,gui.data.io.movie.reader{1,1}.reader.getinfo().width,'uint8')*255;
+            else
+                mov = ones(1024,1024,'uint8')*255;
+            end
         else
             mov = ones(1024,1024,'uint8')*255;
         end

@@ -7,11 +7,13 @@ if length(f)>1
 	names = '';
 	return
 end
-	
-if size(args.(f{:}),2)==1
-	features = permute(double(args.(f{:})'),[3,1,2]);
-else
+
+num_feats = min(size(args.(f{:})));
+
+if size(args.(f{:}),2)==num_feats
 	features = permute(double(args.(f{:})),[3,1,2]);
+else
+	features = permute(double(args.(f{:})'),[3,1,2]);
 end
 
-names = f{:};
+names = strcat([f{:} '-'], num2str((1:num_feats)'));

@@ -64,6 +64,15 @@ switch ext
         [annotations,tmax,hotkeys,FR] = loadAnnotFile(filename, defaultFR);
         tmin = 1;
     end
+    
+    case '.csv' % csv table for sebastian
+        fid = filename;
+        if(loadRange)
+            [annotations,~,~,hotkeys,FR] = loadAnnotCSV(filename, defaultFR, tmin, tmax);
+        else
+            [annotations,tmin,tmax,hotkeys,FR] = loadAnnotCSV(filename, defaultFR);
+        end
+        
     otherwise
         [annotations,tmax,tmin,fid,hotkeys] = deal([]);
         errordlg(['Unrecognized extension for annotation file ' filename]);

@@ -71,7 +71,8 @@ if(chInds(end)~=length(M))
     chInds = [chInds length(M)];
 end
 
-M2 = cellfun(@str2num,M,'UniformOutput',false);
+M2 = cellfun(@(x) regexprep(x,'[a-zA-Z]',''),M,'uniformoutput',false);
+M2 = cellfun(@str2num,M2,'UniformOutput',false);
 M2 = M2(~cellfun(@isempty,M2));
 M2 = cellfun(@(x) x(1),M2);
 isTime = any(floor(M2)~=M2); % if any of our event starts is a decimal, assume it's times not frames

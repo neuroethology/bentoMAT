@@ -29,19 +29,27 @@ for ii = 1:length(m)
             usecolor = 'k';
             sig     = nanmean(data.rast);
             sig     = nan_fill(sig);
-            useFR = min(useFR,gui.data.CaFR);
-            h.bin.String = num2str(1/useFR);
-            [p,q]   = rat(useFR/gui.data.CaFR);
-            sig     = resample(sig,p,q);
+            if useFR >= gui.data.CaFR*.999
+                useFR = min(useFR,gui.data.CaFR);
+                h.bin.String = num2str(1/useFR);
+                p=1;q=1;
+            else
+                [p,q]   = rat(useFR/gui.data.CaFR);
+            end
+            sig     = my_resample(sig,p,q);
 
         case 'u' % unit: across trials no, across channels no
             usecolor = 'k';
             sig     = data.rast(h.unit.Value - 1,:);
             sig     = nan_fill(sig);
-            useFR = min(useFR,gui.data.CaFR);
-            h.bin.String = num2str(1/useFR);
-            [p,q]   = rat(useFR/gui.data.CaFR);
-            sig     = resample(sig,p,q);
+            if useFR >= gui.data.CaFR*.999
+                useFR = min(useFR,gui.data.CaFR);
+                h.bin.String = num2str(1/useFR);
+                p=1;q=1;
+            else
+                [p,q]   = rat(useFR/gui.data.CaFR);
+            end
+            sig     = my_resample(sig,p,q);
 
         case 'b' % behavior: across trials yes, across channels yes
             plotTraces = 0;
@@ -68,13 +76,20 @@ for ii = 1:length(m)
                 [gui,data] = loadCurrentFeatures(gui,data);
                 sig     = squeeze(data.tracking.features{chnum}(:,featnum));
                 trackFR = 1/(gui.data.trackTime(2) - gui.data.trackTime(1));
+            if useFR >= gui.data.CaFR*.999
                 useFR = min(useFR,trackFR);
                 h.bin.String = num2str(1/useFR);
+                p=1;q=1;
+            else
                 [p,q]   = rat(useFR/trackFR);
-                sig     = resample(sig,p,q);
+            end
+                sig     = my_resample(sig,p,q);
             else
                 sig = zeros(1,length(gui.data.trackTime));
             end
+    end
+    if(size(sig,2)==1)
+        sig=sig';
     end
 
     win  = round(-str2double(h.pre.String)*useFR):round(str2double(h.post.String)*useFR);
@@ -103,14 +118,27 @@ for ii = 1:length(m)
     teB     = find(dt==-1);
 
     % find the trigger frames for the plotted trace
-    tb      = round(tbB*useFR/data.annoFR);
-    te      = round(teB*useFR/data.annoFR);
+    if isempty(data.CaTime)
+        tb      = round(tbB*useFR/data.annoFR); 
+        te      = round(teB*useFR/data.annoFR);
+    else
+        tb      = round(tbB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR); % resample and apply any offset between bhvr and neural data
+        te      = round(teB*useFR/data.annoFR + (data.annoTime(1)-data.CaTime(1))*useFR);
+    end
+
     if(isempty(tb)), continue; end
 
     if(te(1)<tb(1)), te(1) = []; end
     if(length(te)<length(tb)), tb(end) = []; end
     if(teB(1)<tbB(1)), teB(1) = []; end
     if(length(teB)<length(tbB)), tbB(end) = []; end
+    
+    % drop bouts that happen before the recording
+    drop = find(tb<0 | te<0);
+    tb(drop)=[];
+    te(drop)=[];
+    tbB(drop)=[];
+    teB(drop)=[];
 
     % merge bouts that are close together
     drop = find((tb(2:end)-te(1:end-1)) < merge);
@@ -192,10 +220,12 @@ SEM  = 1/sqrt(max(length(use),1));
 time = win/useFR;
 if(size(BTA,1)>1)
     drawvar(time,BTA,usecolor,SEM);
+    xlim(time([1 end]))
     p(1) = min(min(nanmean(BTA) - nanstd(BTA)*SEM),0);
-    p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM)*1.05 + eps;
+    p(2) = max(nanmean(BTA) + nanstd(BTA)*SEM) + max(abs(nanstd(BTA)*SEM))*0.1 + eps;
 else
     plot(time,BTA,'color',usecolor);
+    xlim(time([1 end]))
     p(1) = min([BTA 0]);
     p(2) = max(BTA)+eps;
 end

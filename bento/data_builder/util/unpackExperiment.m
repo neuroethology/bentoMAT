@@ -207,11 +207,19 @@ for i=1:size(data,1)
                             catch
                                 error(['I wasn''t able to find/load a video at: ' strtemp.io.movie.fid{j}]);
                             end
-                            timestamps = getVideoTimestamps(fileparts(strtemp.io.movie.fid{j}));
-                            if timestamps % check for timestamp files
-                                tmax = min([tmax timestamps(end)]);
+                            timestamps = getVideoTimestamps(strtemp.io.movie.fid{j});
+                            if timestamps % check for timestamp files, update movie data accordingly
+                                tmax = min([tmax length(timestamps)]);
+                                strtemp.io.movie.FR = 1/mean(timestamps(2:end)-timestamps(1:end-1));
                             else
                                 tmax = min([tmax round(info.Duration*info.FrameRate)]);
+                            end
+                            if(~isempty(data{i,match.Calcium_imaging_file}) && isempty(strtemp.CaTime)) % hack to check for accompanying Ca timestamps :[
+                                timestamps = getVideoTimestamps(strtemp.io.movie.fid{j},'_Ca');
+                                if timestamps
+                                    strtemp.CaTime = timestamps(1:length(strtemp.rast))';
+                                    strtemp.CaFR = 1/mean(timestamps(2:end)-timestamps(1:end-1));
+                                end
                             end
                         end
                 end
@@ -229,59 +237,72 @@ for i=1:size(data,1)
         if(~isempty(data{i,match.Tracking}))
             trackList = strsplit(data{i,match.Tracking},';');
             for trackFile = 1:length(trackList)
-                fid = [pth strip(strip(trackList{trackFile},'left','.'),'left',filesep)];
-                [~,~,ext] = fileparts(fid);
-                
-                if(strcmpi(ext,'.mat'))
-                    temp = load(fid); %virtual load would be faster/more memory friendly, but laggier
-%                     f = fieldnames(temp);
-%                     if(length(f)==2) %what is this for? i forget.
-%                         temp=temp.(f{2});
-%                     elseif(length(f)==1)
-%                         temp = temp.(f{1});
-%                     end
-                    strtemp.tracking.args{trackFile} = temp;
-                    strtemp.io.feat.fid{trackFile} = fid;
-                    
-                elseif(strcmpi(ext,'.json'))
-                    if(exist('jsondecode','builtin'))
-                        disp('loading tracking data');
-                        strtemp.tracking.args{trackFile} = jsondecode(fileread(fid));
-                    elseif(exist('loadjson','file'))
-                        disp('Using loadjson.')
-                        strtemp.tracking.args{trackFile} = loadjson(fid);
+                strtemp = unpackTracking(pth, strtemp, trackList, trackFile);
+            
+                % everything that follows is shameful hacks!
+                % we need a better way to get timestamps for the tracking data...
+                if(isfield(strtemp,'tracking'))
+                    if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
+                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/double(strtemp.tracking.args{1}.fps);
+
+                    elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
+                        strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
+
+                    elseif isfield(strtemp.tracking.args{1},'fps')
+                        if length(fieldnames(strtemp.tracking.args{1}))==2
+                            datafield = setdiff(fieldnames(strtemp.tracking.args{1}),'fps');
+                        elseif isfield(strtemp.tracking.args{1},'data') 
+                            datafield = 'data';
+                        elseif isfield(strtemp.tracking.args{1},'data_smooth')
+                            datafield = 'data_smooth';
+                        else
+                            f = fieldnames(strtemp.tracking.args{1});
+                            ans = inputdlg('Which field holds the tracking data?');
+                            if isfield(strtemp.tracking.args{1},ans{:})
+                                datafield = ans{:};
+                            else
+                                datafield = [];
+                            end
+                        end
+                        if datafield
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(datafield)))/double(strtemp.tracking.args{1}.fps);
+                        end
+
                     else
-                        disp('Please download jsonlab (https://github.com/fangq/jsonlab) or upgrade to Matlab 2016b or later.')
-                        strtemp.tracking.args{trackFile} = [];
+                        if(~isempty(data{i,match.Behavior_movie}) && length(strtemp.io.movie.fid)==1)
+                            if(~strcmpi(strtemp.io.movie.fid{1}(end-2:end),'seq'))
+                                timestamps = getVideoTimestamps(strtemp.io.movie.fid{1});
+                            else
+                                temp         	= seqIo(strtemp.io.movie.fid{1},'reader');
+                                disp('getting timestamps...');
+                                timestamps = getSeqTimestamps(strtemp.io.movie.fid{1},temp);
+                            end
+                            if(timestamps)
+                                strtemp.trackTime = timestamps;
+                                continue;
+                            end
+                        end
+
+                        % I give up, let's just ask the user
+                        ans = inputdlg('What''s the framerate of the tracking data?');
+                        fps = str2num(ans{:});
+
+                        if isnumeric(strtemp.tracking.args{1})
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}))/fps;
+                        elseif length(fieldnames(strtemp.tracking.args{1}))==1
+                            f = fieldnames(strtemp.tracking.args{1});
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.(f{:})))/fps;
+                        elseif length(fieldnames(strtemp.tracking.args{1}))==2
+                            if isfield(strtemp.tracking.args{1},'data')
+                                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.data))/fps;
+                            elseif isfield(strtemp.tracking.args{1},'data_smooth')
+                                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.data_smooth))/fps;
+                            elseif isfield(strtemp.tracking.args{1},'features')
+                                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.features))/fps;
+                            end
+                        end
                     end
-                    strtemp.io.feat.fid{trackFile} = fid;
-                    
-                elseif(strcmpi(ext,'.h5')) %DeepLabCut or JAX output
-                    trackType = promptTrackType({'JAX','DLC'});
-                    strtemp.tracking.fun = trackType;
-                    if contains(trackType,'DLC')
-                        args = h5read(fid,'/df_with_missing/table');
-                        strtemp.tracking.args{trackFile} = args.values_block_0;
-                    elseif contains(trackType,'JAX')
-                        args = struct();
-                        args.points = h5read(fid,'/poseest/points');
-                        args.ids = h5read(fid,'/poseest/instance_track_id');
-                        strtemp.tracking.args{trackFile} = args;
-                        strtemp.trackTime = (1:length(strtemp.tracking.args{1}.ids))/30;
-                    end
-                    
-                elseif(strcmpi(ext,'.csv')) %also DeepLabCut output
-                    args = xlsread(fid);
-                    strtemp.tracking.args{trackFile} = args';
                 end
-            end
-            % we need a better way to get timestamps for the tracking data...
-            if(isfield(strtemp.tracking.args{1},'keypoints') && isfield(strtemp.tracking.args{1},'fps'))
-                strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/strtemp.tracking.args{1}.fps;
-            
-            
-            elseif(isfield(strtemp.tracking.args{1},'tMax')) %hacks for jellyfish
-                strtemp.trackTime = (1:strtemp.tracking.args{1}.tMax)/strtemp.CaFR;
             end
             
         else
@@ -371,9 +392,10 @@ for i=1:size(data,1)
         strtemp.io.annot        = struct();
         strtemp.io.annot.fid    = [];
         strtemp.io.annot.tmin   = strtemp.io.movie.tmin;
-        strtemp.io.annot.tmax   = ceil(strtemp.io.movie.tmax * strtemp.annoFR/strtemp.io.movie.FR);
         strtemp.io.annot.FR     = strtemp.io.movie.FR;
         strtemp.annoFR          = strtemp.io.movie.FR; % change default annotation framerate to match the movie
+        strtemp.io.annot.tmax   = ceil(strtemp.io.movie.tmax * strtemp.annoFR/strtemp.io.movie.FR);
+        strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annot           = struct();
         strtemp.annoTime        = (strtemp.io.annot.tmin:strtemp.io.annot.tmax)/strtemp.io.annot.FR;
         
@@ -384,16 +406,18 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = ceil(strtemp.audio.tmax * strtemp.annoFR/strtemp.audio.FR);
         strtemp.io.annot.FR     = strtemp.audio.FR;
         strtemp.annoFR          = strtemp.io.movie.FR; % change default annotation framerate to match the audio
+        strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
         strtemp.annot           = struct();
            
-    elseif(~isempty(data{i,match.Tracking}))
+    elseif(~isempty(data{i,match.Tracking}) && ~isempty(strtemp.trackTime))
         strtemp.io.annot        = struct();
         strtemp.io.annot.fid    = [];
         strtemp.io.annot.tmin   = 1;
         strtemp.io.annot.tmax   = length(strtemp.trackTime);
         strtemp.io.annot.FR     = 1/(strtemp.trackTime(2)-strtemp.trackTime(1));
         strtemp.annoFR          = 1/(strtemp.trackTime(2)-strtemp.trackTime(1));
+        strtemp.annoFR_source = strtemp.annoFR;
         strtemp.annoTime        = strtemp.io.annot.tmin:(1/strtemp.annoFR):strtemp.io.annot.tmax;
         strtemp.annot           = struct();
     else
@@ -405,7 +429,12 @@ for i=1:size(data,1)
         strtemp.io.annot.tmax   = length(strtemp.CaTime);
         strtemp.io.annot.FR     = strtemp.CaFR;
         strtemp.annoFR          = strtemp.CaFR;
+        strtemp.annoFR_source = strtemp.annoFR;
     end
     
+    try
     mouse(data{i,match.Mouse}).(['session' num2str(data{i,match.Sessn})])(data{i,match.Trial}) = strtemp;
+    catch
+        keyboard
+    end
 end

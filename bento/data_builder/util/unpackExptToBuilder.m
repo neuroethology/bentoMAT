@@ -9,7 +9,13 @@ else
     useSource = source.Parent;
 end
 
-[~,~,raw] = xlsread(pth,'Sheet1'); %load the excel sheet
+% [~,~,raw] = xlsread(pth,'Sheet1'); %load the excel sheet
+if ismac | isunix
+        raw   = readcell(pth);
+        raw(cellfun(@(x) any(ismissing(x)), raw)) = {NaN};
+elseif ispc
+        [~,~,raw]   = xlsread(pth,'Sheet 1');
+end
 
 % fix nans/filename formatting issues
 raw(cellfun(@isstr,raw)) = strrep(raw(cellfun(@isstr,raw)),'/',filesep);

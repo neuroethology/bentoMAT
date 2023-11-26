@@ -40,6 +40,8 @@ if(h.subset.Value)
     mask = imresize(mask,[1 length(rast)])>0.5;
     rast = rast(:,mask);
 end
+nanmask = any(isnan(rast));
+rast = rast(:,~nanmask);
 
 % zscore if requested:
 if(h.zscore.Value)

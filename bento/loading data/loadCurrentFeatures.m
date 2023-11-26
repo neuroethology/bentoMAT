@@ -13,16 +13,23 @@ if(isfield(gui,'data'))
         end
     end
 else
-    data.tracking.fun = promptTrackType();
+    if ~isfield(data.tracking,'fun') || isempty(data.tracking.fun)
+        data.tracking.fun = promptTrackType();
+    end
+    if(~isfield(data,'trackTime'))
+        data.trackTime=[];
+    end
     if(isempty(data.tracking.fun))
         gui.enabled.tracker = [0 0];
     elseif(isfield(data.io.movie,'reader'))
         [rr,cc] = identifyTrackedMovie(data);
-        if(isfield(data.io.movie.reader{rr,cc},'TS'))
+        if(isfield(data.io.movie.reader{rr,cc},'TS') && isempty(data.trackTime))
             data.trackTime = data.io.movie.reader{rr,cc}.TS;
         end
+    elseif(~isempty(data.annot) && isempty(data.trackTime))
+        data.trackTime = data.annoTime;
     else
-%         data.trackTime = data.annoTime;
+        data.trackTime = [];
     end
 end
 
@@ -34,7 +41,10 @@ if(strcmpi(data.tracking.fun,'generic_timeseries'))
 else
     addFeats=false(size(data.tracking.args));
     for i = 1:length(data.tracking.args)
-        addFeats(i) = isfield(data.tracking.args{i},'features') || contains(data.tracking.fun,'EMG') || contains(data.tracking.fun,'jelly');
+        addFeats(i) = isfield(data.tracking.args{i},'features') ...
+                        || contains(data.tracking.fun,'EMG') ...
+                        || contains(data.tracking.fun,'jelly') ...
+                        || contains(data.tracking.fun,'SimBA');
     end
 end
 
@@ -91,6 +101,15 @@ for i = 1:length(data.tracking.args)
             data.tracking.features{count} = squeeze(formattedFeats(j,:,:));
             formattedFeatNames{count} = allfeats{i}.featnames;
         end
+    end
+end
+if(isempty(data.trackTime))
+    if(any(contains(fieldnames(data.tracking.args{1}),'fps')))
+        fps = double(data.tracking.args{1}.fps);
+        data.trackTime = (1:length(data.tracking.features{1}))/fps;
+    else
+        FR = inputdlg('Enter tracking framerate in Hz:');
+        data.trackTime = (1:length(data.tracking.features{1}))/FR;
     end
 end
 

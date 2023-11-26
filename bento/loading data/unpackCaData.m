@@ -21,19 +21,20 @@ switch ext
 %             rast(i+1,:) = temp{6}(temp{1}==i);
 %             rast(i+1,temp{5}(temp{1}==i)==0)=nan;
 %         end
-%
-% prabhat FP:
-%         temp = csvread(pth);
-%         time = temp(:,1)';
-%         rast = temp(:,5)';
-%         % get rid of artifacts
-%         rast((1:500))    = nan;
-%         rast(end-119:end) = nan;
-%         spikes=[];
-    
-        temp = csvread(pth,2,0);
-        time = temp(:,1)';
-        rast = temp(:,2:end)';
+
+        temp = readtable(pth);
+        if(size(temp,2)==5) % it's an Anderson lab miniscope file
+            time = temp(:,1)';
+            rast = temp(:,5)';
+            % get rid of artifacts
+            rast((1:500))    = nan;
+            rast(end-119:end) = nan;
+        else % it's probably an inscopix csv
+            rast = table2array(temp)';
+            time = (rast(1,:)+rast(1,2));
+            rast = rast(2:end,:);
+        end
+        spikes=[];
 
     case '.mat'
         temp = load(pth);
@@ -69,6 +70,10 @@ switch ext
             rast = temp.(f{~strcmpi(f,'time')});
             spikes = [];
             time = temp.(f{strcpmi(f,'time')});
+        elseif any(strcmpi(f,'C')) && isstruct(temp.C) && isfield(temp.C,'data') % it's probably minian output
+            rast = temp.C.data;
+            spikes = [];
+            time = []; %look for miniscope_timeStamps.csv in same folder, and video_timeStamps.csv for behavior video
         else
             disp(['unsure which variable to read in ' fname]);
             rast = []; spikes=[];
@@ -80,6 +85,15 @@ switch ext
         rast = datapara.data';
         time=[];
         spikes=[];
+end
+
+if isempty(time)
+    time = getVideoTimestamps(pth);
+    if(time)
+        if(size(time,2)==1)
+            time=time';
+        end
+    end
 end
 
 disp('done');

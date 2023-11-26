@@ -1,4 +1,4 @@
-% function Labeling_functions(source)
+function Labeling_functions(source)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -38,7 +38,7 @@ uicontrol('Parent',h.ctrlsBox,'Style','pushbutton','horizontalalign','left',...
             'callback',{@addFeature,featList,gui});
 
 guidata(gcf,h);
-% end
+end
 
 function addFeature(source,~,featList,gui)
     h = guidata(source);

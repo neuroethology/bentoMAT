@@ -1,4 +1,4 @@
-function trackType = promptTrackType(custom_list)
+function trackType = promptTrackType(custom_list, filename)
 %
 % (C) Ann Kennedy, 2019
 % California Institute of Technology
@@ -17,7 +17,11 @@ else
     useList = trackerList;
 end
 
-[s,v] = listdlg('PromptString','Select tracking format:',...
+if ~exist('filename','var')
+    filename = '';
+end
+
+[s,v] = listdlg('PromptString',{'Specify format of file', filename},...
                 'SelectionMode','single',...
                 'ListSize',[160 100],...
                 'ListString',useList);

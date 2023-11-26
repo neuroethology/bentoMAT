@@ -1,5 +1,10 @@
 function pts = MARS(data,fr)
 
+    if ~isfield(data,'keypoints')
+        pts = {};
+        return
+    end
+    
     fr = min(fr,size(data.keypoints,1));
     if(iscell(data.keypoints)) %support for both jsondecode and loadjson
         v       = data.keypoints{fr};

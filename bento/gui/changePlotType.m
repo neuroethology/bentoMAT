@@ -97,8 +97,9 @@ function sm_rast = promptSmKernel(rast)
     
     switch smk
         case 'Gaussian'
-            sm_rast = smoothts(rast,'g',smw*5,smw);
+            sm_rast = smoothdata(rast','gaussian',smw)';
         case 'Exponential'
+            rast(isnan(rast))=0;
             sm_rast = smoothts([zeros(size(rast,1),1) rast],'e',smw);
             sm_rast = sm_rast(:,2:end);
     end
