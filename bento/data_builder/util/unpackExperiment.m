@@ -255,6 +255,8 @@ for i=1:size(data,1)
                             datafield = 'data';
                         elseif isfield(strtemp.tracking.args{1},'data_smooth')
                             datafield = 'data_smooth';
+                        elseif strcmpi(strtemp.tracking.fun,'SLEAP')
+                            datafield = 'tracks';
                         else
                             f = fieldnames(strtemp.tracking.args{1});
                             ans = inputdlg('Which field holds the tracking data?');
@@ -300,6 +302,8 @@ for i=1:size(data,1)
                             elseif isfield(strtemp.tracking.args{1},'features')
                                 strtemp.trackTime = (1:length(strtemp.tracking.args{1}.features))/fps;
                             end
+                        elseif any(contains(fieldnames(strtemp.tracking.args{1}),'keypoints'))
+                            strtemp.trackTime = (1:length(strtemp.tracking.args{1}.keypoints))/fps;
                         end
                     end
                 end

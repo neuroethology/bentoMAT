@@ -52,7 +52,7 @@ for trackFile = 1:length(gui.data.tracking.args)
         color = pts.color;
         pts = pts.pts;
     else
-        color = {'green','blue','red','magenta','yellow','cyan'};
+        color = {'green','cyan','red','magenta','yellow','blue'};
     end
     if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
         dims = [gui.data.io.movie.reader{1}.reader.width];
@@ -80,7 +80,7 @@ for trackFile = 1:length(gui.data.tracking.args)
                 movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(i:i+1).*scale(1:2) gui.config.ptSize],'color',c);
 
                 if(any(isnan(pts{j}(i:i+3)))), continue; end
-                movies{rr,cc} = insertShape(movies{rr,cc},'Line',pts{j}(i:i+3).*scale,'linewidth',2,'color',c);
+                movies{rr,cc} = insertShape(movies{rr,cc},'Line',pts{j}(i:i+3).*scale,'linewidth',1,'color',c);
 
             end
             if(any(isnan(pts{j}(i:i+1)))), continue; end
@@ -101,4 +101,14 @@ for trackFile = 1:length(gui.data.tracking.args)
             movies{rr,cc} = insertText(movies{rr,cc},textPos,num2str(j),'BoxColor','red','TextColor','white','FontSize',10);    
         end
     end
+
+    px = []; py = [];
+    for j = 1:length(pts)
+        px = [px pts{j}(2:2:end)];
+        py = [py pts{j}(3:2:end)];
+    end
+    ctr = [nanmedian(py) nanmedian(px)];
+    win = 150;
+%     movies{rr,cc} = movies{rr,cc}(max(ctr(1)-win,1) : min(ctr(1)+win, size(movies{rr,cc},1)), ...
+%                                   max(ctr(2)-win,1) : min(ctr(2)+win, size(movies{rr,cc},2)), :);
 end

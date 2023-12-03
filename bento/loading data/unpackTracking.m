@@ -44,6 +44,11 @@ elseif(strcmpi(ext,'.h5')) %DeepLabCut, JAX output, or SLEAP
         args.occupancy = h5read(fid,'/track_occupancy');
         args.tracks = h5read(fid,'/tracks');
         args.edges = double(h5read(fid,'/edge_inds'))+1;
+
+        ans = inputdlg('What''s the framerate of the tracking data?');
+        fps = str2num(ans{:});
+
+        args.fps = fps;
         strtemp.tracking.args{trackFile} = args;
         strtemp.tracking.fun = 'SLEAP';
         

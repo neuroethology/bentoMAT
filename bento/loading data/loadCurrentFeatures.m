@@ -28,8 +28,6 @@ else
         end
     elseif(~isempty(data.annot) && isempty(data.trackTime))
         data.trackTime = data.annoTime;
-    else
-        data.trackTime = [];
     end
 end
 
@@ -103,7 +101,7 @@ for i = 1:length(data.tracking.args)
         end
     end
 end
-if(isempty(data.trackTime))
+if(isempty(data.trackTime) && gui.enabled.features(1)==1)
     if(any(contains(fieldnames(data.tracking.args{1}),'fps')))
         fps = double(data.tracking.args{1}.fps);
         data.trackTime = (1:length(data.tracking.features{1}))/fps;
