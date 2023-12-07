@@ -36,7 +36,8 @@ for col = 1:size(movie.reader,1) %loop over loaded movies
                     time    = min(time, tMax);
                     frnum = round(time*reader{col,i}.reader.FrameRate);
                 end
-                reader{col,i}.reader.currentTime = min(time, reader{col,i}.reader.Duration - 1/reader{col,i}.reader.FrameRate);
+                reader{col,i}.reader.currentTime = min(time + 1/reader{col,i}.FrameRate, ...
+                                                    (reader{col,i}.NumFrames - 1)/reader{col,i}.FrameRate);
                 movies{col,i} = readFrame(reader{col,i}.reader);
 %                 movies{col,i} = read(reader{col,i},frnum);
 
