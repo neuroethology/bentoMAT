@@ -23,7 +23,8 @@ if(gui.enabled.movie(2))
             info = gui.data.io.movie.reader{rr,cc}.reader.getinfo();
             frnum = info.curFrame+1;
         case 'vid'
-            frnum = round(time * gui.data.io.movie.reader{rr,cc}.reader.FrameRate)+1;
+            frnum = round(time * gui.data.io.movie.reader{rr,cc}.reader.FrameRate);
+            frnum = round(gui.data.io.movie.reader{rr,cc}.reader.CurrentTime * gui.data.io.movie.reader{rr,cc}.reader.FrameRate);
     end
     if(frnum<2)
         return;
@@ -43,16 +44,16 @@ else
 end
 
 for trackFile = 1:length(gui.data.tracking.args)
-%     try
+    try
     eval(['pts = ' gui.data.tracking.fun '(gui.data.tracking.args{trackFile}, ' num2str(frnum) ' );']);
-%     catch
-%         keyboard
-%     end
+    catch
+        keyboard
+    end
     if(isstruct(pts))
         color = pts.color;
         pts = pts.pts;
     else
-        color = {'green','cyan','red','magenta','yellow','blue'};
+        color = {'green','cyan','red','magenta','yellow','white','blue'};
     end
     if(isfield(gui.data.io.movie,'fid') && length(gui.data.io.movie.fid)>1)
         dims = [gui.data.io.movie.reader{1}.reader.width];
@@ -92,9 +93,9 @@ for trackFile = 1:length(gui.data.tracking.args)
     
     for j=1:length(pts)    
         if(any(isnan(pts{j}(1:2)))), continue; end
-        if j==1 || pts{j}(1)~=pts{j-1}(1)
-            movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize*2],'color','red','opacity',1);
-        end
+%         if j==1 || pts{j}(1)~=pts{j-1}(1)
+%             movies{rr,cc} = insertShape(movies{rr,cc},trackMarker,[pts{j}(2:3).*scale(1:2) gui.config.ptSize*1.25],'color','red','opacity',1);
+%         end
         
         if(gui.config.trackingText)
             textPos  = [pts{j}(2:3).*scale(1:2)] + .005*size(movies{rr,cc},1)*[1 1];
