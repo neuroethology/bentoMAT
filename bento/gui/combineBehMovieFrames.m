@@ -8,9 +8,6 @@ function mov = combineBehMovieFrames(gui,movies,time)
 
 
 % add tracking data if included
-if(size(movies{1},1)==224)
-    movies{1} = imresize(movies{1},2);
-end
 if(all(gui.enabled.tracker))
     movies = applyTracking(gui,movies,time);
 end

@@ -238,6 +238,7 @@ for i=1:size(data,1)
             trackList = strsplit(data{i,match.Tracking},';');
             for trackFile = 1:length(trackList)
                 strtemp = unpackTracking(pth, strtemp, trackList, trackFile);
+                strtemp.io.movie.angles = [0 0 0 0 0 0];  % for rotating/shifting 3D pose data (can't figure out where else to put this)
             
                 % everything that follows is shameful hacks!
                 % we need a better way to get timestamps for the tracking data...
@@ -286,8 +287,8 @@ for i=1:size(data,1)
                         end
 
                         % I give up, let's just ask the user
-                        ans = inputdlg('What''s the framerate of the tracking data?');
-                        fps = str2num(ans{:});
+                        fps = inputdlg('What''s the framerate of the tracking data?');
+                        fps = str2num(fps{:});
 
                         if isnumeric(strtemp.tracking.args{1})
                             strtemp.trackTime = (1:length(strtemp.tracking.args{1}))/fps;
