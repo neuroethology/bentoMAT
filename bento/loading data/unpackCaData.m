@@ -77,7 +77,7 @@ switch ext
             mice = f(contains(f,'filt_470'));
             rast = [];
             for m = 1:length(mice)
-                rast(m,:) = temp.(mice{m})(1,:);
+                rast(m,:) = temp.(mice{m});
                 rast(m,1:200) = nan;
                 rast(m,end-200:end)=nan;
                 rast(m,:) = rast(m,:) - min(rast(m,~isnan(rast(m,:))));
