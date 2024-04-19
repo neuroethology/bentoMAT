@@ -73,6 +73,18 @@ switch ext
             rast = temp.C.data;
             spikes = [];
             time = []; %look for miniscope_timeStamps.csv in same folder, and video_timeStamps.csv for behavior video
+        elseif any(contains(f,'filt_470'))  % it's K-lab fiberphotometry
+            mice = f(contains(f,'filt_470'));
+            rast = [];
+            for m = 1:length(mice)
+                rast(m,:) = temp.(mice{m})(1,:);
+                rast(m,1:200) = nan;
+                rast(m,end-200:end)=nan;
+                rast(m,:) = rast(m,:) - min(rast(m,~isnan(rast(m,:))));
+                rast(m,:) = rast(m,:) / max(rast(m,~isnan(rast(m,:))));
+            end
+            spikes = [];
+            time = temp.timeAxis;
         else
             disp(['unsure which variable to read in ' fname]);
             rast = []; spikes=[];
