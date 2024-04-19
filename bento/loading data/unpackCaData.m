@@ -87,9 +87,8 @@ switch ext
             time = temp.timeAxis;
         else
             disp(['unsure which variable to read in ' fname]);
-            rast = []; spikes=[];
+            rast = []; spikes = []; time = [];
         end
-        time = [];
     case '.flr'
         % Yatang Ca traces
         datapara = input_lyt(pth);
