@@ -28,7 +28,7 @@ end
 
 inds = [find(~cellfun(@isempty,strfind(M,'-----'))); length(M)+3];
 annot = struct();
-for i = 1:2
+for i = 1:(length(inds)-1)
     str = ['Ch' num2str(i)];
     for b=1:length(labelList)
         annot.(str).(labelList{b}) = [];
@@ -41,7 +41,7 @@ if(isinf(tmax))
 else
     maxTime = tmax-tmin+1;
 end
-for i = 1:2
+for i = 1:(length(inds)-1)
     str = ['Ch' num2str(i)];
     Mtemp = regexp(M((inds(i)+1):(inds(i+1)-3)),'(\S+)','match');
     Mtemp = cat(1,Mtemp{:});

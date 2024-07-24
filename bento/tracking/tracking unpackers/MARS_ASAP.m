@@ -11,11 +11,12 @@ function pts = MARS_ASAP(data,fr)
     end
     
     pts = {};
-    for i = 1:size(b,1)
-        bx     = [b(i,[1 3 3 1 1]); b(i,[2 2 4 4 2])];
-        pts{i} = [i bx(:)'];
-    end
-    count=size(b,1);
+    count=0;
+%     for i = 1:size(b,1)
+%         bx     = [b(i,[1 3 3 1 1]); b(i,[2 2 4 4 2])];
+%         pts{i} = [i bx(:)'];
+%     end
+%     count=size(b,1);
 
     parts.body = [2 6 8 7 2];
     parts.midline = [1 2 3 8 9 10];

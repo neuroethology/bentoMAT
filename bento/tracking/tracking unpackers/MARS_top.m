@@ -1,12 +1,17 @@
 function pts = MARS_top(data,fr)
 
     fr = min(fr,size(data.keypoints,1));
+    fr = max(fr,1);
     inds    = [1 2 4 5 7 6 4 3 1];
     if(iscell(data.keypoints)) %support for both jsondecode and loadjson
         v       = data.keypoints{fr};
         v       = permute(reshape(v,[2 2 7]),[2 1 3]);
     else
+        try
         v       = squeeze(data.keypoints(fr,:,:,:));
+        catch
+            keyboard
+        end
     end
     m1      = squeeze(v(1,:,inds));
     m2      = squeeze(v(2,:,inds));

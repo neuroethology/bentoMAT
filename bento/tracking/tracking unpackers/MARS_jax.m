@@ -6,7 +6,6 @@ function pts = MARS(data,fr)
     end
     
     fr = min(fr,size(data.keypoints,1));
-    fr = max(fr,1);
     if(iscell(data.keypoints)) %support for both jsondecode and loadjson
         v       = data.keypoints{fr};
         v       = permute(reshape(v,[2 2 7]),[2 1 3]);

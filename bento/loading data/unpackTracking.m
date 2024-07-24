@@ -56,7 +56,8 @@ elseif(strcmpi(ext,'.h5')) %DeepLabCut, JAX output, or SLEAP
 
 elseif(strcmpi(ext,'.csv')) %also DeepLabCut output
     args = xlsread(fid);
-    strtemp.tracking.args{trackFile} = args';
-else % I couldn't unpack the tracking data :[
+    strtemp.tracking.args{trackFile}.data = args';
+else
+    disp('Error: unrecognized tracking file type, returning empty field.')
     strtemp.tracking.args={[]};
 end
