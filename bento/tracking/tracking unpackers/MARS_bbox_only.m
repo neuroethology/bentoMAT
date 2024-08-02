@@ -5,12 +5,14 @@ function pts = MARS_bbox_only(data,fr)
     if(iscell(data.bbox)) %support for both jsondecode and loadjson
         b       = data.bbox{fr};
     else
-        b       = squeeze(data.bbox(:,:,fr));
+        b       = permute(data.bbox(fr,:,:),[2,3,1]);
     end
-    b1      = [b(1,[1 3 3 1 1]); b(1,[2 2 4 4 2])];
-    b2      = [b(2,[1 3 3 1 1]); b(2,[2 2 4 4 2])];
-
-    pts = {[1 b1(:)'] [2 b2(:)']};
+    
+    pts = {[]};
+    for i = 1:size(b,1)
+        bx     = [b(i,[1 3 3 1 1]); b(i,[2 2 4 4 2])];
+        pts{1} = [pts{1} [i bx(:)']];
+    end
     
     if(isfield(data,'crop_bounds') && ~isempty(data.crop_bounds)) % support for multi-arena MARS
         bounds = data.crop_bounds;

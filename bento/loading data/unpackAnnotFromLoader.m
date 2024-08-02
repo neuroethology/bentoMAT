@@ -30,12 +30,7 @@ for j = 1:length(annoList)
     if(subFrames)
         [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}], defaultFR, startAnno,stopAnno);
     else
-        try
-            [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}], defaultFR);
-        catch
-            disp(['Couldn''t load annotations at ' pth annoList{j}]);
-            keyboard
-        end
+        [atemp,tmax(j),tmin(j),FR,fid{j},~] = loadAnyAnnot([pth annoList{j}], defaultFR);
     end
     
     % generate a filename to save modified annotations

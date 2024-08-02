@@ -342,7 +342,7 @@ for i=1:size(data,1)
                 [y,fs]          = audioread(fid);
                 disp('Generating spectrogram...');
                 win = hann(1024);
-                [~,f,t,psd]     = spectrogram(y,win,[],[],fs,'yaxis');
+                [~,f,t,psd]     = spectrogram(y,win,[],256,fs,'yaxis');
                 psd             = 10*log10(abs(double(psd)+eps));
                 disp('Saving spectrogram for future use...');
                 fid             = [pth strip(strip(strrep(data{i,match.Audio_file},ext,'_spectrogram.mat'),'left','.'),'left',filesep)];
