@@ -108,7 +108,7 @@ for c = 1:length(chInds)-1
                 end
             end
             if((vals(2)+tmin)>=winStart && (vals(1)+tmax)<=winStop) %if this annotation is within the range we're loading
-                annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-winStart,1),winStop-winStart+1);
+                annot.(ch).(beh)(end+1,:) = min(max(vals(1:2)-winStart+1-tmin+1,0),winStop-winStart+1);
                 if(vals(2)-tmin+1 > tmax)
                     tmax = vals(2)-tmin+2;
                 end

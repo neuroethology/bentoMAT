@@ -9,7 +9,7 @@ function [rast,time,spikes,ROIs] = unpackCaData(pth)
 [~,fname,ext] = fileparts(pth);
 disp(['Loading Ca file ' fname '...']);
 
-[rast,time,ROIs]=deal([]);
+[rast,time,ROIs,spikes]=deal([]);
 % add cases to this switch statement for other data types~?
 switch ext
     case '.csv'
@@ -21,6 +21,7 @@ switch ext
 %             rast(i+1,:) = temp{6}(temp{1}==i);
 %             rast(i+1,temp{5}(temp{1}==i)==0)=nan;
 %         end
+
         temp = readtable(pth);
         if(size(temp,2)==5) % it's an Anderson lab miniscope file
             time = temp(:,1)';

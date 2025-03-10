@@ -1,9 +1,6 @@
-function [annot, maxTime] = loadAnnotFileObserver(cleantext, fr)
+function [annot, maxTime] = loadAnnotSheetObserver(M, defaultFR)
 
-
-cleantext = cellfun(@(x) regexprep(x,{'\"','(',')'},''), cleantext, 'uniformoutput',false);
-
-headers = split(cleantext{1},';');
+headers = M(1,:);
 behavior_name_index = find(strcmpi(headers,'behavior'));
 event_type_index = find(strcmpi(headers,'event_type'));
 timestamp_index = find(strcmpi(headers,'Time_Relative_sf'));
@@ -13,14 +10,13 @@ if length([behavior_name_index event_type_index timestamp_index])~=3
     return
 end
 
-annot.Ch1=[];
+annot.Ch1 = [];
 counts=[];
-for i=2:length(cleantext)
-    if(isempty(strtrim(cleantext{i})))
-        continue
+for i=2:length(M)
+    event = M{i,event_type_index};
+    if isnan(event)
+        continue;
     end
-    data = split(strtrim(cleantext{i}),';');
-    event = data{event_type_index};
     if strcmpi(event,'state start')
         flag = 1;
     elseif strcmpi(event,'state stop')
@@ -32,9 +28,9 @@ for i=2:length(cleantext)
         keyboard
     end
     
-    beh = strrep(data{behavior_name_index},' ','_');
+    beh = strrep(M{i, behavior_name_index},' ','_');
     beh = regexprep(beh, '[^\w]', ''); % remove bad characters
-    time = ceil(str2num(data{timestamp_index})*fr);
+    time = ceil(M{i, timestamp_index}*defaultFR);
     if ~isfield(annot.Ch1,beh)
         annot.Ch1.(beh) = [];
         counts.(beh) = 0;
@@ -45,3 +41,14 @@ for i=2:length(cleantext)
     annot.Ch1.(beh)(counts.(beh),flag) = time;
 end
 maxTime = time;
+
+
+
+
+
+
+
+
+
+
+

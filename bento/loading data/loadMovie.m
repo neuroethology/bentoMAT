@@ -31,10 +31,15 @@ for col = 1:size(data.io.movie.fid,1)
 %                                                 % inaccurate! trust the experimenter instead.
 %                 tMax            = reader{col,i}.numFrames/Fr;
             otherwise
-                reader{col,i}.reader       = VideoReader([data.io.movie.fid{col,i}]);
-                reader{col,i}.reader.CurrentTime = 0;
-                Fr              = reader{col,i}.reader.FrameRate;
-                tMax            = reader{col,i}.reader.Duration;
+                rtemp       = VideoReader([data.io.movie.fid{col,i}]);
+                rtemp.CurrentTime = 0;
+                Fr              = rtemp.FrameRate;
+                tMax            = rtemp.Duration;
+
+                reader{col,i}.reader = rtemp;
+                reader{col,i}.FrameRate = Fr;
+                reader{col,i}.Duration = tMax;
+                reader{col,i}.NumFrames = rtemp.NumFrames;
                 
                 timestamps = getVideoTimestamps(data.io.movie.fid{col,i});
                 if timestamps

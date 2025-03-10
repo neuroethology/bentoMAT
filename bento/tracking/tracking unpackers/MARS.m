@@ -11,7 +11,7 @@ function pts = MARS(data,fr)
         v       = data.keypoints{fr};
         v       = permute(reshape(v,[2 2 7]),[2 1 3]);
     else
-        v       = squeeze(data.keypoints(fr,:,:,:));
+        v       = permute(data.keypoints(fr,:,:,:),[2,3,4,1]);
     end
     
     pts={};count=0;
